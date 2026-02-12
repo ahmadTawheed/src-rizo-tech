@@ -1,0 +1,31 @@
+:root {
+    --primary-color: #8BBA40;
+    --secondary-color: #5AB06A;
+    --third-color: #1E4565;
+    --background-color: #FBFBFB;
+    --bg-icon: #D9D9D9;
+    --bg-footer: #212121;
+    --text-color: #FFFFFF;
+    --error-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --iconAndUl-colors: #2D2D2D;
+    --overMode-color: #000000; /*opacity => 65%*/
+    /* Add more colors as needed */
+    --green1: #52FF55; /*opacity => 40%*/
+    --green2: #EBFCF1; 
+    --green3: #DCFCE7; 
+    --red1: #FF8A8C; /*opacity => 30%*/
+    --red2: #FFD8EF; 
+    --red3: #80141B; 
+    --purble1: #F3E8FF; 
+    --purble2: #7F23CF; 
+    --yellow1: #FFFAC4;
+    --yellow2: #A16006;
+    --yellow3: #FFCC00;
+    --browen1: #91410F;
+    --white0:#CCCCCC;
+    --white1:#ECECEC;
+    
+    
+}
