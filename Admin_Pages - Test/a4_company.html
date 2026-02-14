@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المجال الزراعي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+            --overMode-color: #000000;
+            --green1: #52FF55;
+            --green2: #EBFCF1; 
+            --green3: #DCFCE7; 
+            --red1: #FF8A8C;
+            --red2: #FFD8EF; 
+            --red3: #80141B; 
+            --purble1: #F3E8FF; 
+            --purble2: #7F23CF; 
+            --yellow1: #FFFAC4;
+            --yellow2: #A16006;
+            --yellow3: #FFCC00;
+            --browen1: #91410F;
+            --white0:#CCCCCC;
+            --white1:#ECECEC;
+        }
+
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--background-color) 0%, #f0f4f0 50%, #e8f5e9 100%);
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(139, 186, 64, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(90, 176, 106, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 69, 101, 0.05) 0%, transparent 30%);
+        }
+
+        /* Glass Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 186, 64, 0.2);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 10px 15px -3px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        /* Stat Card Hover */
+        .stat-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(139, 186, 64, 0.3);
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table thead th {
+            background: linear-gradient(135deg, var(--third-color), #2a5a7a);
+            color: var(--text-color);
+            padding: 16px 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table thead th:first-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        .data-table thead th:last-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: linear-gradient(90deg, rgba(139, 186, 64, 0.08), rgba(90, 176, 106, 0.05));
+            transform: scale(1.005);
+        }
+
+        .data-table tbody td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(139, 186, 64, 0.15);
+            vertical-align: middle;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, var(--third-color), #2a5a7a);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: linear-gradient(135deg, #2a5a7a, var(--third-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 69, 101, 0.4);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--iconAndUl-colors);
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 186, 64, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 186, 64, 0.5);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--third-color), #2a5a7a);
+            color: white;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: calc(90vh - 140px);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            gap: 8px;
+            padding: 0 24px;
+            background: var(--white1);
+            border-bottom: 2px solid rgba(139, 186, 64, 0.2);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 14px 24px;
+            font-weight: 600;
+            color: var(--iconAndUl-colors);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--third-color);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: var(--background-color);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.15);
+        }
+
+        .form-input:disabled {
+            background: var(--white1);
+            cursor: not-allowed;
+        }
+
+        /* Search Input */
+        .search-input {
+            padding: 14px 20px 14px 50px;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 20px rgba(139, 186, 64, 0.2);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-active {
+            background: var(--green3);
+            color: #166534;
+        }
+
+        .status-suspended {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Checkbox Custom */
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Select Dropdown */
+        .select-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-size: 15px;
+            background: var(--background-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Profile Image */
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 4px 15px rgba(139, 186, 64, 0.3);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(139, 186, 64, 0.1), rgba(90, 176, 106, 0.05));
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid rgba(139, 186, 64, 0.2);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--third-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Training/Job Card */
+        .item-card {
+            background: var(--background-color);
+            border: 1px solid var(--white1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(139, 186, 64, 0.15);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--third-color), #0f2d42);
+            padding: 24px 16px;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo h2 {
+            color: var(--primary-color);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .sidebar-logo span {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(139, 186, 64, 0.2);
+            color: var(--primary-color);
+        }
+
+        .sidebar-menu a.active {
+            border-right: 4px solid var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: 280px;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--third-color);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--success-color), #219a52);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+        }
+
+        .toast.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .data-table thead th,
+            .data-table tbody td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+
+            .btn-action {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        /* Floating Elements */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Delete All Button */
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Filter Dropdown */
+        .filter-dropdown {
+            position: relative;
+        }
+
+        .filter-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            min-width: 200px;
+            z-index: 100;
+            display: none;
+            margin-top: 8px;
+        }
+
+        .filter-menu.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        .filter-option {
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .filter-option:hover {
+            background: var(--green3);
+        }
+
+        /* Confirmation Modal */
+        .confirm-modal {
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #fee2e2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .confirm-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--third-color);
+            margin-bottom: 12px;
+        }
+
+        .confirm-text {
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background: var(--white1);
+            color: var(--iconAndUl-colors);
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 2px solid var(--white1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 32px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            right: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(-28px);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: var(--background-color);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--white1);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--third-color);
+        }
+    </style>
+</head>
+<body class="bg-pattern">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h2>AgriControl</h2>
+            <span>لوحة تحكم زراعية متكاملة</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#" class="active">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    لوحة التحكم
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                    أصحاب العمل
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    الخبراء
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                    </svg>
+                    التدريبات
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+                    </svg>
+                    الوظائف
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    التقارير
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                    </svg>
+                    الإعدادات
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <div>
+                <h1 class="page-title">إدارة أصحاب العمل والشركات</h1>
+                <p style="color: #666; margin-top: 4px;">إدارة كاملة لحسابات أصحاب العمل والشركات الزراعية</p>
+            </div>
+            <button class="mobile-menu-btn" style="display: none;" onclick="toggleSidebar()">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-card stat-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">إجمالي الخبراء</p>
+                        <h3 class="text-3xl font-bold" style="color: var(--third-color);" id="totalExperts">1,247</h3>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                        <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card stat-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">أصحاب العمل</p>
+                        <h3 class="text-3xl font-bold" style="color: var(--third-color);" id="totalEmployers">856</h3>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--third-color), #2a5a7a);">
+                        <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card stat-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">الحسابات النشطة</p>
+                        <h3 class="text-3xl font-bold" style="color: var(--success-color);" id="activeAccounts">723</h3>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--success-color), #219a52);">
+                        <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card stat-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">الحسابات المعلقة</p>
+                        <h3 class="text-3xl font-bold" style="color: var(--error-color);" id="suspendedAccounts">133</h3>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--error-color), #c0392b);">
+                        <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="glass-card rounded-2xl p-6 mb-6">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <!-- Search -->
+                <div class="relative flex-1 min-w-64">
+                    <svg class="absolute right-4 top-1/2 transform -translate-y-1/2" width="20" height="20" fill="#888" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                    <input type="text" class="search-input w-full" placeholder="البحث بـ: المعرف، الاسم، البريد، الهاتف، الدولة..." id="searchInput" onkeyup="searchEmployers()">
+                </div>
+
+                <!-- Filter -->
+                <div class="filter-dropdown">
+                    <button class="btn-primary flex items-center gap-2" onclick="toggleFilter()">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                        </svg>
+                        فلترة حسب العمر
+                    </button>
+                    <div class="filter-menu" id="filterMenu">
+                        <div class="filter-option" onclick="filterByAge('all')">جميع الأعمار</div>
+                        <div class="filter-option" onclick="filterByAge('18-25')">18 - 25 سنة</div>
+                        <div class="filter-option" onclick="filterByAge('26-35')">26 - 35 سنة</div>
+                        <div class="filter-option" onclick="filterByAge('36-45')">36 - 45 سنة</div>
+                        <div class="filter-option" onclick="filterByAge('46+')">46 سنة فأكثر</div>
+                    </div>
+                </div>
+
+                <!-- Delete All -->
+                <button class="btn-danger flex items-center gap-2" onclick="confirmDeleteAll()">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                    حذف الكل
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+            <div class="table-container">
+                <table class="data-table" id="employersTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" class="checkbox-custom" id="selectAll" onclick="toggleSelectAll()">
+                            </th>
+                            <th>الاسم / المعرف</th>
+                            <th>البريد / الهاتف</th>
+                            <th>الدور / تاريخ الانضمام</th>
+                            <th>الدولة / الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center items-center gap-2 mt-6" id="pagination">
+            <!-- Pagination will be rendered here -->
+        </div>
+    </main>
+
+    <!-- View Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold">عرض بيانات صاحب العمل</h3>
+                <button onclick="closeModal('viewModal')" class="text-white hover:opacity-80 transition-opacity">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="switchTab('userTab', this)">معلومات المستخدم</button>
+                <button class="tab-btn" onclick="switchTab('statsTab', this)">إحصائيات</button>
+                <button class="tab-btn" onclick="switchTab('trainingsTab', this)">التدريبات</button>
+                <button class="tab-btn" onclick="switchTab('jobsTab', this)">الوظائف</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- User Info Tab -->
+                <div class="tab-content active" id="userTab">
+                    <div class="flex flex-col items-center mb-8">
+                        <img src="" alt="صورة المستخدم" class="profile-image mb-4" id="viewProfileImage">
+                        <h4 class="text-xl font-bold" style="color: var(--third-color);" id="viewFullName"></h4>
+                        <p class="text-gray-500" id="viewRole"></p>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <p class="info-label">المعرف</p>
+                            <p class="info-value" id="viewId"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">الاسم الأول</p>
+                            <p class="info-value" id="viewFirstName"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">الاسم الثاني</p>
+                            <p class="info-value" id="viewLastName"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">البريد الإلكتروني</p>
+                            <p class="info-value" id="viewEmail"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">رقم الهاتف</p>
+                            <p class="info-value" id="viewPhone"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">تأكيد الهاتف</p>
+                            <p class="info-value" id="viewPhoneVerified"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">الدولة</p>
+                            <p class="info-value" id="viewCountry"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">العنوان</p>
+                            <p class="info-value" id="viewAddress"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">تاريخ الميلاد</p>
+                            <p class="info-value" id="viewBirthDate"></p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">تاريخ الانضمام</p>
+                            <p class="info-value" id="viewJoinDate"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Tab -->
+                <div class="tab-content" id="statsTab">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number" id="viewTotalTrainings">0</span>
+                            <p class="stat-label">التدريبات المرفوعة</p>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="viewTotalJobs">0</span>
+                            <p class="stat-label">الوظائف المرفوعة</p>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="viewJobApplicants">0</span>
+                            <p class="stat-label">المتقدمين على الوظائف</p>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="viewTrainingApplicants">0</span>
+                            <p class="stat-label">المتقدمين على التدريبات</p>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="viewTotalEarnings">$0</span>
+                            <p class="stat-label">إجمالي الأرباح</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trainings Tab -->
+                <div class="tab-content" id="trainingsTab">
+                    <h4 class="font-bold mb-4" style="color: var(--third-color);">التدريبات المرفوعة</h4>
+                    <div id="viewTrainingsList">
+                        <!-- Trainings will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Jobs Tab -->
+                <div class="tab-content" id="jobsTab">
+                    <h4 class="font-bold mb-4" style="color: var(--third-color);">الوظائف المرفوعة</h4>
+                    <div id="viewJobsList">
+                        <!-- Jobs will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold">تعديل بيانات صاحب العمل</h3>
+                <button onclick="closeModal('editModal')" class="text-white hover:opacity-80 transition-opacity">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editForm" onsubmit="saveEdit(event)">
+                    <input type="hidden" id="editId">
+
+                    <!-- Account Status -->
+                    <div class="glass-card rounded-xl p-4 mb-6" style="background: var(--background-color);">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold" style="color: var(--third-color);">حالة الحساب</h4>
+                                <p class="text-sm text-gray-500">تفعيل أو تعليق الحساب</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="editStatus" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">الاسم الأول</label>
+                            <input type="text" class="form-input" id="editFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">الاسم الثاني</label>
+                            <input type="text" class="form-input" id="editLastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-input" id="editEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-input" id="editPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">الدولة</label>
+                            <select class="select-input" id="editCountry" required>
+                                <option value="">اختر الدولة</option>
+                                <option value="مصر">مصر</option>
+                                <option value="السعودية">السعودية</option>
+                                <option value="الإمارات">الإمارات</option>
+                                <option value="الكويت">الكويت</option>
+                                <option value="قطر">قطر</option>
+                                <option value="البحرين">البحرين</option>
+                                <option value="عمان">عمان</option>
+                                <option value="الأردن">الأردن</option>
+                                <option value="المغرب">المغرب</option>
+                                <option value="تونس">تونس</option>
+                                <option value="الجزائر">الجزائر</option>
+                                <option value="السودان">السودان</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">العنوان</label>
+                            <input type="text" class="form-input" id="editAddress">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">تاريخ الميلاد</label>
+                            <input type="date" class="form-input" id="editBirthDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">الدور</label>
+                            <select class="select-input" id="editRole" required>
+                                <option value="صاحب عمل">صاحب عمل</option>
+                                <option value="شركة">شركة</option>
+                                <option value="مزارع">مزارع</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">رابط صورة المستخدم</label>
+                        <input type="url" class="form-input" id="editImage" placeholder="https://example.com/image.jpg">
+                    </div>
+
+                    <div class="flex gap-4 justify-end mt-6">
+                        <button type="button" class="btn-secondary" onclick="closeModal('editModal')">إلغاء</button>
+                        <button type="submit" class="btn-primary">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="confirm-modal">
+                <div class="confirm-icon">
+                    <svg width="40" height="40" fill="var(--error-color)" viewBox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                </div>
+                <h3 class="confirm-title">تأكيد الحذف</h3>
+                <p class="confirm-text" id="deleteMessage">هل أنت متأكد من حذف هذا الحساب؟</p>
+                <div class="confirm-buttons">
+                    <button class="btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button>
+                    <button class="btn-danger" onclick="confirmDelete()">حذف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // =====================
+        // Data Store
+        // =====================
+        let employersData = [
+            {
+                id: "EMP001",
+                firstName: "أحمد",
+                lastName: "المحمدي",
+                email: "ahmed@company.com",
+                phone: "+201234567890",
+                phoneVerified: true,
+                country: "مصر",
+                address: "القاهرة - مصر الجديدة",
+                birthDate: "1985-03-15",
+                role: "صاحب عمل",
+                status: true,
+                joinDate: "2024-01-15",
+                image: "https://randomuser.me/api/portraits/men/1.jpg",
+                stats: {
+                    totalTrainings: 12,
+                    totalJobs: 8,
+                    jobApplicants: 45,
+                    trainingApplicants: 120,
+                    totalEarnings: 15750
+                },
+                trainings: [
+                    { title: "أساسيات الزراعة الحديثة", specialty: "زراعة عامة", price: 150, isFree: false },
+                    { title: "تقنيات الري الذكي", specialty: "ري وتنظيم", price: 0, isFree: true },
+                    { title: "إدارة المزارع الكبيرة", specialty: "إدارة مزارع", price: 250, isFree: false }
+                ],
+                jobs: [
+                    { title: "مهندس زراعي", specialty: "هندسة زراعية" },
+                    { title: "مشرف مزرعة", specialty: "إدارة" },
+                    { title: "فني ري", specialty: "ري" }
+                ]
+            },
+            {
+                id: "EMP002",
+                firstName: "سارة",
+                lastName: "القرني",
+                email: "sara@agri.sa",
+                phone: "+966501234567",
+                phoneVerified: true,
+                country: "السعودية",
+                address: "الرياض - حي النخيل",
+                birthDate: "1990-07-22",
+                role: "شركة",
+                status: true,
+                joinDate: "2024-02-10",
+                image: "https://randomuser.me/api/portraits/women/2.jpg",
+                stats: {
+                    totalTrainings: 25,
+                    totalJobs: 15,
+                    jobApplicants: 89,
+                    trainingApplicants: 230,
+                    totalEarnings: 45000
+                },
+                trainings: [
+                    { title: "زراعة النخيل", specialty: "فاكهة", price: 300, isFree: false },
+                    { title: "الزراعة العضوية", specialty: "زراعة عضوية", price: 0, isFree: true },
+                    { title: "مكافحة الآفات", specialty: "وقاية نبات", price: 180, isFree: false }
+                ],
+                jobs: [
+                    { title: "مدير مزرعة نخيل", specialty: "إدارة" },
+                    { title: "خبير وقاية نبات", specialty: "وقاية" }
+                ]
+            },
+            {
+                id: "EMP003",
+                firstName: "محمد",
+                lastName: "العتيبي",
+                email: "mohammed@farms.ae",
+                phone: "+971501234567",
+                phoneVerified: false,
+                country: "الإمارات",
+                address: "دبي - العوير",
+                birthDate: "1978-11-30",
+                role: "مزارع",
+                status: false,
+                joinDate: "2023-12-05",
+                image: "https://randomuser.me/api/portraits/men/3.jpg",
+                stats: {
+                    totalTrainings: 5,
+                    totalJobs: 3,
+                    jobApplicants: 12,
+                    trainingApplicants: 45,
+                    totalEarnings: 3500
+                },
+                trainings: [
+                    { title: "تربية الأبقار", specialty: "ثروة حيوانية", price: 200, isFree: false }
+                ],
+                jobs: [
+                    { title: "راعي أبقار", specialty: "ثروة حيوانية" },
+                    { title: "فني حلابة", specialty: "ألبان" }
+                ]
+            },
+            {
+                id: "EMP004",
+                firstName: "فاطمة",
+                lastName: "الهاجري",
+                email: "fatima@agri.qa",
+                phone: "+97450123456",
+                phoneVerified: true,
+                country: "قطر",
+                address: "الدوحة - الوكرة",
+                birthDate: "1988-05-18",
+                role: "صاحب عمل",
+                status: true,
+                joinDate: "2024-03-01",
+                image: "https://randomuser.me/api/portraits/women/4.jpg",
+                stats: {
+                    totalTrainings: 8,
+                    totalJobs: 6,
+                    jobApplicants: 34,
+                    trainingApplicants: 78,
+                    totalEarnings: 8900
+                },
+                trainings: [
+                    { title: "الزراعة المائية", specialty: "زراعة حديثة", price: 0, isFree: true },
+                    { title: "إنتاج الخضروات", specialty: "خضروات", price: 120, isFree: false }
+                ],
+                jobs: [
+                    { title: "مهندس زراعة مائية", specialty: "هندسة" }
+                ]
+            },
+            {
+                id: "EMP005",
+                firstName: "خالد",
+                lastName: "المطيري",
+                email: "khalid@agro.kw",
+                phone: "+96599123456",
+                phoneVerified: true,
+                country: "الكويت",
+                address: "الكويت - الجهراء",
+                birthDate: "1982-09-05",
+                role: "شركة",
+                status: true,
+                joinDate: "2024-01-20",
+                image: "https://randomuser.me/api/portraits/men/5.jpg",
+                stats: {
+                    totalTrainings: 18,
+                    totalJobs: 12,
+                    jobApplicants: 67,
+                    trainingApplicants: 189,
+                    totalEarnings: 28000
+                },
+                trainings: [
+                    { title: "تسميد المحاصيل", specialty: "تسميد", price: 175, isFree: false },
+                    { title: "إدارة التربة", specialty: "تربة", price: 220, isFree: false }
+                ],
+                jobs: [
+                    { title: "خبير تربة", specialty: "تربة" },
+                    { title: "فني مختبر", specialty: "تحاليل" }
+                ]
+            },
+            {
+                id: "EMP006",
+                firstName: "نورة",
+                lastName: "الشمري",
+                email: "noura@farms.jo",
+                phone: "+96279123456",
+                phoneVerified: false,
+                country: "الأردن",
+                address: "عمان - خلدا",
+                birthDate: "1995-02-28",
+                role: "مزارع",
+                status: true,
+                joinDate: "2024-02-28",
+                image: "https://randomuser.me/api/portraits/women/6.jpg",
+                stats: {
+                    totalTrainings: 3,
+                    totalJobs: 2,
+                    jobApplicants: 8,
+                    trainingApplicants: 25,
+                    totalEarnings: 1200
+                },
+                trainings: [
+                    { title: "زراعة الزيتون", specialty: "زيتون", price: 0, isFree: true }
+                ],
+                jobs: [
+                    { title: "عامل مزرعة زيتون", specialty: "زيتون" }
+                ]
+            },
+            {
+                id: "EMP007",
+                firstName: "عبدالله",
+                lastName: "السعيد",
+                email: "abdullah@agriculture.eg",
+                phone: "+201115556666",
+                phoneVerified: true,
+                country: "مصر",
+                address: "الإسكندرية - سيدي جابر",
+                birthDate: "1975-06-12",
+                role: "صاحب عمل",
+                status: false,
+                joinDate: "2023-11-15",
+                image: "https://randomuser.me/api/portraits/men/7.jpg",
+                stats: {
+                    totalTrainings: 30,
+                    totalJobs: 20,
+                    jobApplicants: 150,
+                    trainingApplicants: 400,
+                    totalEarnings: 65000
+                },
+                trainings: [
+                    { title: "زراعة القمح", specialty: "محاصيل", price: 100, isFree: false },
+                    { title: "تصنيع الألبان", specialty: "ألبان", price: 180, isFree: false },
+                    { title: "تربية الدواجن", specialty: "دواجن", price: 250, isFree: false }
+                ],
+                jobs: [
+                    { title: "مدير مزرعة دواجن", specialty: "دواجن" },
+                    { title: "مهندس محاصيل", specialty: "محاصيل" },
+                    { title: "محاسب زراعي", specialty: "محاسبة" }
+                ]
+            },
+            {
+                id: "EMP008",
+                firstName: "ريم",
+                lastName: "الفهد",
+                email: "reem@agri.bh",
+                phone: "+97339123456",
+                phoneVerified: true,
+                country: "البحرين",
+                address: "المنامة - السيف",
+                birthDate: "1992-12-03",
+                role: "شركة",
+                status: true,
+                joinDate: "2024-03-10",
+                image: "https://randomuser.me/api/portraits/women/8.jpg",
+                stats: {
+                    totalTrainings: 10,
+                    totalJobs: 7,
+                    jobApplicants: 42,
+                    trainingApplicants: 95,
+                    totalEarnings: 12500
+                },
+                trainings: [
+                    { title: "تصدير المنتجات الزراعية", specialty: "تجارة", price: 300, isFree: false }
+                ],
+                jobs: [
+                    { title: "مسؤول تصدير", specialty: "تجارة" },
+                    { title: "مراقب جودة", specialty: "جودة" }
+                ]
+            }
+        ];
+
+        // State variables
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let filteredData = [...employersData];
+        let deleteTarget = null;
+        let deleteType = null;
+
+        // =====================
+        // Initialization
+        // =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            updateStats();
+        });
+
+        // =====================
+        // Table Rendering
+        // =====================
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            tbody.innerHTML = pageData.map(employer => `
+                <tr data-id="${employer.id}">
+                    <td>
+                        <input type="checkbox" class="checkbox-custom row-checkbox" value="${employer.id}">
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <img src="${employer.image}" alt="${employer.firstName}" class="w-10 h-10 rounded-full object-cover">
+                            <div>
+                                <div class="font-bold" style="color: var(--third-color);">${employer.firstName} ${employer.lastName}</div>
+                                <div class="text-xs text-gray-500">${employer.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="font-medium">${employer.email}</div>
+                        <div class="text-xs text-gray-500">${employer.phone}</div>
+                    </td>
+                    <td>
+                        <div class="font-medium">${employer.role}</div>
+                        <div class="text-xs text-gray-500">${formatDate(employer.joinDate)}</div>
+                    </td>
+                    <td>
+                        <div class="font-medium">${employer.country}</div>
+                        <span class="status-badge ${employer.status ? 'status-active' : 'status-suspended'}">
+                            <span class="w-2 h-2 rounded-full ${employer.status ? 'bg-green-600' : 'bg-red-600'}"></span>
+                            ${employer.status ? 'نشط' : 'معلق'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button class="btn-action btn-view" onclick="viewEmployer('${employer.id}')">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                </svg>
+                                عرض
+                            </button>
+                            <button class="btn-action btn-edit" onclick="editEmployer('${employer.id}')">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                </svg>
+                                تعديل
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteEmployer('${employer.id}')">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                </svg>
+                                حذف
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            let html = '';
+            
+            // Previous button
+            html += `<button class="btn-secondary px-3 py-2 rounded-lg ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}" 
+                      onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                      </svg>
+                    </button>`;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="${currentPage === i ? 'btn-primary' : 'btn-secondary'} px-4 py-2 rounded-lg"
+                          onclick="changePage(${i})">${i}</button>`;
+            }
+            
+            // Next button
+            html += `<button class="btn-secondary px-3 py-2 rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" 
+                      onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                      </svg>
+                    </button>`;
+            
+            pagination.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable();
+            }
+        }
+
+        // =====================
+        // Search and Filter
+        // =====================
+        function searchEmployers() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            filteredData = employersData.filter(employer => {
+                return employer.id.toLowerCase().includes(query) ||
+                       employer.firstName.toLowerCase().includes(query) ||
+                       employer.lastName.toLowerCase().includes(query) ||
+                       employer.email.toLowerCase().includes(query) ||
+                       employer.phone.toLowerCase().includes(query) ||
+                       employer.country.toLowerCase().includes(query);
+            });
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        function toggleFilter() {
+            const filterMenu = document.getElementById('filterMenu');
+            filterMenu.classList.toggle('active');
+        }
+
+        function filterByAge(range) {
+            const today = new Date();
+            
+            filteredData = employersData.filter(employer => {
+                const birthDate = new Date(employer.birthDate);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                switch(range) {
+                    case '18-25':
+                        return age >= 18 && age <= 25;
+                    case '26-35':
+                        return age >= 26 && age <= 35;
+                    case '36-45':
+                        return age >= 36 && age <= 45;
+                    case '46+':
+                        return age >= 46;
+                    default:
+                        return true;
+                }
+            });
+            
+            currentPage = 1;
+            renderTable();
+            toggleFilter();
+            showToast('تم تطبيق الفلتر بنجاح', 'success');
+        }
+
+        // Close filter menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const filterDropdown = document.querySelector('.filter-dropdown');
+            const filterMenu = document.getElementById('filterMenu');
+            if (!filterDropdown.contains(e.target)) {
+                filterMenu.classList.remove('active');
+            }
+        });
+
+        // =====================
+        // Select All
+        // =====================
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        }
+
+        // =====================
+        // View Employer
+        // =====================
+        function viewEmployer(id) {
+            const employer = employersData.find(e => e.id === id);
+            if (!employer) return;
+            
+            // Populate user info
+            document.getElementById('viewProfileImage').src = employer.image;
+            document.getElementById('viewFullName').textContent = `${employer.firstName} ${employer.lastName}`;
+            document.getElementById('viewRole').textContent = employer.role;
+            document.getElementById('viewId').textContent = employer.id;
+            document.getElementById('viewFirstName').textContent = employer.firstName;
+            document.getElementById('viewLastName').textContent = employer.lastName;
+            document.getElementById('viewEmail').textContent = employer.email;
+            document.getElementById('viewPhone').textContent = employer.phone;
+            document.getElementById('viewPhoneVerified').innerHTML = employer.phoneVerified 
+                ? '<span style="color: var(--success-color);">تم التأكيد</span>' 
+                : '<span style="color: var(--error-color);">لم يتم التأكيد</span>';
+            document.getElementById('viewCountry').textContent = employer.country;
+            document.getElementById('viewAddress').textContent = employer.address || 'غير محدد';
+            document.getElementById('viewBirthDate').textContent = formatDate(employer.birthDate);
+            document.getElementById('viewJoinDate').textContent = formatDate(employer.joinDate);
+            
+            // Populate stats
+            document.getElementById('viewTotalTrainings').textContent = employer.stats.totalTrainings;
+            document.getElementById('viewTotalJobs').textContent = employer.stats.totalJobs;
+            document.getElementById('viewJobApplicants').textContent = employer.stats.jobApplicants;
+            document.getElementById('viewTrainingApplicants').textContent = employer.stats.trainingApplicants;
+            document.getElementById('viewTotalEarnings').textContent = `$${employer.stats.totalEarnings.toLocaleString()}`;
+            
+            // Populate trainings
+            const trainingsList = document.getElementById('viewTrainingsList');
+            trainingsList.innerHTML = employer.trainings.map(t => `
+                <div class="item-card">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold" style="color: var(--third-color);">${t.title}</h5>
+                            <p class="text-sm text-gray-500">${t.specialty}</p>
+                        </div>
+                        <div class="text-left">
+                            <span class="font-bold ${t.isFree ? 'text-green-600' : ''}" style="color: ${t.isFree ? 'var(--success-color)' : 'var(--third-color)'}">
+                                ${t.isFree ? 'مجاني' : `$${t.price}`}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Populate jobs
+            const jobsList = document.getElementById('viewJobsList');
+            jobsList.innerHTML = employer.jobs.map(j => `
+                <div class="item-card">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold" style="color: var(--third-color);">${j.title}</h5>
+                            <p class="text-sm text-gray-500">${j.specialty}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Reset to first tab
+            switchTab('userTab', document.querySelector('.tab-btn'));
+            
+            openModal('viewModal');
+        }
+
+        // =====================
+        // Edit Employer
+        // =====================
+        function editEmployer(id) {
+            const employer = employersData.find(e => e.id === id);
+            if (!employer) return;
+            
+            document.getElementById('editId').value = employer.id;
+            document.getElementById('editFirstName').value = employer.firstName;
+            document.getElementById('editLastName').value = employer.lastName;
+            document.getElementById('editEmail').value = employer.email;
+            document.getElementById('editPhone').value = employer.phone;
+            document.getElementById('editCountry').value = employer.country;
+            document.getElementById('editAddress').value = employer.address || '';
+            document.getElementById('editBirthDate').value = employer.birthDate;
+            document.getElementById('editRole').value = employer.role;
+            document.getElementById('editStatus').checked = employer.status;
+            document.getElementById('editImage').value = employer.image;
+            
+            openModal('editModal');
+        }
+
+        function saveEdit(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('editId').value;
+            const index = employersData.findIndex(e => e.id === id);
+            
+            if (index === -1) return;
+            
+            employersData[index] = {
+                ...employersData[index],
+                firstName: document.getElementById('editFirstName').value,
+                lastName: document.getElementById('editLastName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                country: document.getElementById('editCountry').value,
+                address: document.getElementById('editAddress').value,
+                birthDate: document.getElementById('editBirthDate').value,
+                role: document.getElementById('editRole').value,
+                status: document.getElementById('editStatus').checked,
+                image: document.getElementById('editImage').value || employersData[index].image
+            };
+            
+            // Update filtered data
+            const filteredIndex = filteredData.findIndex(e => e.id === id);
+            if (filteredIndex !== -1) {
+                filteredData[filteredIndex] = employersData[index];
+            }
+            
+            renderTable();
+            updateStats();
+            closeModal('editModal');
+            showToast('تم حفظ التعديلات بنجاح', 'success');
+        }
+
+        // =====================
+        // Delete Employer
+        // =====================
+        function deleteEmployer(id) {
+            deleteTarget = id;
+            deleteType = 'single';
+            const employer = employersData.find(e => e.id === id);
+            document.getElementById('deleteMessage').textContent = `هل أنت متأكد من حذف حساب "${employer.firstName} ${employer.lastName}"؟`;
+            openModal('deleteModal');
+        }
+
+        function confirmDeleteAll() {
+            const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                showToast('يرجى تحديد حسابات للحذف', 'warning');
+                return;
+            }
+            deleteType = 'multiple';
+            document.getElementById('deleteMessage').textContent = `هل أنت متأكد من حذف ${selectedCheckboxes.length} حسابات محددة؟`;
+            openModal('deleteModal');
+        }
+
+        function confirmDelete() {
+            if (deleteType === 'single') {
+                employersData = employersData.filter(e => e.id !== deleteTarget);
+                filteredData = filteredData.filter(e => e.id !== deleteTarget);
+            } else if (deleteType === 'multiple') {
+                const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+                const idsToDelete = Array.from(selectedCheckboxes).map(cb => cb.value);
+                employersData = employersData.filter(e => !idsToDelete.includes(e.id));
+                filteredData = filteredData.filter(e => !idsToDelete.includes(e.id));
+            }
+            
+            renderTable();
+            updateStats();
+            closeModal('deleteModal');
+            showToast('تم الحذف بنجاح', 'success');
+            
+            // Reset select all
+            document.getElementById('selectAll').checked = false;
+        }
+
+        // =====================
+        // Modal Functions
+        // =====================
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+
+        // =====================
+        // Tab Switching
+        // =====================
+        function switchTab(tabId, btnElement) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to selected tab
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // =====================
+        // Utility Functions
+        // =====================
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function updateStats() {
+            const activeCount = employersData.filter(e => e.status).length;
+            const suspendedCount = employersData.filter(e => !e.status).length;
+            
+            document.getElementById('totalEmployers').textContent = employersData.length.toLocaleString();
+            document.getElementById('activeAccounts').textContent = activeCount;
+            document.getElementById('suspendedAccounts').textContent = suspendedCount;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // =====================
+        // Sidebar Toggle (Mobile)
+        // =====================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // =====================
+        // Keyboard Navigation
+        // =====================
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+F to focus search
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+    </script>
+</body>
+</html>

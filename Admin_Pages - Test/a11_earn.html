@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المزرعة الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8BBA40',
+                        secondary: '#5AB06A',
+                        third: '#1E4565',
+                        background: '#FBFBFB',
+                        bgIcon: '#D9D9D9',
+                        bgFooter: '#212121',
+                        textColor: '#FFFFFF',
+                        error: '#e74c3c',
+                        success: '#27ae60',
+                        warning: '#f39c12',
+                        iconUl: '#2D2D2D',
+                        green1: '#52FF55',
+                        green2: '#EBFCF1',
+                        green3: '#DCFCE7',
+                        red1: '#FF8A8C',
+                        red2: '#FFD8EF',
+                        red3: '#80141B',
+                        purple1: '#F3E8FF',
+                        purple2: '#7F23CF',
+                        yellow1: '#FFFAC4',
+                        yellow2: '#A16006',
+                        yellow3: '#FFCC00',
+                        brown1: '#91410F',
+                        white0: '#CCCCCC',
+                        white1: '#ECECEC'
+                    },
+                    fontFamily: {
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+        }
+        
+        body {
+            background-color: var(--background-color);
+        }
+        
+        .sidebar-item.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .sidebar-item:hover:not(.active) {
+            background-color: rgba(139, 186, 64, 0.1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(30, 69, 101, 0.15);
+        }
+        
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.65);
+        }
+        
+        .gradient-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .gradient-third {
+            background: linear-gradient(135deg, var(--third-color), #2a5a7a);
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate-scale {
+            animation: scaleIn 0.3s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 1s ease-out;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 186, 64, 0.3);
+        }
+        
+        .input-focus:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 186, 64, 0.2);
+        }
+        
+        .table-row-hover:hover {
+            background-color: rgba(139, 186, 64, 0.05);
+        }
+        
+        .notification-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .chart-bar {
+            transition: height 0.8s ease-out;
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .status-pending { background-color: #FFFAC4; color: #A16006; }
+        .status-approved { background-color: #DCFCE7; color: #166534; }
+        .status-rejected { background-color: #FEE2E2; color: #991B1B; }
+        .status-completed { background-color: #DCFCE7; color: #166534; }
+    </style>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl z-50 transform transition-transform duration-300 lg:translate-x-0 translate-x-full">
+        <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-third">المزرعة الذكية</h1>
+                    <p class="text-xs text-gray-500">لوحة التحكم</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="p-4 space-y-2">
+            <button onclick="showSection('dashboard')" class="sidebar-item active w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200" data-section="dashboard">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span class="font-medium">لوحة القيادة</span>
+            </button>
+            
+            <button onclick="showSection('courses')" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600" data-section="courses">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <span class="font-medium">الكورسات والتدريبات</span>
+            </button>
+            
+            <button onclick="showSection('trainers')" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600" data-section="trainers">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="font-medium">المدربون</span>
+            </button>
+            
+            <button onclick="showSection('profits')" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600" data-section="profits">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="font-medium">الأرباح والتوزيع</span>
+            </button>
+            
+            <button onclick="showSection('transactions')" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600" data-section="transactions">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+                <span class="font-medium">سجلات المعاملات</span>
+            </button>
+            
+            <button onclick="showSection('withdrawals')" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600" data-section="withdrawals">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+                <span class="font-medium">طلبات السحب</span>
+                <span class="notification-dot w-2 h-2 bg-primary rounded-full mr-auto"></span>
+            </button>
+            
+            <button onclick="showSection('payment-methods')" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600" data-section="payment-methods">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="font-medium">طرق الدفع</span>
+            </button>
+        </nav>
+        
+        <div class="absolute bottom-0 right-0 left-0 p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full gradient-third flex items-center justify-center text-white font-bold">
+                    م
+                </div>
+                <div class="flex-1">
+                    <p class="font-medium text-gray-800 text-sm">مدير النظام</p>
+                    <p class="text-xs text-gray-500">admin@farm.com</p>
+                </div>
+                <button onclick="logout()" class="text-gray-400 hover:text-error transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Mobile Menu Button -->
+    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center">
+        <svg class="w-6 h-6 text-third" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    </button>
+    
+    <!-- Main Content -->
+    <main class="lg:mr-64 min-h-screen">
+        <!-- Header -->
+        <header class="sticky top-0 bg-white/95 backdrop-blur-sm shadow-sm z-40 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 id="page-title" class="text-2xl font-bold text-third">لوحة القيادة</h2>
+                    <p id="page-subtitle" class="text-sm text-gray-500">مرحباً بك في لوحة التحكم</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <input type="text" placeholder="بحث..." class="w-64 px-4 py-2 pr-10 rounded-xl border border-gray-200 focus:outline-none input-focus text-sm">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <button class="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content Container -->
+        <div id="content-container" class="p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="section-content animate-fade-in">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm card-hover transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-green2 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                            </div>
+                            <span class="text-success text-sm font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                12%
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="total-courses-stat">24</h3>
+                        <p class="text-gray-500 text-sm">إجمالي الكورسات</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 shadow-sm card-hover transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple1 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                            <span class="text-success text-sm font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                8%
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="total-trainers-stat">12</h3>
+                        <p class="text-gray-500 text-sm">المدربون النشطون</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 shadow-sm card-hover transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-yellow1 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-yellow2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <span class="text-success text-sm font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                23%
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="total-revenue-stat">158,450</h3>
+                        <p class="text-gray-500 text-sm">إجمالي الإيرادات (ر.س)</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 shadow-sm card-hover transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-red2 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-red3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                            </div>
+                            <span class="text-warning text-sm font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                </svg>
+                                5 قيد المراجعة
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="pending-withdrawals-stat">5</h3>
+                        <p class="text-gray-500 text-sm">طلبات سحب معلقة</p>
+                    </div>
+                </div>
+                
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Revenue Chart -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-third">الإيرادات الشهرية</h3>
+                            <select class="px-3 py-1 rounded-lg border border-gray-200 text-sm focus:outline-none input-focus">
+                                <option>2024</option>
+                                <option>2023</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end justify-between h-48 gap-2">
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="w-full bg-gray-100 rounded-t-lg relative overflow-hidden" style="height: 60%">
+                                    <div class="chart-bar absolute bottom-0 w-full rounded-t-lg" style="height: 0%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">يناير</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="w-full bg-gray-100 rounded-t-lg relative overflow-hidden" style="height: 75%">
+                                    <div class="chart-bar absolute bottom-0 w-full rounded-t-lg" style="height: 0%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">فبراير</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="w-full bg-gray-100 rounded-t-lg relative overflow-hidden" style="height: 45%">
+                                    <div class="chart-bar absolute bottom-0 w-full rounded-t-lg" style="height: 0%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">مارس</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="w-full bg-gray-100 rounded-t-lg relative overflow-hidden" style="height: 90%">
+                                    <div class="chart-bar absolute bottom-0 w-full rounded-t-lg" style="height: 0%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">أبريل</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="w-full bg-gray-100 rounded-t-lg relative overflow-hidden" style="height: 65%">
+                                    <div class="chart-bar absolute bottom-0 w-full rounded-t-lg" style="height: 0%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">مايو</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="w-full bg-gray-100 rounded-t-lg relative overflow-hidden" style="height: 80%">
+                                    <div class="chart-bar absolute bottom-0 w-full rounded-t-lg" style="height: 0%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">يونيو</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profit Distribution -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-third">توزيع الأرباح</h3>
+                            <button onclick="showSection('profits')" class="text-primary text-sm font-medium hover:underline">عرض الكل</button>
+                        </div>
+                        <div class="space-y-4" id="profit-distribution-preview">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Transactions -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-third">آخر المعاملات</h3>
+                        <button onclick="showSection('transactions')" class="text-primary text-sm font-medium hover:underline">عرض الكل</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-100">
+                                    <th class="text-right py-3 px-4 text-sm font-medium text-gray-500">المعرف</th>
+                                    <th class="text-right py-3 px-4 text-sm font-medium text-gray-500">النوع</th>
+                                    <th class="text-right py-3 px-4 text-sm font-medium text-gray-500">المبلغ</th>
+                                    <th class="text-right py-3 px-4 text-sm font-medium text-gray-500">الحالة</th>
+                                    <th class="text-right py-3 px-4 text-sm font-medium text-gray-500">التاريخ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-transactions-table">
+                                <!-- Will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Courses Section -->
+            <section id="courses-section" class="section-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <select id="courses-filter" class="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="">جميع التصنيفات</option>
+                            <option value="زراعة">زراعة</option>
+                            <option value="ري">ري</option>
+                            <option value="محاصيل">محاصيل</option>
+                            <option value="تسميد">تسميد</option>
+                        </select>
+                    </div>
+                    <button onclick="openCourseModal()" class="btn-primary px-6 py-3 rounded-xl text-white font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        إضافة كورس جديد
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الكورس</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المدرب</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">السعر</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المشتركين</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">التقييم</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الحالة</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="courses-table-body">
+                                <!-- Will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Trainers Section -->
+            <section id="trainers-section" class="section-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <input type="text" placeholder="بحث عن مدرب..." class="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none input-focus w-64">
+                    </div>
+                    <button onclick="openTrainerModal()" class="btn-primary px-6 py-3 rounded-xl text-white font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        إضافة مدرب جديد
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="trainers-grid">
+                    <!-- Will be populated by JS -->
+                </div>
+            </section>
+            
+            <!-- Profits Section -->
+            <section id="profits-section" class="section-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">إجمالي الأرباح</p>
+                                <h3 class="text-2xl font-bold text-third" id="total-profits">158,450 ر.س</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 gradient-third rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">تم توزيعه</p>
+                                <h3 class="text-2xl font-bold text-third" id="distributed-profits">95,070 ر.س</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-yellow1 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-yellow2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">قيد التوزيع</p>
+                                <h3 class="text-2xl font-bold text-third" id="pending-profits">63,380 ر.س</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-third">توزيع الأرباح التلقائي</h3>
+                        <button onclick="distributeProfits()" class="btn-primary px-6 py-3 rounded-xl text-white font-medium">
+                            توزيع الأرباح الآن
+                        </button>
+                    </div>
+                    <p class="text-gray-500 mb-4">يتم توزيع الأرباح تلقائياً على المدربين بنسبة 60% من قيمة كل كورس</p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المدرب</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الكورسات</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">إجمالي المبيعات</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">نسبة المدرب</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المستحق له</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profit-distribution-table">
+                                <!-- Will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Transactions Section -->
+            <section id="transactions-section" class="section-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <select id="transaction-type-filter" class="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="">جميع الأنواع</option>
+                            <option value="إيداع">إيداع</option>
+                            <option value="سحب">سحب</option>
+                            <option value="توزيع">توزيع</option>
+                        </select>
+                        <select id="transaction-status-filter" class="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="">جميع الحالات</option>
+                            <option value="مكتمل">مكتمل</option>
+                            <option value="قيد المراجعة">قيد المراجعة</option>
+                            <option value="مرفوض">مرفوض</option>
+                        </select>
+                    </div>
+                    <button onclick="exportTransactions()" class="px-6 py-3 rounded-xl border border-primary text-primary font-medium hover:bg-green2 transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        تصدير
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المعرف</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">النوع</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المبلغ</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الجهة</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الحالة</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">التاريخ</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">التفاصيل</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-table-body">
+                                <!-- Will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Withdrawals Section -->
+            <section id="withdrawals-section" class="section-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <select id="withdrawal-status-filter" class="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="">جميع الحالات</option>
+                            <option value="قيد المراجعة">قيد المراجعة</option>
+                            <option value="مقبول">مقبول</option>
+                            <option value="مرفوض">مرفوض</option>
+                            <option value="مكتمل">مكتمل</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المعرف</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المستفيد</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">المبلغ</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">طريقة السحب</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الحالة</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">التاريخ</th>
+                                    <th class="text-right py-4 px-6 text-sm font-bold text-third">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawals-table-body">
+                                <!-- Will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Payment Methods Section -->
+            <section id="payment-methods-section" class="section-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-third">طرق الدفع والسحب المتاحة</h3>
+                    <button onclick="openPaymentMethodModal()" class="btn-primary px-6 py-3 rounded-xl text-white font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        إضافة طريقة دفع
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="payment-methods-grid">
+                    <!-- Will be populated by JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Course Modal -->
+    <div id="course-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeCourseModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                <h3 id="course-modal-title" class="text-xl font-bold text-third">إضافة كورس جديد</h3>
+                <button onclick="closeCourseModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="course-form" class="p-6 space-y-4">
+                <input type="hidden" id="course-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">اسم الكورس</label>
+                        <input type="text" id="course-name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">التصنيف</label>
+                        <select id="course-category" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="">اختر التصنيف</option>
+                            <option value="زراعة">زراعة</option>
+                            <option value="ري">ري</option>
+                            <option value="محاصيل">محاصيل</option>
+                            <option value="تسميد">تسميد</option>
+                            <option value="آفات">آفات</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">المدرب</label>
+                        <select id="course-trainer" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="">اختر المدرب</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">السعر (ر.س)</label>
+                        <input type="number" id="course-price" required min="0" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
+                    <textarea id="course-description" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus"></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">المدة (ساعات)</label>
+                        <input type="number" id="course-duration" min="1" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
+                        <select id="course-status" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="نشط">نشط</option>
+                            <option value="غير نشط">غير نشط</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeCourseModal()" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-white font-medium">
+                        حفظ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Trainer Modal -->
+    <div id="trainer-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeTrainerModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                <h3 id="trainer-modal-title" class="text-xl font-bold text-third">إضافة مدرب جديد</h3>
+                <button onclick="closeTrainerModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="trainer-form" class="p-6 space-y-4">
+                <input type="hidden" id="trainer-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل</label>
+                        <input type="text" id="trainer-name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                        <input type="email" id="trainer-email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
+                        <input type="tel" id="trainer-phone" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">نسبة الأرباح (%)</label>
+                        <input type="number" id="trainer-profit-percentage" value="60" min="0" max="100" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">التخصص</label>
+                    <input type="text" id="trainer-specialty" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">نبذة عن المدرب</label>
+                    <textarea id="trainer-bio" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeTrainerModal()" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-white font-medium">
+                        حفظ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Withdrawal Modal -->
+    <div id="withdrawal-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeWithdrawalModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="text-xl font-bold text-third">تفاصيل طلب السحب</h3>
+                <button onclick="closeWithdrawalModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="withdrawal-details" class="p-6">
+                <!-- Will be populated by JS -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Method Modal -->
+    <div id="payment-method-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closePaymentMethodModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                <h3 id="payment-method-modal-title" class="text-xl font-bold text-third">إضافة طريقة دفع</h3>
+                <button onclick="closePaymentMethodModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="payment-method-form" class="p-6 space-y-4">
+                <input type="hidden" id="payment-method-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">اسم طريقة الدفع</label>
+                    <input type="text" id="payment-method-name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus" placeholder="مثال: تحويل بنكي">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">النوع</label>
+                    <select id="payment-method-type" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                        <option value="بطاقة بنكية">بطاقة بنكية</option>
+                        <option value="محفظة إلكترونية">محفظة إلكترونية</option>
+                        <option value="تحويل بنكي">تحويل بنكي</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الحد الأدنى للسحب (ر.س)</label>
+                    <input type="number" id="payment-method-min" value="100" min="1" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الحد الأقصى للسحب (ر.س)</label>
+                    <input type="number" id="payment-method-max" value="50000" min="1" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">رسوم السحب (%)</label>
+                    <input type="number" id="payment-method-fee" value="0" min="0" max="100" step="0.1" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
+                    <select id="payment-method-status" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                        <option value="نشط">نشط</option>
+                        <option value="غير نشط">غير نشط</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closePaymentMethodModal()" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-white font-medium">
+                        حفظ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Process Withdrawal Modal -->
+    <div id="process-withdrawal-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeProcessWithdrawalModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="text-xl font-bold text-third">معالجة طلب السحب</h3>
+                <button onclick="closeProcessWithdrawalModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="process-withdrawal-form" class="p-6 space-y-4">
+                <input type="hidden" id="process-withdrawal-id">
+                
+                <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">المستفيد:</span>
+                        <span id="process-beneficiary" class="font-medium"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">المبلغ:</span>
+                        <span id="process-amount" class="font-bold text-primary"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">طريقة السحب:</span>
+                        <span id="process-method" class="font-medium"></span>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">حالة الطلب</label>
+                    <select id="process-status" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                        <option value="قيد المراجعة">قيد المراجعة</option>
+                        <option value="مقبول">مقبول</option>
+                        <option value="مرفوض">مرفوض</option>
+                        <option value="مكتمل">مكتمل</option>
+                    </select>
+                </div>
+                
+                <div id="bank-details-section" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">اسم البنك</label>
+                        <input type="text" id="process-bank-name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">رقم الحساب / IBAN</label>
+                        <input type="text" id="process-account-number" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">اسم صاحب الحساب</label>
+                        <input type="text" id="process-account-holder" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                </div>
+                
+                <div id="wallet-details-section" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">اسم المحفظة</label>
+                        <select id="process-wallet-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                            <option value="STC Pay">STC Pay</option>
+                            <option value="Apple Pay">Apple Pay</option>
+                            <option value="مدى Pay">مدى Pay</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف المرتبط</label>
+                        <input type="tel" id="process-wallet-phone" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ملاحظات</label>
+                    <textarea id="process-notes" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus" placeholder="أضف ملاحظات...</textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">رقم المرجع (اختياري)</label>
+                    <input type="text" id="process-reference" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none input-focus" placeholder="رقم العملية البنكية">
+                </div>
+                
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeProcessWithdrawalModal()" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-white font-medium">
+                        تأكيد المعالجة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-4 flex items-center gap-3 border-r-4" id="toast-content">
+            <div id="toast-icon"></div>
+            <p id="toast-message" class="font-medium"></p>
+        </div>
+    </div>
+    
+    <script>
+        // Data Storage
+        let courses = [];
+        let trainers = [];
+        let transactions = [];
+        let withdrawals = [];
+        let paymentMethods = [];
+        
+        // Initialize Data
+        function initializeData() {
+            // Sample Trainers
+            trainers = [
+                { id: 1, name: 'د. أحمد الزراعي', email: 'ahmed@farm.com', phone: '0501234567', specialty: 'الزراعة العضوية', profitPercentage: 60, bio: 'خبير في الزراعة العضوية المستدامة', totalEarnings: 45000, status: 'نشط' },
+                { id: 2, name: 'م. سارة المحاصيل', email: 'sara@farm.com', phone: '0559876543', specialty: 'محاصيل الخضراوات', profitPercentage: 60, bio: 'متخصصة في زراعة الخضراوات', totalEarnings: 32000, status: 'نشط' },
+                { id: 3, name: 'د. محمد الري', email: 'mohammed@farm.com', phone: '0541112233', specialty: 'أنظمة الري الحديثة', profitPercentage: 55, bio: 'مهندس ري متخصص', totalEarnings: 28000, status: 'نشط' },
+                { id: 4, name: 'أ. فاطمة التسميد', email: 'fatima@farm.com', phone: '0563334455', specialty: 'التسميد والتغذية', profitPercentage: 60, bio: 'خبيرة في تغذية النباتات', totalEarnings: 18500, status: 'نشط' }
+            ];
+            
+            // Sample Courses
+            courses = [
+                { id: 1, name: 'أساسيات الزراعة العضوية', category: 'زراعة', trainerId: 1, trainerName: 'د. أحمد الزراعي', price: 1500, duration: 12, description: 'دورة شاملة في الزراعة العضوية', subscribers: 45, rating: 4.8, status: 'نشط' },
+                { id: 2, name: 'زراعة الطماطم الاحترافية', category: 'محاصيل', trainerId: 2, trainerName: 'م. سارة المحاصيل', price: 800, duration: 8, description: 'تعلم زراعة الطماطم من الصفر', subscribers: 78, rating: 4.6, status: 'نشط' },
+                { id: 3, name: 'أنظمة الري بالتنقيط', category: 'ري', trainerId: 3, trainerName: 'د. محمد الري', price: 1200, duration: 10, description: 'تركيب وصيانة أنظمة الري', subscribers: 32, rating: 4.9, status: 'نشط' },
+                { id: 4, name: 'التسميد المتوازن', category: 'تسميد', trainerId: 4, trainerName: 'أ. فاطمة التسميد', price: 650, duration: 6, description: 'فن التسميد الصحيح', subscribers: 56, rating: 4.5, status: 'نشط' },
+                { id: 5, name: 'الزراعة المائية', category: 'زراعة', trainerId: 1, trainerName: 'د. أحمد الزراعي', price: 2000, duration: 15, description: 'تقنيات الزراعة بدون تربة', subscribers: 28, rating: 4.7, status: 'نشط' },
+                { id: 6, name: 'مكافحة الآفات الطبيعية', category: 'آفات', trainerId: 2, trainerName: 'م. سارة المحاصيل', price: 900, duration: 8, description: 'طرق طبيعية لمكافحة الآفات', subscribers: 62, rating: 4.4, status: 'نشط' }
+            ];
+            
+            // Sample Transactions
+            transactions = [
+                { id: 'TRX001', type: 'إيداع', amount: 15000, party: 'شراء كورسات - يناير', status: 'مكتمل', date: '2024-01-15', details: 'إيداع من مبيعات الكورسات' },
+                { id: 'TRX002', type: 'توزيع', amount: 9000, party: 'د. أحمد الزراعي', status: 'مكتمل', date: '2024-01-16', details: 'توزيع أرباح 60%' },
+                { id: 'TRX003', type: 'سحب', amount: 5000, party: 'د. أحمد الزراعي', status: 'مكتمل', date: '2024-01-20', details: 'سحب إلى الحساب البنكي' },
+                { id: 'TRX004', type: 'إيداع', amount: 22500, party: 'شراء كورسات - فبراير', status: 'مكتمل', date: '2024-02-10', details: 'إيداع من مبيعات الكورسات' },
+                { id: 'TRX005', type: 'توزيع', amount: 13500, party: 'م. سارة المحاصيل', status: 'مكتمل', date: '2024-02-12', details: 'توزيع أرباح 60%' },
+                { id: 'TRX006', type: 'سحب', amount: 8000, party: 'م. سارة المحاصيل', status: 'قيد المراجعة', date: '2024-02-18', details: 'طلب سحب معلق' },
+                { id: 'TRX007', type: 'إيداع', amount: 18500, party: 'شراء كورسات - مارس', status: 'مكتمل', date: '2024-03-05', details: 'إيداع من مبيعات الكورسات' },
+                { id: 'TRX008', type: 'توزيع', amount: 11000, party: 'د. محمد الري', status: 'مكتمل', date: '2024-03-08', details: 'توزيع أرباح 55%' }
+            ];
+            
+            // Sample Withdrawals
+            withdrawals = [
+                { 
+                    id: 'WTH001', 
+                    beneficiary: 'د. أحمد الزراعي', 
+                    amount: 5000, 
+                    method: 'تحويل بنكي',
+                    methodType: 'تحويل بنكي',
+                    status: 'مكتمل',
+                    date: '2024-01-20',
+                    bankName: 'البنك الأهلي',
+                    accountNumber: 'SA0380000000608010167519',
+                    accountHolder: 'أحمد محمد الزراعي',
+                    reference: 'REF-2024-001',
+                    notes: 'تم التحويل بنجاح'
+                },
+                { 
+                    id: 'WTH002', 
+                    beneficiary: 'م. سارة المحاصيل', 
+                    amount: 8000, 
+                    method: 'STC Pay',
+                    methodType: 'محفظة إلكترونية',
+                    status: 'قيد المراجعة',
+                    date: '2024-02-18',
+                    walletType: 'STC Pay',
+                    walletPhone: '0559876543',
+                    notes: ''
+                },
+                { 
+                    id: 'WTH003', 
+                    beneficiary: 'د. محمد الري', 
+                    amount: 3500, 
+                    method: 'تحويل بنكي',
+                    methodType: 'تحويل بنكي',
+                    status: 'مقبول',
+                    date: '2024-02-20',
+                    bankName: 'بنك الراجحي',
+                    accountNumber: 'SA4480000006608010167520',
+                    accountHolder: 'محمد عبدالله الري',
+                    notes: 'بانتظار التحويل'
+                },
+                { 
+                    id: 'WTH004', 
+                    beneficiary: 'أ. فاطمة التسميد', 
+                    amount: 4200, 
+                    method: 'Apple Pay',
+                    methodType: 'محفظة إلكترونية',
+                    status: 'قيد المراجعة',
+                    date: '2024-02-22',
+                    walletType: 'Apple Pay',
+                    walletPhone: '0563334455',
+                    notes: ''
+                },
+                { 
+                    id: 'WTH005', 
+                    beneficiary: 'د. أحمد الزراعي', 
+                    amount: 7500, 
+                    method: 'تحويل بنكي',
+                    methodType: 'تحويل بنكي',
+                    status: 'مرفوض',
+                    date: '2024-02-15',
+                    bankName: 'البنك الأهلي',
+                    accountNumber: 'SA0380000000608010167519',
+                    accountHolder: 'أحمد محمد الزراعي',
+                    notes: 'بيانات الحساب غير صحيحة'
+                }
+            ];
+            
+            // Sample Payment Methods
+            paymentMethods = [
+                { id: 1, name: 'تحويل بنكي - الأهلي', type: 'تحويل بنكي', minAmount: 100, maxAmount: 50000, fee: 0, status: 'نشط', icon: 'bank' },
+                { id: 2, name: 'تحويل بنكي - الراجحي', type: 'تحويل بنكي', minAmount: 100, maxAmount: 50000, fee: 0, status: 'نشط', icon: 'bank' },
+                { id: 3, name: 'STC Pay', type: 'محفظة إلكترونية', minAmount: 50, maxAmount: 20000, fee: 1, status: 'نشط', icon: 'wallet' },
+                { id: 4, name: 'Apple Pay', type: 'محفظة إلكترونية', minAmount: 50, maxAmount: 15000, fee: 1.5, status: 'نشط', icon: 'wallet' },
+                { id: 5, name: 'بطاقة مدى', type: 'بطاقة بنكية', minAmount: 100, maxAmount: 30000, fee: 0.5, status: 'نشط', icon: 'card' }
+            ];
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            renderAll();
+            animateCharts();
+        });
+        
+        // Render All
+        function renderAll() {
+            renderCourses();
+            renderTrainers();
+            renderTransactions();
+            renderWithdrawals();
+            renderPaymentMethods();
+            renderProfitDistribution();
+            renderRecentTransactions();
+            updateStats();
+            populateTrainerSelect();
+        }
+        
+        // Update Stats
+        function updateStats() {
+            document.getElementById('total-courses-stat').textContent = courses.length;
+            document.getElementById('total-trainers-stat').textContent = trainers.filter(t => t.status === 'نشط').length;
+            
+            const totalRevenue = transactions.filter(t => t.type === 'إيداع').reduce((sum, t) => sum + t.amount, 0);
+            document.getElementById('total-revenue-stat').textContent = totalRevenue.toLocaleString();
+            
+            const pendingWithdrawals = withdrawals.filter(w => w.status === 'قيد المراجعة').length;
+            document.getElementById('pending-withdrawals-stat').textContent = pendingWithdrawals;
+        }
+        
+        // Animate Charts
+        function animateCharts() {
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.height = '100%';
+                }, index * 100);
+            });
+        }
+        
+        // Show Section
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(`${sectionName}-section`);
+            if (section) {
+                section.classList.remove('hidden');
+                section.classList.add('animate-fade-in');
+            }
+            
+            // Update sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('text-gray-600');
+            });
+            
+            const activeItem = document.querySelector(`[data-section="${sectionName}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+                activeItem.classList.remove('text-gray-600');
+            }
+            
+            // Update page title
+            const titles = {
+                'dashboard': { title: 'لوحة القيادة', subtitle: 'مرحباً بك في لوحة التحكم' },
+                'courses': { title: 'الكورسات والتدريبات', subtitle: 'إدارة جميع الكورسات التدريبية' },
+                'trainers': { title: 'المدربون', subtitle: 'إدارة المدربين والمدربات' },
+                'profits': { title: 'الأرباح والتوزيع', subtitle: 'توزيع الأرباح على المدربين' },
+                'transactions': { title: 'سجلات المعاملات', subtitle: 'عرض جميع المعاملات المالية' },
+                'withdrawals': { title: 'طلبات السحب', subtitle: 'إدارة طلبات سحب المدربين' },
+                'payment-methods': { title: 'طرق الدفع', subtitle: 'إدارة طرق الدفع والسحب' }
+            };
+            
+            if (titles[sectionName]) {
+                document.getElementById('page-title').textContent = titles[sectionName].title;
+                document.getElementById('page-subtitle').textContent = titles[sectionName].subtitle;
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.add('translate-x-full');
+            }
+        }
+        
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('translate-x-full');
+        }
+        
+        // Render Courses
+        function renderCourses() {
+            const tbody = document.getElementById('courses-table-body');
+            tbody.innerHTML = courses.map(course => `
+                <tr class="border-b border-gray-100 table-row-hover transition-colors">
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center text-white font-bold">
+                                ${course.name.charAt(0)}
+                            </div>
+                            <div>
+                                <p class="font-medium text-third">${course.name}</p>
+                                <p class="text-xs text-gray-500">${course.category}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6 text-gray-600">${course.trainerName}</td>
+                    <td class="py-4 px-6 font-bold text-primary">${course.price.toLocaleString()} ر.س</td>
+                    <td class="py-4 px-6">${course.subscribers} طالب</td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-1">
+                            <svg class="w-4 h-4 text-yellow3" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <span class="font-medium">${course.rating}</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${course.status === 'نشط' ? 'bg-green2 text-success' : 'bg-gray-100 text-gray-500'}">
+                            ${course.status}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-2">
+                            <button onclick="editCourse(${course.id})" class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-primary">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </button>
+                            <button onclick="deleteCourse(${course.id})" class="p-2 hover:bg-red-50 rounded-lg transition-colors text-gray-500 hover:text-error">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Render Trainers
+        function renderTrainers() {
+            const grid = document.getElementById('trainers-grid');
+            grid.innerHTML = trainers.map(trainer => `
+                <div class="bg-white rounded-2xl p-6 shadow-sm card-hover transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-14 h-14 rounded-xl gradient-third flex items-center justify-center text-white text-xl font-bold">
+                                ${trainer.name.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-third">${trainer.name}</h4>
+                                <p class="text-sm text-gray-500">${trainer.specialty}</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 rounded-lg text-xs font-medium ${trainer.status === 'نشط' ? 'bg-green2 text-success' : 'bg-gray-100 text-gray-500'}">
+                            ${trainer.status}
+                        </span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            ${trainer.email}
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            ${trainer.phone}
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div>
+                            <p class="text-xs text-gray-500">إجمالي الأرباح</p>
+                            <p class="font-bold text-primary">${trainer.totalEarnings.toLocaleString()} ر.س</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="editTrainer(${trainer.id})" class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-primary">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </button>
+                            <button onclick="deleteTrainer(${trainer.id})" class="p-2 hover:bg-red-50 rounded-lg transition-colors text-gray-500 hover:text-error">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Render Transactions
+        function renderTransactions() {
+            const tbody = document.getElementById('transactions-table-body');
+            tbody.innerHTML = transactions.map(tx => `
+                <tr class="border-b border-gray-100 table-row-hover transition-colors">
+                    <td class="py-4 px-6 font-mono text-sm">${tx.id}</td>
+                    <td class="py-4 px-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                            tx.type === 'إيداع' ? 'bg-green2 text-success' : 
+                            tx.type === 'سحب' ? 'bg-red2 text-red3' : 
+                            'bg-purple1 text-purple2'
+                        }">
+                            ${tx.type}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 font-bold ${tx.type === 'إيداع' ? 'text-success' : 'text-error'}">
+                        ${tx.type === 'إيداع' ? '+' : '-'}${tx.amount.toLocaleString()} ر.س
+                    </td>
+                    <td class="py-4 px-6 text-gray-600">${tx.party}</td>
+                    <td class="py-4 px-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                            tx.status === 'مكتمل' ? 'bg-green2 text-success' : 
+                            tx.status === 'قيد المراجعة' ? 'status-pending' : 
+                            'status-rejected'
+                        }">
+                            ${tx.status}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-gray-600">${tx.date}</td>
+                    <td class="py-4 px-6">
+                        <button onclick="viewTransactionDetails('${tx.id}')" class="text-primary text-sm font-medium hover:underline">
+                            عرض التفاصيل
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Render Withdrawals
+        function renderWithdrawals() {
+            const tbody = document.getElementById('withdrawals-table-body');
+            tbody.innerHTML = withdrawals.map(w => `
+                <tr class="border-b border-gray-100 table-row-hover transition-colors">
+                    <td class="py-4 px-6 font-mono text-sm">${w.id}</td>
+                    <td class="py-4 px-6 font-medium text-third">${w.beneficiary}</td>
+                    <td class="py-4 px-6 font-bold text-primary">${w.amount.toLocaleString()} ر.س</td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-2">
+                            ${w.methodType === 'تحويل بنكي' ? `
+                                <svg class="w-5 h-5 text-third" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            ` : `
+                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                            `}
+                            <span class="text-gray-600">${w.method}</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                            w.status === 'مكتمل' ? 'status-completed' : 
+                            w.status === 'قيد المراجعة' ? 'status-pending' : 
+                            w.status === 'مقبول' ? 'status-approved' : 
+                            'status-rejected'
+                        }">
+                            ${w.status}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-gray-600">${w.date}</td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-2">
+                            <button onclick="viewWithdrawalDetails('${w.id}')" class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-primary" title="عرض التفاصيل">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                            ${w.status === 'قيد المراجعة' || w.status === 'مقبول' ? `
+                                <button onclick="processWithdrawal('${w.id}')" class="p-2 hover:bg-green2 rounded-lg transition-colors text-gray-500 hover:text-primary" title="معالجة">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Render Payment Methods
+        function renderPaymentMethods() {
+            const grid = document.getElementById('payment-methods-grid');
+            grid.innerHTML = paymentMethods.map(pm => `
+                <div class="bg-white rounded-2xl p-6 shadow-sm card-hover transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl ${pm.type === 'تحويل بنكي' ? 'gradient-third' : pm.type === 'محفظة إلكترونية' ? 'gradient-primary' : 'bg-yellow1'} flex items-center justify-center">
+                            ${pm.type === 'تحويل بنكي' ? `
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            ` : pm.type === 'محفظة إلكترونية' ? `
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                            ` : `
+                                <svg class="w-6 h-6 text-yellow2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                            `}
+                        </div>
+                        <span class="px-2 py-1 rounded-lg text-xs font-medium ${pm.status === 'نشط' ? 'bg-green2 text-success' : 'bg-gray-100 text-gray-500'}">
+                            ${pm.status}
+                        </span>
+                    </div>
+                    <h4 class="font-bold text-third mb-2">${pm.name}</h4>
+                    <p class="text-sm text-gray-500 mb-4">${pm.type}</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">الحد الأدنى:</span>
+                            <span class="font-medium">${pm.minAmount.toLocaleString()} ر.س</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">الحد الأقصى:</span>
+                            <span class="font-medium">${pm.maxAmount.toLocaleString()} ر.س</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">الرسوم:</span>
+                            <span class="font-medium">${pm.fee}%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100">
+                        <button onclick="editPaymentMethod(${pm.id})" class="flex-1 py-2 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors text-sm">
+                            تعديل
+                        </button>
+                        <button onclick="deletePaymentMethod(${pm.id})" class="p-2 hover:bg-red-50 rounded-xl transition-colors text-gray-500 hover:text-error">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Render Profit Distribution
+        function renderProfitDistribution() {
+            const table = document.getElementById('profit-distribution-table');
+            table.innerHTML = trainers.map(trainer => {
+                const trainerCourses = courses.filter(c => c.trainerId === trainer.id);
+                const totalSales = trainerCourses.reduce((sum, c) => sum + (c.price * c.subscribers), 0);
+                const trainerShare = totalSales * (trainer.profitPercentage / 100);
+                
+                return `
+                    <tr class="border-b border-gray-100 table-row-hover transition-colors">
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg gradient-third flex items-center justify-center text-white font-bold">
+                                    ${trainer.name.charAt(0)}
+                                </div>
+                                <span class="font-medium text-third">${trainer.name}</span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 text-gray-600">${trainerCourses.length} كورس</td>
+                        <td class="py-4 px-6 font-medium">${totalSales.toLocaleString()} ر.س</td>
+                        <td class="py-4 px-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium bg-purple1 text-purple2">
+                                ${trainer.profitPercentage}%
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 font-bold text-primary">${trainerShare.toLocaleString()} ر.س</td>
+                        <td class="py-4 px-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium bg-green2 text-success">
+                                نشط
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Preview on dashboard
+            const preview = document.getElementById('profit-distribution-preview');
+            preview.innerHTML = trainers.slice(0, 4).map(trainer => {
+                const trainerCourses = courses.filter(c => c.trainerId === trainer.id);
+                const totalSales = trainerCourses.reduce((sum, c) => sum + (c.price * c.subscribers), 0);
+                const trainerShare = totalSales * (trainer.profitPercentage / 100);
+                const maxShare = Math.max(...trainers.map(t => {
+                    const tc = courses.filter(c => c.trainerId === t.id);
+                    return tc.reduce((sum, c) => sum + (c.price * c.subscribers), 0) * (t.profitPercentage / 100);
+                }));
+                
+                return `
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg gradient-third flex items-center justify-center text-white font-bold text-sm">
+                            ${trainer.name.charAt(0)}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium text-third">${trainer.name}</span>
+                                <span class="text-sm text-primary font-medium">${trainerShare.toLocaleString()} ر.س</span>
+                            </div>
+                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full rounded-full" style="width: ${(trainerShare / maxShare) * 100}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Render Recent Transactions
+        function renderRecentTransactions() {
+            const table = document.getElementById('recent-transactions-table');
+            table.innerHTML = transactions.slice(0, 5).map(tx => `
+                <tr class="border-b border-gray-100 table-row-hover transition-colors">
+                    <td class="py-3 px-4 font-mono text-sm">${tx.id}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            tx.type === 'إيداع' ? 'bg-green2 text-success' : 
+                            tx.type === 'سحب' ? 'bg-red2 text-red3' : 
+                            'bg-purple1 text-purple2'
+                        }">
+                            ${tx.type}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 font-bold ${tx.type === 'إيداع' ? 'text-success' : 'text-error'}">
+                        ${tx.type === 'إيداع' ? '+' : '-'}${tx.amount.toLocaleString()}
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            tx.status === 'مكتمل' ? 'bg-green2 text-success' : 
+                            tx.status === 'قيد المراجعة' ? 'status-pending' : 
+                            'status-rejected'
+                        }">
+                            ${tx.status}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-gray-600 text-sm">${tx.date}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // Populate Trainer Select
+        function populateTrainerSelect() {
+            const select = document.getElementById('course-trainer');
+            select.innerHTML = '<option value="">اختر المدرب</option>' + 
+                trainers.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+        }
+        
+        // Course Modal Functions
+        function openCourseModal() {
+            document.getElementById('course-modal').classList.remove('hidden');
+            document.getElementById('course-modal-title').textContent = 'إضافة كورس جديد';
+            document.getElementById('course-form').reset();
+            document.getElementById('course-id').value = '';
+        }
+        
+        function closeCourseModal() {
+            document.getElementById('course-modal').classList.add('hidden');
+        }
+        
+        function editCourse(id) {
+            const course = courses.find(c => c.id === id);
+            if (!course) return;
+            
+            document.getElementById('course-modal').classList.remove('hidden');
+            document.getElementById('course-modal-title').textContent = 'تعديل الكورس';
+            document.getElementById('course-id').value = course.id;
+            document.getElementById('course-name').value = course.name;
+            document.getElementById('course-category').value = course.category;
+            document.getElementById('course-trainer').value = course.trainerId;
+            document.getElementById('course-price').value = course.price;
+            document.getElementById('course-duration').value = course.duration;
+            document.getElementById('course-description').value = course.description;
+            document.getElementById('course-status').value = course.status;
+        }
+        
+        function deleteCourse(id) {
+            if (confirm('هل أنت متأكد من حذف هذا الكورس؟')) {
+                courses = courses.filter(c => c.id !== id);
+                renderCourses();
+                updateStats();
+                showToast('تم حذف الكورس بنجاح', 'success');
+            }
+        }
+        
+        // Course Form Submit
+        document.getElementById('course-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('course-id').value;
+            const trainerId = parseInt(document.getElementById('course-trainer').value);
+            const trainer = trainers.find(t => t.id === trainerId);
+            
+            const courseData = {
+                name: document.getElementById('course-name').value,
+                category: document.getElementById('course-category').value,
+                trainerId: trainerId,
+                trainerName: trainer ? trainer.name : '',
+                price: parseFloat(document.getElementById('course-price').value),
+                duration: parseInt(document.getElementById('course-duration').value) || 0,
+                description: document.getElementById('course-description').value,
+                status: document.getElementById('course-status').value,
+                subscribers: 0,
+                rating: 0
+            };
+            
+            if (id) {
+                // Edit
+                const index = courses.findIndex(c => c.id === parseInt(id));
+                if (index !== -1) {
+                    courses[index] = { ...courses[index], ...courseData };
+                }
+                showToast('تم تحديث الكورس بنجاح', 'success');
+            } else {
+                // Add
+                courseData.id = Math.max(...courses.map(c => c.id), 0) + 1;
+                courses.push(courseData);
+                showToast('تم إضافة الكورس بنجاح', 'success');
+            }
+            
+            closeCourseModal();
+            renderCourses();
+            updateStats();
+        });
+        
+        // Trainer Modal Functions
+        function openTrainerModal() {
+            document.getElementById('trainer-modal').classList.remove('hidden');
+            document.getElementById('trainer-modal-title').textContent = 'إضافة مدرب جديد';
+            document.getElementById('trainer-form').reset();
+            document.getElementById('trainer-id').value = '';
+            document.getElementById('trainer-profit-percentage').value = '60';
+        }
+        
+        function closeTrainerModal() {
+            document.getElementById('trainer-modal').classList.add('hidden');
+        }
+        
+        function editTrainer(id) {
+            const trainer = trainers.find(t => t.id === id);
+            if (!trainer) return;
+            
+            document.getElementById('trainer-modal').classList.remove('hidden');
+            document.getElementById('trainer-modal-title').textContent = 'تعديل بيانات المدرب';
+            document.getElementById('trainer-id').value = trainer.id;
+            document.getElementById('trainer-name').value = trainer.name;
+            document.getElementById('trainer-email').value = trainer.email;
+            document.getElementById('trainer-phone').value = trainer.phone;
+            document.getElementById('trainer-specialty').value = trainer.specialty;
+            document.getElementById('trainer-profit-percentage').value = trainer.profitPercentage;
+            document.getElementById('trainer-bio').value = trainer.bio;
+        }
+        
+        function deleteTrainer(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المدرب؟')) {
+                trainers = trainers.filter(t => t.id !== id);
+                renderTrainers();
+                updateStats();
+                populateTrainerSelect();
+                showToast('تم حذف المدرب بنجاح', 'success');
+            }
+        }
+        
+        // Trainer Form Submit
+        document.getElementById('trainer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('trainer-id').value;
+            
+            const trainerData = {
+                name: document.getElementById('trainer-name').value,
+                email: document.getElementById('trainer-email').value,
+                phone: document.getElementById('trainer-phone').value,
+                specialty: document.getElementById('trainer-specialty').value,
+                profitPercentage: parseInt(document.getElementById('trainer-profit-percentage').value),
+                bio: document.getElementById('trainer-bio').value,
+                totalEarnings: 0,
+                status: 'نشط'
+            };
+            
+            if (id) {
+                const index = trainers.findIndex(t => t.id === parseInt(id));
+                if (index !== -1) {
+                    trainers[index] = { ...trainers[index], ...trainerData };
+                }
+                showToast('تم تحديث بيانات المدرب بنجاح', 'success');
+            } else {
+                trainerData.id = Math.max(...trainers.map(t => t.id), 0) + 1;
+                trainers.push(trainerData);
+                showToast('تم إضافة المدرب بنجاح', 'success');
+            }
+            
+            closeTrainerModal();
+            renderTrainers();
+            updateStats();
+            populateTrainerSelect();
+        });
+        
+        // Payment Method Modal Functions
+        function openPaymentMethodModal() {
+            document.getElementById('payment-method-modal').classList.remove('hidden');
+            document.getElementById('payment-method-modal-title').textContent = 'إضافة طريقة دفع';
+            document.getElementById('payment-method-form').reset();
+            document.getElementById('payment-method-id').value = '';
+        }
+        
+        function closePaymentMethodModal() {
+            document.getElementById('payment-method-modal').classList.add('hidden');
+        }
+        
+        function editPaymentMethod(id) {
+            const pm = paymentMethods.find(p => p.id === id);
+            if (!pm) return;
+            
+            document.getElementById('payment-method-modal').classList.remove('hidden');
+            document.getElementById('payment-method-modal-title').textContent = 'تعديل طريقة الدفع';
+            document.getElementById('payment-method-id').value = pm.id;
+            document.getElementById('payment-method-name').value = pm.name;
+            document.getElementById('payment-method-type').value = pm.type;
+            document.getElementById('payment-method-min').value = pm.minAmount;
+            document.getElementById('payment-method-max').value = pm.maxAmount;
+            document.getElementById('payment-method-fee').value = pm.fee;
+            document.getElementById('payment-method-status').value = pm.status;
+        }
+        
+        function deletePaymentMethod(id) {
+            if (confirm('هل أنت متأكد من حذف هذه الطريقة؟')) {
+                paymentMethods = paymentMethods.filter(p => p.id !== id);
+                renderPaymentMethods();
+                showToast('تم حذف طريقة الدفع بنجاح', 'success');
+            }
+        }
+        
+        // Payment Method Form Submit
+        document.getElementById('payment-method-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('payment-method-id').value;
+            
+            const pmData = {
+                name: document.getElementById('payment-method-name').value,
+                type: document.getElementById('payment-method-type').value,
+                minAmount: parseInt(document.getElementById('payment-method-min').value),
+                maxAmount: parseInt(document.getElementById('payment-method-max').value),
+                fee: parseFloat(document.getElementById('payment-method-fee').value),
+                status: document.getElementById('payment-method-status').value
+            };
+            
+            if (id) {
+                const index = paymentMethods.findIndex(p => p.id === parseInt(id));
+                if (index !== -1) {
+                    paymentMethods[index] = { ...paymentMethods[index], ...pmData };
+                }
+                showToast('تم تحديث طريقة الدفع بنجاح', 'success');
+            } else {
+                pmData.id = Math.max(...paymentMethods.map(p => p.id), 0) + 1;
+                paymentMethods.push(pmData);
+                showToast('تم إضافة طريقة الدفع بنجاح', 'success');
+            }
+            
+            closePaymentMethodModal();
+            renderPaymentMethods();
+        });
+        
+        // Withdrawal Details
+        function viewWithdrawalDetails(id) {
+            const w = withdrawals.find(w => w.id === id);
+            if (!w) return;
+            
+            document.getElementById('withdrawal-modal').classList.remove('hidden');
+            
+            let detailsHTML = `
+                <div class="space-y-4">
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">رقم العملية</p>
+                                <p class="font-bold text-third">${w.id}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">الحالة</p>
+                                <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                                    w.status === 'مكتمل' ? 'status-completed' : 
+                                    w.status === 'قيد المراجعة' ? 'status-pending' : 
+                                    w.status === 'مقبول' ? 'status-approved' : 
+                                    'status-rejected'
+                                }">${w.status}</span>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">المستفيد</p>
+                                <p class="font-medium">${w.beneficiary}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">المبلغ</p>
+                                <p class="font-bold text-primary text-lg">${w.amount.toLocaleString()} ر.س</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">طريقة السحب</p>
+                                <p class="font-medium">${w.method}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">التاريخ</p>
+                                <p class="font-medium">${w.date}</p>
+                            </div>
+                        </div>
+                    </div>
+            `;
+            
+            if (w.methodType === 'تحويل بنكي' && w.bankName) {
+                detailsHTML += `
+                    <div class="border border-gray-200 rounded-xl p-4">
+                        <h4 class="font-bold text-third mb-3">بيانات الحساب البنكي</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">اسم البنك:</span>
+                                <span class="font-medium">${w.bankName}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">رقم الحساب / IBAN:</span>
+                                <span class="font-mono font-medium">${w.accountNumber}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">اسم صاحب الحساب:</span>
+                                <span class="font-medium">${w.accountHolder}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (w.methodType === 'محفظة إلكترونية' && w.walletType) {
+                detailsHTML += `
+                    <div class="border border-gray-200 rounded-xl p-4">
+                        <h4 class="font-bold text-third mb-3">بيانات المحفظة الإلكترونية</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">المحفظة:</span>
+                                <span class="font-medium">${w.walletType}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">رقم الهاتف:</span>
+                                <span class="font-medium">${w.walletPhone}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (w.reference) {
+                detailsHTML += `
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">رقم المرجع:</span>
+                        <span class="font-mono font-medium">${w.reference}</span>
+                    </div>
+                `;
+            }
+            
+            if (w.notes) {
+                detailsHTML += `
+                    <div class="bg-yellow1 rounded-xl p-4">
+                        <p class="text-sm text-yellow2"><strong>ملاحظات:</strong> ${w.notes}</p>
+                    </div>
+                `;
+            }
+            
+            detailsHTML += '</div>';
+            
+            document.getElementById('withdrawal-details').innerHTML = detailsHTML;
+        }
+        
+        function closeWithdrawalModal() {
+            document.getElementById('withdrawal-modal').classList.add('hidden');
+        }
+        
+        // Process Withdrawal
+        function processWithdrawal(id) {
+            const w = withdrawals.find(w => w.id === id);
+            if (!w) return;
+            
+            document.getElementById('process-withdrawal-modal').classList.remove('hidden');
+            document.getElementById('process-withdrawal-id').value = w.id;
+            document.getElementById('process-beneficiary').textContent = w.beneficiary;
+            document.getElementById('process-amount').textContent = w.amount.toLocaleString() + ' ر.س';
+            document.getElementById('process-method').textContent = w.method;
+            document.getElementById('process-status').value = w.status;
+            document.getElementById('process-notes').value = w.notes || '';
+            
+            // Show appropriate fields based on method type
+            const bankSection = document.getElementById('bank-details-section');
+            const walletSection = document.getElementById('wallet-details-section');
+            
+            if (w.methodType === 'تحويل بنكي') {
+                bankSection.classList.remove('hidden');
+                walletSection.classList.add('hidden');
+                document.getElementById('process-bank-name').value = w.bankName || '';
+                document.getElementById('process-account-number').value = w.accountNumber || '';
+                document.getElementById('process-account-holder').value = w.accountHolder || '';
+            } else if (w.methodType === 'محفظة إلكترونية') {
+                bankSection.classList.add('hidden');
+                walletSection.classList.remove('hidden');
+                document.getElementById('process-wallet-type').value = w.walletType || 'STC Pay';
+                document.getElementById('process-wallet-phone').value = w.walletPhone || '';
+            }
+            
+            document.getElementById('process-reference').value = w.reference || '';
+        }
+        
+        function closeProcessWithdrawalModal() {
+            document.getElementById('process-withdrawal-modal').classList.add('hidden');
+        }
+        
+        // Process Withdrawal Form Submit
+        document.getElementById('process-withdrawal-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('process-withdrawal-id').value;
+            const index = withdrawals.findIndex(w => w.id === id);
+            
+            if (index !== -1) {
+                const newStatus = document.getElementById('process-status').value;
+                const notes = document.getElementById('process-notes').value;
+                const reference = document.getElementById('process-reference').value;
+                
+                withdrawals[index].status = newStatus;
+                withdrawals[index].notes = notes;
+                withdrawals[index].reference = reference;
+                
+                // Add transaction record if completed
+                if (newStatus === 'مكتمل') {
+                    const newTransaction = {
+                        id: 'TRX' + String(transactions.length + 1).padStart(3, '0'),
+                        type: 'سحب',
+                        amount: withdrawals[index].amount,
+                        party: withdrawals[index].beneficiary,
+                        status: 'مكتمل',
+                        date: new Date().toISOString().split('T')[0],
+                        details: `سحب عبر ${withdrawals[index].method}`
+                    };
+                    transactions.unshift(newTransaction);
+                }
+                
+                showToast('تم معالجة طلب السحب بنجاح', 'success');
+                closeProcessWithdrawalModal();
+                renderWithdrawals();
+                renderTransactions();
+                updateStats();
+            }
+        });
+        
+        // Distribute Profits
+        function distributeProfits() {
+            if (confirm('هل تريد توزيع الأرباح الآن؟')) {
+                let totalDistributed = 0;
+                
+                trainers.forEach(trainer => {
+                    const trainerCourses = courses.filter(c => c.trainerId === trainer.id);
+                    const totalSales = trainerCourses.reduce((sum, c) => sum + (c.price * c.subscribers), 0);
+                    const trainerShare = totalSales * (trainer.profitPercentage / 100);
+                    
+                    trainer.totalEarnings += trainerShare;
+                    totalDistributed += trainerShare;
+                    
+                    // Add transaction
+                    transactions.unshift({
+                        id: 'TRX' + String(transactions.length + 1).padStart(3, '0'),
+                        type: 'توزيع',
+                        amount: trainerShare,
+                        party: trainer.name,
+                        status: 'مكتمل',
+                        date: new Date().toISOString().split('T')[0],
+                        details: `توزيع أرباح ${trainer.profitPercentage}%`
+                    });
+                });
+                
+                showToast(`تم توزيع ${totalDistributed.toLocaleString()} ر.س بنجاح`, 'success');
+                renderAll();
+            }
+        }
+        
+        // Export Transactions
+        function exportTransactions() {
+            const csv = [
+                ['المعرف', 'النوع', 'المبلغ', 'الجهة', 'الحالة', 'التاريخ', 'التفاصيل'],
+                ...transactions.map(t => [t.id, t.type, t.amount, t.party, t.status, t.date, t.details])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'transactions.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('تم تصدير المعاملات بنجاح', 'success');
+        }
+        
+        // View Transaction Details
+        function viewTransactionDetails(id) {
+            const tx = transactions.find(t => t.id === id);
+            if (!tx) return;
+            
+            alert(`تفاصيل المعاملة:\n\nالمعرف: ${tx.id}\nالنوع: ${tx.type}\nالمبلغ: ${tx.amount.toLocaleString()} ر.س\nالجهة: ${tx.party}\nالحالة: ${tx.status}\nالتاريخ: ${tx.date}\nالتفاصيل: ${tx.details}`);
+        }
+        
+        // Logout
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                showToast('تم تسجيل الخروج بنجاح', 'success');
+            }
+        }
+        
+        // Toast Notification
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const toastContent = document.getElementById('toast-content');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastContent.className = 'bg-white rounded-xl shadow-2xl p-4 flex items-center gap-3 border-r-4 ' + 
+                (type === 'success' ? 'border-success' : type === 'error' ? 'border-error' : 'border-warning');
+            
+            toastIcon.innerHTML = type === 'success' ? 
+                '<svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' :
+                type === 'error' ? 
+                '<svg class="w-6 h-6 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' :
+                '<svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+            
+            toastMessage.textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

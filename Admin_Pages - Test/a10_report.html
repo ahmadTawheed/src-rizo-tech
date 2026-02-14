@@ -1,0 +1,3243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الزراعة - إدارة البلاغات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+            --overMode-color: #000000;
+            --green1: #52FF55;
+            --green2: #EBFCF1;
+            --green3: #DCFCE7;
+            --red1: #FF8A8C;
+            --red2: #FFD8EF;
+            --red3: #80141B;
+            --purble1: #F3E8FF;
+            --purble2: #7F23CF;
+            --yellow1: #FFFAC4;
+            --yellow2: #A16006;
+            --yellow3: #FFCC00;
+            --browen1: #91410F;
+            --white0: #CCCCCC;
+            --white1: #ECECEC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: var(--background-color);
+            color: var(--iconAndUl-colors);
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--third-color) 0%, #0F2537 100%);
+            padding: 24px 16px;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            margin-bottom: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(139, 186, 64, 0.2);
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo .logo-text {
+            color: var(--text-color);
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 16px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--primary-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(139, 186, 64, 0.15);
+            color: var(--text-color);
+        }
+
+        .nav-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item.active {
+            background: rgba(139, 186, 64, 0.2);
+            color: var(--primary-color);
+        }
+
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item i {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .nav-item span {
+            white-space: nowrap;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .nav-item span {
+            opacity: 0;
+            width: 0;
+        }
+
+        .nav-badge {
+            background: var(--error-color);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-right: auto;
+        }
+
+        .sidebar.collapsed .nav-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: 280px;
+            min-height: 100vh;
+            transition: margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-content.expanded {
+            margin-right: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--text-color);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toggle-sidebar {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: var(--green3);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .toggle-sidebar:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .header-search {
+            position: relative;
+        }
+
+        .header-search input {
+            width: 320px;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: var(--background-color);
+        }
+
+        .header-search input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+        }
+
+        .header-search i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bg-icon);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: var(--background-color);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            background: var(--green3);
+        }
+
+        .header-btn .badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 18px;
+            height: 18px;
+            background: var(--error-color);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px 8px 8px;
+            background: var(--background-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-profile:hover {
+            background: var(--green3);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info .name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info .role {
+            font-size: 12px;
+            color: var(--bg-icon);
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 32px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--third-color);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--bg-icon);
+            font-size: 15px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.pending::before {
+            background: linear-gradient(90deg, var(--warning-color), #FFB84D);
+        }
+
+        .stat-card.review::before {
+            background: linear-gradient(90deg, var(--purble2), #A855F7);
+        }
+
+        .stat-card.resolved::before {
+            background: linear-gradient(90deg, var(--success-color), #4ADE80);
+        }
+
+        .stat-card.total::before {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-card.pending .stat-icon {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning-color);
+        }
+
+        .stat-card.review .stat-icon {
+            background: rgba(127, 35, 207, 0.1);
+            color: var(--purble2);
+        }
+
+        .stat-card.resolved .stat-icon {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+
+        .stat-card.total .stat-icon {
+            background: rgba(139, 186, 64, 0.15);
+            color: var(--primary-color);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .stat-trend.up {
+            background: var(--green3);
+            color: var(--success-color);
+        }
+
+        .stat-trend.down {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--third-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--bg-icon);
+            font-size: 14px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--third-color);
+            margin-bottom: 8px;
+        }
+
+        .filter-input,
+        .filter-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--background-color);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+        }
+
+        .filter-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .filter-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 186, 64, 0.4);
+        }
+
+        .filter-btn.secondary {
+            background: var(--background-color);
+            color: var(--iconAndUl-colors);
+            border: 2px solid var(--white1);
+        }
+
+        .filter-btn.secondary:hover {
+            background: var(--white1);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-bottom: 1px solid var(--white1);
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--third-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-count {
+            background: var(--primary-color);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .table-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .table-btn.export {
+            background: var(--green3);
+            color: var(--secondary-color);
+        }
+
+        .table-btn.export:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--background-color);
+            padding: 16px 20px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--third-color);
+            white-space: nowrap;
+        }
+
+        .data-table th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .data-table th.sortable:hover {
+            background: var(--white1);
+        }
+
+        .data-table th i {
+            display: inline-block;
+            margin-right: 6px;
+            opacity: 0.4;
+        }
+
+        .data-table th.sorted i {
+            opacity: 1;
+            color: var(--primary-color);
+        }
+
+        .data-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--white1);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(139, 186, 64, 0.03);
+        }
+
+        .reporter-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reporter-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .reporter-info .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--third-color);
+            margin-bottom: 2px;
+        }
+
+        .reporter-info .id {
+            font-size: 12px;
+            color: var(--bg-icon);
+        }
+
+        .job-cell {
+            max-width: 250px;
+        }
+
+        .job-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--third-color);
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .job-type {
+            font-size: 12px;
+            color: var(--bg-icon);
+        }
+
+        .job-type i {
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.pending {
+            background: rgba(243, 156, 18, 0.12);
+            color: var(--warning-color);
+        }
+
+        .status-badge.review {
+            background: rgba(127, 35, 207, 0.1);
+            color: var(--purble2);
+        }
+
+        .status-badge.resolved {
+            background: var(--green3);
+            color: var(--success-color);
+        }
+
+        .status-badge i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .is-real-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .is-real-badge.yes {
+            background: var(--green3);
+            color: var(--success-color);
+        }
+
+        .is-real-badge.no {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .action-btn.view {
+            background: rgba(30, 69, 101, 0.1);
+            color: var(--third-color);
+        }
+
+        .action-btn.view:hover {
+            background: var(--third-color);
+            color: white;
+        }
+
+        .action-btn.edit {
+            background: rgba(139, 186, 64, 0.15);
+            color: var(--primary-color);
+        }
+
+        .action-btn.edit:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .owner-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .owner-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .reason-cell {
+            max-width: 200px;
+            font-size: 13px;
+            color: var(--iconAndUl-colors);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Pagination */
+        .table-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-top: 1px solid var(--white1);
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: var(--bg-icon);
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            width: 38px;
+            height: 38px;
+            border: 2px solid var(--white1);
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .pagination-btn:hover:not(.active):not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-bottom: 1px solid var(--white1);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--third-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-title i {
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--background-color);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: calc(90vh - 180px);
+        }
+
+        .modal-section {
+            margin-bottom: 24px;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--third-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section-title i {
+            color: var(--primary-color);
+            width: 18px;
+            height: 18px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            background: var(--background-color);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--bg-icon);
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--third-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--third-color);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--background-color);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .radio-item.selected {
+            border-color: var(--primary-color);
+            background: rgba(139, 186, 64, 0.1);
+        }
+
+        .radio-item input {
+            display: none;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--bg-icon);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .radio-item.selected .radio-circle {
+            border-color: var(--primary-color);
+        }
+
+        .radio-circle::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.3s;
+        }
+
+        .radio-item.selected .radio-circle::after {
+            transform: scale(1);
+        }
+
+        .radio-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 24px;
+            border-top: 1px solid var(--white1);
+            background: var(--background-color);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--iconAndUl-colors);
+            border: 2px solid var(--white1);
+        }
+
+        .btn-secondary:hover {
+            background: var(--white1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 186, 64, 0.4);
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Quick Actions Card */
+        .quick-actions {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .quick-actions-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--third-color);
+            margin-bottom: 16px;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 16px;
+            background: var(--background-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--primary-color);
+            background: rgba(139, 186, 64, 0.05);
+        }
+
+        .quick-action-btn i {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-color);
+        }
+
+        .quick-action-btn span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--third-color);
+            text-align: center;
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 320px;
+            transform: translateX(-120%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast.success .toast-icon {
+            background: var(--green3);
+            color: var(--success-color);
+        }
+
+        .toast.error .toast-icon {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+        }
+
+        .toast.warning .toast-icon {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--third-color);
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--bg-icon);
+        }
+
+        .toast-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--background-color);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .toast-close:hover {
+            background: var(--white1);
+        }
+
+        /* Delete Confirmation Modal */
+        .confirm-modal {
+            max-width: 450px;
+        }
+
+        .confirm-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--error-color);
+        }
+
+        .confirm-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--third-color);
+            margin-bottom: 12px;
+        }
+
+        .confirm-message {
+            text-align: center;
+            font-size: 14px;
+            color: var(--bg-icon);
+            margin-bottom: 24px;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .confirm-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--bg-icon);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .checkbox.checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkbox.checked::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 6px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+
+            .header-search input {
+                width: 200px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 12px 16px;
+            }
+
+            .content-area {
+                padding: 16px;
+            }
+
+            .header-search {
+                display: none;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .filters-row {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .pagination-controls {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--background-color);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--bg-icon);
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--third-color);
+            margin-bottom: 8px;
+        }
+
+        .empty-description {
+            color: var(--bg-icon);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .dropdown.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background: var(--background-color);
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .dropdown-item.danger {
+            color: var(--error-color);
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <i data-lucide="leaf" style="width: 24px; height: 24px; color: white;"></i>
+            </div>
+            <div class="logo-text">
+                <div style="font-size: 16px; font-weight: 700;">زراعة تك</div>
+                <div style="font-size: 11px; opacity: 0.7;">لوحة التحكم</div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">الرئيسية</div>
+            <div class="nav-item active" onclick="setActiveNav(this)">
+                <i data-lucide="layout-dashboard"></i>
+                <span>لوحة التحكم</span>
+            </div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="bar-chart-3"></i>
+                <span>الإحصائيات</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">إدارة المحتوى</div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="briefcase"></i>
+                <span>الوظائف</span>
+                <span class="nav-badge">24</span>
+            </div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="graduation-cap"></i>
+                <span>التدريبات</span>
+                <span class="nav-badge">18</span>
+            </div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="building-2"></i>
+                <span>الشركات</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">إدارة المستخدمين</div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="users"></i>
+                <span>المستخدمين</span>
+            </div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="user-check"></i>
+                <span>الموافقات</span>
+                <span class="nav-badge">5</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">البلاغات</div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="flag"></i>
+                <span>جميع البلاغات</span>
+                <span class="nav-badge" id="reportsBadge">12</span>
+            </div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="alert-triangle"></i>
+                <span>البلاغات المعلقة</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">الإعدادات</div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="settings"></i>
+                <span>الإعدادات</span>
+            </div>
+            <div class="nav-item" onclick="setActiveNav(this)">
+                <i data-lucide="log-out"></i>
+                <span>تسجيل الخروج</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-right">
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i data-lucide="panel-right-close"></i>
+                </button>
+                <div class="header-search">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="البحث في البلاغات..." id="globalSearch" onkeyup="handleGlobalSearch(event)">
+                </div>
+            </div>
+            <div class="header-left">
+                <button class="header-btn" onclick="showNotifications()">
+                    <i data-lucide="bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="header-btn">
+                    <i data-lucide="message-square"></i>
+                    <span class="badge">7</span>
+                </button>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <div class="user-avatar">أ</div>
+                    <div class="user-info">
+                        <div class="name">أحمد محمد</div>
+                        <div class="role">مدير النظام</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Page Header -->
+            <div class="page-header animate-in">
+                <h1 class="page-title">إدارة البلاغات</h1>
+                <p class="page-subtitle">عرض وإدارة البلاغات المرسلة من المستخدمين حول الوظائف والتدريبات الزراعية</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card total animate-in delay-1">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i data-lucide="flag"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
+                            12%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalReports">24</div>
+                    <div class="stat-label">إجمالي البلاغات</div>
+                </div>
+
+                <div class="stat-card pending animate-in delay-2">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="stat-trend down">
+                            <i data-lucide="trending-down" style="width: 14px; height: 14px;"></i>
+                            8%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="pendingReports">8</div>
+                    <div class="stat-label">بانتظار الاستلام</div>
+                </div>
+
+                <div class="stat-card review animate-in delay-3">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i data-lucide="eye"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="reviewReports">6</div>
+                    <div class="stat-label">قيد المراجعة</div>
+                </div>
+
+                <div class="stat-card resolved animate-in delay-4">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
+                            24%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="resolvedReports">10</div>
+                    <div class="stat-label">تم الحل</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions animate-in">
+                <div class="quick-actions-title">إجراءات سريعة</div>
+                <div class="quick-actions-grid">
+                    <button class="quick-action-btn" onclick="openAddReportModal()">
+                        <i data-lucide="plus-circle"></i>
+                        <span>إضافة بلاغ جديد</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="exportData()">
+                        <i data-lucide="download"></i>
+                        <span>تصدير البيانات</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="showSuspendedItems()">
+                        <i data-lucide="pause-circle"></i>
+                        <span>العناصر المعلقة</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="showBlockedUsers()">
+                        <i data-lucide="user-x"></i>
+                        <span>المستخدمين المحظورين</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section animate-in">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label class="filter-label">البحث في البلاغات</label>
+                        <input type="text" class="filter-input" placeholder="ابحث عن محتوى البلاغ..." id="searchInput" onkeyup="filterReports()">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">حالة البلاغ</label>
+                        <select class="filter-select" id="statusFilter" onchange="filterReports()">
+                            <option value="all">جميع الحالات</option>
+                            <option value="pending">بانتظار الاستلام</option>
+                            <option value="review">قيد المراجعة</option>
+                            <option value="resolved">تم الحل</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">نوع العنصر</label>
+                        <select class="filter-select" id="typeFilter" onchange="filterReports()">
+                            <option value="all">الكل</option>
+                            <option value="job">وظيفة</option>
+                            <option value="training">تدريب</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">التدريب حقيقي؟</label>
+                        <select class="filter-select" id="realFilter" onchange="filterReports()">
+                            <option value="all">الكل</option>
+                            <option value="yes">نعم</option>
+                            <option value="no">لا</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="filter-btn primary" onclick="applyFilters()">
+                            <i data-lucide="filter" style="width: 18px; height: 18px;"></i>
+                            تطبيق الفلتر
+                        </button>
+                        <button class="filter-btn secondary" onclick="resetFilters()">
+                            <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
+                            إعادة تعيين
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-container animate-in">
+                <div class="table-header">
+                    <div class="table-title">
+                        <i data-lucide="inbox" style="width: 22px; height: 22px; color: var(--primary-color);"></i>
+                        قائمة البلاغات
+                        <span class="table-count" id="tableCount">24</span>
+                    </div>
+                    <div class="table-actions">
+                        <button class="table-btn export" onclick="exportData()">
+                            <i data-lucide="file-down" style="width: 16px; height: 16px;"></i>
+                            تصدير
+                        </button>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="checkbox-wrapper">
+                                    <div class="checkbox" id="selectAll" onclick="toggleSelectAll()"></div>
+                                </div>
+                            </th>
+                            <th class="sortable" onclick="sortTable('id')">
+                                <i data-lucide="hash" style="width: 14px; height: 14px;"></i>
+                                رقم البلاغ
+                            </th>
+                            <th>معلومات المُبلِّغ</th>
+                            <th class="sortable" onclick="sortTable('title')">
+                                <i data-lucide="briefcase" style="width: 14px; height: 14px;"></i>
+                                العنصر المُبلَّغ عنه
+                            </th>
+                            <th>صاحب العنصر</th>
+                            <th>سبب البلاغ</th>
+                            <th>حقيقي؟</th>
+                            <th class="sortable" onclick="sortTable('status')">
+                                <i data-lucide="circle-dot" style="width: 14px; height: 14px;"></i>
+                                الحالة
+                            </th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="table-pagination">
+                    <div class="pagination-info">
+                        عرض <span id="showingFrom">1</span> - <span id="showingTo">10</span> من <span id="totalItems">24</span> بلاغ
+                    </div>
+                    <div class="pagination-controls" id="paginationControls">
+                        <!-- Pagination will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- View Report Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="eye"></i>
+                    تفاصيل البلاغ
+                </div>
+                <button class="modal-close" onclick="closeModal('viewModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewModal')">
+                    إغلاق
+                </button>
+                <button class="btn btn-primary" onclick="editCurrentReport()">
+                    <i data-lucide="edit" style="width: 18px; height: 18px;"></i>
+                    تعديل البلاغ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Report Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="edit"></i>
+                    تعديل البلاغ
+                </div>
+                <button class="modal-close" onclick="closeModal('editModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editModal')">
+                    إلغاء
+                </button>
+                <button class="btn btn-primary" onclick="saveReportChanges()">
+                    <i data-lucide="save" style="width: 18px; height: 18px;"></i>
+                    حفظ التغييرات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Report Modal -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="plus"></i>
+                    إضافة بلاغ جديد
+                </div>
+                <button class="modal-close" onclick="closeModal('addModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">معرف المستخدم المُبلِّغ</label>
+                    <input type="text" class="form-input" id="newReporterId" placeholder="أدخل معرف المستخدم">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم المُبلِّغ</label>
+                    <input type="text" class="form-input" id="newReporterName" placeholder="أدخل اسم المستخدم">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">نوع العنصر</label>
+                    <select class="form-select" id="newItemType">
+                        <option value="job">وظيفة</option>
+                        <option value="training">تدريب</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">عنوان الوظيفة/التدريب</label>
+                    <input type="text" class="form-input" id="newItemTitle" placeholder="أدخل عنوان الوظيفة أو التدريب">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">معرف صاحب العنصر</label>
+                    <input type="text" class="form-input" id="newOwnerId" placeholder="أدخل معرف صاحب الوظيفة/التدريب">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">اسم صاحب العنصر</label>
+                    <input type="text" class="form-input" id="newOwnerName" placeholder="أدخل اسم صاحب الوظيفة/التدريب">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">هل التدريب/الوظيفة حقيقي؟</label>
+                    <div class="radio-group">
+                        <label class="radio-item" id="realYes" onclick="selectRadio('realYes')">
+                            <input type="radio" name="isReal" value="yes">
+                            <div class="radio-circle"></div>
+                            <span class="radio-label">نعم</span>
+                        </label>
+                        <label class="radio-item" id="realNo" onclick="selectRadio('realNo')">
+                            <input type="radio" name="isReal" value="no">
+                            <div class="radio-circle"></div>
+                            <span class="radio-label">لا</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">سبب البلاغ</label>
+                    <textarea class="form-textarea" id="newReason" placeholder="أدخل سبب البلاغ..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">حالة البلاغ</label>
+                    <select class="form-select" id="newStatus">
+                        <option value="pending">بانتظار الاستلام</option>
+                        <option value="review">قيد المراجعة</option>
+                        <option value="resolved">تم الحل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addModal')">
+                    إلغاء
+                </button>
+                <button class="btn btn-primary" onclick="addNewReport()">
+                    <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
+                    إضافة البلاغ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal confirm-modal">
+            <div class="modal-body" style="padding: 32px;">
+                <div class="confirm-icon">
+                    <i data-lucide="trash-2" style="width: 32px; height: 32px;"></i>
+                </div>
+                <div class="confirm-title">تأكيد الحذف</div>
+                <div class="confirm-message" id="deleteMessage">هل أنت متأكد من حذف هذا البلاغ؟ لا يمكن التراجع عن هذا الإجراء.</div>
+                <div class="confirm-actions">
+                    <button class="btn btn-secondary" onclick="closeModal('deleteModal')">
+                        إلغاء
+                    </button>
+                    <button class="btn btn-danger" onclick="confirmDelete()">
+                        <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
+                        حذف
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Modal (Suspend/Delete Item/User) -->
+    <div class="modal-overlay" id="actionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="actionModalTitle">
+                    <i data-lucide="settings"></i>
+                    اتخاذ إجراء
+                </div>
+                <button class="modal-close" onclick="closeModal('actionModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="actionModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('actionModal')">
+                    إلغاء
+                </button>
+                <button class="btn btn-primary" id="actionConfirmBtn" onclick="executeAction()">
+                    تنفيذ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Sample Data
+        let reportsData = [
+            {
+                id: 1001,
+                reporterId: 'USR-4521',
+                reporterName: 'محمد أحمد السيد',
+                itemType: 'training',
+                itemTitle: 'تدريب زراعي في إنتاج المحاصيل العضوية',
+                itemId: 'TRN-234',
+                ownerId: 'USR-1205',
+                ownerName: 'شركة الزراعة الحديثة',
+                isReal: 'no',
+                reason: 'التدريب غير موجود فعلياً على أرض الواقع، تم الاتصال بالشركة ولم يتم الرد على الاستفسارات',
+                status: 'pending',
+                createdAt: '2024-01-15'
+            },
+            {
+                id: 1002,
+                reporterId: 'USR-3892',
+                reporterName: 'سارة محمود علي',
+                itemType: 'job',
+                itemTitle: 'مهندس زراعي - مدير مزرعة',
+                itemId: 'JOB-567',
+                ownerId: 'USR-3341',
+                ownerName: 'مزارع الخير',
+                isReal: 'yes',
+                reason: 'شروط الوظيفة غير واضحة ومتطلبات غير منطقية',
+                status: 'review',
+                createdAt: '2024-01-14'
+            },
+            {
+                id: 1003,
+                reporterId: 'USR-2234',
+                reporterName: 'أحمد عبدالله حسن',
+                itemType: 'training',
+                itemTitle: 'دورة متقدمة في تربية النحل',
+                itemId: 'TRN-456',
+                ownerId: 'USR-8876',
+                ownerName: 'جمعية النحالين العرب',
+                isReal: 'no',
+                reason: 'المحتوى المعلن عنه غير مطابق للمحتوى الفعلي، والدورة مكلفة جداً مقارنة بالقيمة المقدمة',
+                status: 'resolved',
+                createdAt: '2024-01-13'
+            },
+            {
+                id: 1004,
+                reporterId: 'USR-5567',
+                reporterName: 'فاطمة علي محمد',
+                itemType: 'job',
+                itemTitle: 'فني زراعي - قسم الإنتاج',
+                itemId: 'JOB-789',
+                ownerId: 'USR-4432',
+                ownerName: 'شركة المحاصيل الزراعية',
+                isReal: 'yes',
+                reason: 'الراتب المذكور في الإعلان يختلف عن الراتب الفعلي عند التواصل',
+                status: 'pending',
+                createdAt: '2024-01-12'
+            },
+            {
+                id: 1005,
+                reporterId: 'USR-6789',
+                reporterName: 'خالد إبراهيم سعيد',
+                itemType: 'training',
+                itemTitle: 'تدريب عملي في البيوت المحمية',
+                itemId: 'TRN-678',
+                ownerId: 'USR-9912',
+                ownerName: 'مشروع البيوت المحمية المتطورة',
+                isReal: 'no',
+                reason: 'العنوان المذكور غير صحيح والمكان غير موجود',
+                status: 'review',
+                createdAt: '2024-01-11'
+            },
+            {
+                id: 1006,
+                reporterId: 'USR-7890',
+                reporterName: 'نورة أحمد عبدالله',
+                itemType: 'job',
+                itemTitle: 'محاسب مزرعة - بدوام جزئي',
+                itemId: 'JOB-890',
+                ownerId: 'USR-5567',
+                ownerName: 'مزرعة النخيل الذهبية',
+                isReal: 'yes',
+                reason: 'الوظيفة تتطلب خبرة 5 سنوات وهذا لم يُذكر في الإعلان',
+                status: 'resolved',
+                createdAt: '2024-01-10'
+            },
+            {
+                id: 1007,
+                reporterId: 'USR-8901',
+                reporterName: 'يوسف محمد علي',
+                itemType: 'training',
+                itemTitle: 'ورشة عمل في الزراعة المائية',
+                itemId: 'TRN-890',
+                ownerId: 'USR-6678',
+                ownerName: 'مركز التكنولوجيا الزراعية',
+                isReal: 'no',
+                reason: 'تم حجز المقعد ودفع المبلغ ولم يتم عقد الورشة في الموعد المحدد',
+                status: 'pending',
+                createdAt: '2024-01-09'
+            },
+            {
+                id: 1008,
+                reporterId: 'USR-9012',
+                reporterName: 'ريم حسن أحمد',
+                itemType: 'job',
+                itemTitle: 'مشرف زراعي - قسم الخضروات',
+                itemId: 'JOB-901',
+                ownerId: 'USR-7789',
+                ownerName: 'شركة الخضروات الطازجة',
+                isReal: 'yes',
+                reason: 'موقع العمل بعيد جداً عن المكان المذكور في الإعلان',
+                status: 'review',
+                createdAt: '2024-01-08'
+            },
+            {
+                id: 1009,
+                reporterId: 'USR-1123',
+                reporterName: 'عمر سعيد محمد',
+                itemType: 'training',
+                itemTitle: 'برنامج تدريبي في إدارة المزارع',
+                itemId: 'TRN-012',
+                ownerId: 'USR-8890',
+                ownerName: 'أكاديمية العلوم الزراعية',
+                isReal: 'no',
+                reason: 'الشهادة المقدمة غير معتمدة رغم الإعلان عن اعتمادها',
+                status: 'resolved',
+                createdAt: '2024-01-07'
+            },
+            {
+                id: 1010,
+                reporterId: 'USR-2234',
+                reporterName: 'هدى عبدالله علي',
+                itemType: 'job',
+                itemTitle: 'أخصائي تسميد وري',
+                itemId: 'JOB-123',
+                ownerId: 'USR-9901',
+                ownerName: 'شركة الري الذكي',
+                isReal: 'yes',
+                reason: 'معلومات غير صحيحة عن ميزات الوظيفة والمزايا',
+                status: 'pending',
+                createdAt: '2024-01-06'
+            },
+            {
+                id: 1011,
+                reporterId: 'USR-3345',
+                reporterName: 'طارق محمد حسن',
+                itemType: 'training',
+                itemTitle: 'دورة في مكافحة الآفات الزراعية',
+                itemId: 'TRN-234',
+                ownerId: 'USR-1012',
+                ownerName: 'معهد الحماية النباتية',
+                isReal: 'yes',
+                reason: 'المدرب غير مؤهل بالشكل الكافي',
+                status: 'review',
+                createdAt: '2024-01-05'
+            },
+            {
+                id: 1012,
+                reporterId: 'USR-4456',
+                reporterName: 'سمية أحمد سعيد',
+                itemType: 'job',
+                itemTitle: 'مدير إنتاج - مزرعة دواجن',
+                itemId: 'JOB-345',
+                ownerId: 'USR-2123',
+                ownerName: 'شركة الدواجن العربية',
+                isReal: 'no',
+                reason: 'الشركة غير موجودة في السجل التجاري',
+                status: 'resolved',
+                createdAt: '2024-01-04'
+            },
+            {
+                id: 1013,
+                reporterId: 'USR-5567',
+                reporterName: 'جمال عبدالله محمد',
+                itemType: 'training',
+                itemTitle: 'تدريب في تقنيات الري الحديثة',
+                itemId: 'TRN-456',
+                ownerId: 'USR-3234',
+                ownerName: 'شركة أنظمة الري المتقدمة',
+                isReal: 'no',
+                reason: 'التدريب مجرد محاضرات نظرية بدون تطبيق عملي',
+                status: 'pending',
+                createdAt: '2024-01-03'
+            },
+            {
+                id: 1014,
+                reporterId: 'USR-6678',
+                reporterName: 'منال حسن علي',
+                itemType: 'job',
+                itemTitle: 'مهندس ميكانيكا زراعية',
+                itemId: 'JOB-567',
+                ownerId: 'USR-4345',
+                ownerName: 'شركة المعدات الزراعية',
+                isReal: 'yes',
+                reason: 'ساعات العمل أطول مما هو مُعلن',
+                status: 'review',
+                createdAt: '2024-01-02'
+            },
+            {
+                id: 1015,
+                reporterId: 'USR-7789',
+                reporterName: 'راشد سعيد أحمد',
+                itemType: 'training',
+                itemTitle: 'دورة في إنتاج الشتلات',
+                itemId: 'TRN-678',
+                ownerId: 'USR-5456',
+                ownerName: 'مشروع إنتاج الشتلات',
+                isReal: 'no',
+                reason: 'تم إلغاء الدورة بعد دفع الرسوم ولم يتم استرداد المبلغ',
+                status: 'resolved',
+                createdAt: '2024-01-01'
+            },
+            {
+                id: 1016,
+                reporterId: 'USR-8890',
+                reporterName: 'عبير محمد حسن',
+                itemType: 'job',
+                itemTitle: 'باحث زراعي - قسم البحث والتطوير',
+                itemId: 'JOB-789',
+                ownerId: 'USR-6567',
+                ownerName: 'مركز الأبحاث الزراعية',
+                isReal: 'yes',
+                reason: 'المؤهلات المطلوبة أعلى مما هو مُعلن',
+                status: 'pending',
+                createdAt: '2023-12-31'
+            },
+            {
+                id: 1017,
+                reporterId: 'USR-9901',
+                reporterName: 'حسن علي عبدالله',
+                itemType: 'training',
+                itemTitle: 'تدريب في الزراعة العضوية',
+                itemId: 'TRN-890',
+                ownerId: 'USR-7678',
+                ownerName: 'جمعية الزراعة العضوية',
+                isReal: 'yes',
+                reason: 'المحتوى قديم وغير محدث',
+                status: 'review',
+                createdAt: '2023-12-30'
+            },
+            {
+                id: 1018,
+                reporterId: 'USR-1012',
+                reporterName: 'أمل سعيد محمد',
+                itemType: 'job',
+                itemTitle: 'فني مختبر - قسم فحص التربة',
+                itemId: 'JOB-901',
+                ownerId: 'USR-8789',
+                ownerName: 'مختبر التحاليل الزراعية',
+                isReal: 'no',
+                reason: 'المختبر غير مرخص',
+                status: 'resolved',
+                createdAt: '2023-12-29'
+            },
+            {
+                id: 1019,
+                reporterId: 'USR-1123',
+                reporterName: 'سالم أحمد حسن',
+                itemType: 'training',
+                itemTitle: 'ورشة في صناعة الأسمدة العضوية',
+                itemId: 'TRN-012',
+                ownerId: 'USR-9890',
+                ownerName: 'مشروع الأسمدة الطبيعية',
+                isReal: 'no',
+                reason: 'المواد المُعلن عنها غير متوفرة',
+                status: 'pending',
+                createdAt: '2023-12-28'
+            },
+            {
+                id: 1020,
+                reporterId: 'USR-2234',
+                reporterName: 'فريدة محمد علي',
+                itemType: 'job',
+                itemTitle: 'محاسب زراعي',
+                itemId: 'JOB-123',
+                ownerId: 'USR-0901',
+                ownerName: 'شركة المحاصيل',
+                isReal: 'yes',
+                reason: 'الراتب أقل مما هو مُعلن',
+                status: 'review',
+                createdAt: '2023-12-27'
+            },
+            {
+                id: 1021,
+                reporterId: 'USR-3345',
+                reporterName: 'ماجد عبدالله سعيد',
+                itemType: 'training',
+                itemTitle: 'دورة في إدارة التربة',
+                itemId: 'TRN-234',
+                ownerId: 'USR-1012',
+                ownerName: 'معهد علوم التربة',
+                isReal: 'yes',
+                reason: 'المدة أقصر مما هو مُعلن',
+                status: 'resolved',
+                createdAt: '2023-12-26'
+            },
+            {
+                id: 1022,
+                reporterId: 'USR-4456',
+                reporterName: 'هند حسن أحمد',
+                itemType: 'job',
+                itemTitle: 'مشرف جودة - قسم الإنتاج',
+                itemId: 'JOB-345',
+                ownerId: 'USR-2123',
+                ownerName: 'شركة التصدير الزراعي',
+                isReal: 'no',
+                reason: 'الشركة لا تملك ترخيص تصدير',
+                status: 'pending',
+                createdAt: '2023-12-25'
+            },
+            {
+                id: 1023,
+                reporterId: 'USR-5567',
+                reporterName: 'وليد محمد علي',
+                itemType: 'training',
+                itemTitle: 'برنامج في الزراعة الذكية',
+                itemId: 'TRN-456',
+                ownerId: 'USR-3234',
+                ownerName: 'شركة الزراعة الذكية',
+                isReal: 'no',
+                reason: 'التقنيات المُعلن عنها غير موجودة',
+                status: 'review',
+                createdAt: '2023-12-24'
+            },
+            {
+                id: 1024,
+                reporterId: 'USR-6678',
+                reporterName: 'سلمى أحمد حسن',
+                itemType: 'job',
+                itemTitle: 'مدير مشاريع زراعية',
+                itemId: 'JOB-567',
+                ownerId: 'USR-4345',
+                ownerName: 'مؤسسة المشاريع الزراعية',
+                isReal: 'yes',
+                reason: 'المشاريع المذكورة غير موجودة',
+                status: 'resolved',
+                createdAt: '2023-12-23'
+            }
+        ];
+
+        // State variables
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let filteredData = [...reportsData];
+        let selectedReport = null;
+        let deleteTarget = null;
+        let currentAction = null;
+        let selectedItems = new Set();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            updateStats();
+            lucide.createIcons();
+        });
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Set Active Navigation
+        function setActiveNav(element) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Render Table
+        function renderTable() {
+            const tbody = document.getElementById('reportsTableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            if (pageData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i data-lucide="inbox"></i>
+                                </div>
+                                <div class="empty-title">لا توجد بلاغات</div>
+                                <div class="empty-description">لم يتم العثور على بلاغات مطابقة لمعايير البحث</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            tbody.innerHTML = pageData.map(report => `
+                <tr>
+                    <td>
+                        <div class="checkbox-wrapper">
+                            <div class="checkbox ${selectedItems.has(report.id) ? 'checked' : ''}" onclick="toggleItemSelection(${report.id})"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-weight: 700; color: var(--third-color);">#${report.id}</span>
+                    </td>
+                    <td>
+                        <div class="reporter-cell">
+                            <div class="reporter-avatar" style="background: ${getAvatarColor(report.reporterId)}; color: white;">
+                                ${report.reporterName.charAt(0)}
+                            </div>
+                            <div class="reporter-info">
+                                <div class="name">${report.reporterName}</div>
+                                <div class="id">${report.reporterId}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="job-cell">
+                            <div class="job-title">${report.itemTitle}</div>
+                            <div class="job-type">
+                                <i data-lucide="${report.itemType === 'job' ? 'briefcase' : 'graduation-cap'}"></i>
+                                ${report.itemType === 'job' ? 'وظيفة' : 'تدريب'} - ${report.itemId}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="owner-cell">
+                            <div class="owner-avatar" style="background: ${getAvatarColor(report.ownerId)}; color: white;">
+                                ${report.ownerName.charAt(0)}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 13px;">${report.ownerName}</div>
+                                <div style="font-size: 11px; color: var(--bg-icon);">${report.ownerId}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="reason-cell">${report.reason}</div>
+                    </td>
+                    <td>
+                        <span class="is-real-badge ${report.isReal}">
+                            ${report.isReal === 'yes' ? 'نعم' : 'لا'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${report.status}">
+                            <i data-lucide="${getStatusIcon(report.status)}"></i>
+                            ${getStatusText(report.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn view" onclick="viewReport(${report.id})" title="عرض التفاصيل">
+                                <i data-lucide="eye"></i>
+                            </button>
+                            <button class="action-btn edit" onclick="editReport(${report.id})" title="تعديل">
+                                <i data-lucide="edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteReport(${report.id})" title="حذف">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('tableCount').textContent = filteredData.length;
+            document.getElementById('showingFrom').textContent = start + 1;
+            document.getElementById('showingTo').textContent = Math.min(end, filteredData.length);
+            document.getElementById('totalItems').textContent = filteredData.length;
+
+            renderPagination();
+            lucide.createIcons();
+        }
+
+        // Render Pagination
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const controls = document.getElementById('paginationControls');
+
+            let html = `
+                <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span style="padding: 0 8px;">...</span>`;
+                }
+            }
+
+            html += `
+                <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            `;
+
+            controls.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // Change Page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderTable();
+        }
+
+        // Filter Reports
+        function filterReports() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const realFilter = document.getElementById('realFilter').value;
+
+            filteredData = reportsData.filter(report => {
+                const matchesSearch = report.reason.toLowerCase().includes(searchTerm) ||
+                    report.itemTitle.toLowerCase().includes(searchTerm) ||
+                    report.reporterName.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || report.status === statusFilter;
+                const matchesType = typeFilter === 'all' || report.itemType === typeFilter;
+                const matchesReal = realFilter === 'all' || report.isReal === realFilter;
+
+                return matchesSearch && matchesStatus && matchesType && matchesReal;
+            });
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Apply Filters
+        function applyFilters() {
+            filterReports();
+            showToast('success', 'تم التطبيق', 'تم تطبيق الفلاتر بنجاح');
+        }
+
+        // Reset Filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('typeFilter').value = 'all';
+            document.getElementById('realFilter').value = 'all';
+            filteredData = [...reportsData];
+            currentPage = 1;
+            renderTable();
+            showToast('success', 'تم إعادة التعيين', 'تم إعادة تعيين الفلاتر');
+        }
+
+        // View Report
+        function viewReport(id) {
+            selectedReport = reportsData.find(r => r.id === id);
+            if (!selectedReport) return;
+
+            const modalBody = document.getElementById('viewModalBody');
+            modalBody.innerHTML = `
+                <div class="modal-section">
+                    <div class="modal-section-title">
+                        <i data-lucide="user"></i>
+                        معلومات المُبلِّغ
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">معرف المستخدم</div>
+                            <div class="info-value">${selectedReport.reporterId}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">اسم المستخدم</div>
+                            <div class="info-value">${selectedReport.reporterName}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">
+                        <i data-lucide="briefcase"></i>
+                        معلومات العنصر المُبلَّغ عنه
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">نوع العنصر</div>
+                            <div class="info-value">${selectedReport.itemType === 'job' ? 'وظيفة' : 'تدريب'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">معرف العنصر</div>
+                            <div class="info-value">${selectedReport.itemId}</div>
+                        </div>
+                        <div class="info-item full-width">
+                            <div class="info-label">عنوان العنصر</div>
+                            <div class="info-value">${selectedReport.itemTitle}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn btn-secondary" onclick="goToItem('${selectedReport.itemId}')">
+                            <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                            الذهاب للعنصر
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">
+                        <i data-lucide="user-circle"></i>
+                        معلومات صاحب العنصر
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">معرف المستخدم</div>
+                            <div class="info-value">${selectedReport.ownerId}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">الاسم</div>
+                            <div class="info-value">${selectedReport.ownerName}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">
+                        <i data-lucide="file-text"></i>
+                        تفاصيل البلاغ
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">هل التدريب/الوظيفة حقيقي؟</div>
+                            <div class="info-value">
+                                <span class="is-real-badge ${selectedReport.isReal}">
+                                    ${selectedReport.isReal === 'yes' ? 'نعم' : 'لا'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">الحالة</div>
+                            <div class="info-value">
+                                <span class="status-badge ${selectedReport.status}">
+                                    ${getStatusText(selectedReport.status)}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-item full-width">
+                            <div class="info-label">سبب البلاغ</div>
+                            <div class="info-value">${selectedReport.reason}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">تاريخ الإنشاء</div>
+                            <div class="info-value">${selectedReport.createdAt}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">
+                        <i data-lucide="settings"></i>
+                        الإجراءات المتاحة
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="openActionModal('suspend_item')">
+                            <i data-lucide="pause" style="width: 16px; height: 16px;"></i>
+                            تعليق العنصر
+                        </button>
+                        <button class="btn btn-danger" onclick="openActionModal('delete_item')">
+                            <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                            حذف العنصر
+                        </button>
+                        <button class="btn btn-secondary" onclick="openActionModal('suspend_user')">
+                            <i data-lucide="user-x" style="width: 16px; height: 16px;"></i>
+                            تعليق الحساب
+                        </button>
+                        <button class="btn btn-danger" onclick="openActionModal('delete_user')">
+                            <i data-lucide="user-minus" style="width: 16px; height: 16px;"></i>
+                            حذف المستخدم
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            openModal('viewModal');
+            lucide.createIcons();
+        }
+
+        // Edit Report
+        function editReport(id) {
+            selectedReport = reportsData.find(r => r.id === id);
+            if (!selectedReport) return;
+
+            const modalBody = document.getElementById('editModalBody');
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">حالة البلاغ</label>
+                    <select class="form-select" id="editStatus">
+                        <option value="pending" ${selectedReport.status === 'pending' ? 'selected' : ''}>بانتظار الاستلام</option>
+                        <option value="review" ${selectedReport.status === 'review' ? 'selected' : ''}>قيد المراجعة</option>
+                        <option value="resolved" ${selectedReport.status === 'resolved' ? 'selected' : ''}>تم الحل</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">هل التدريب/الوظيفة حقيقي؟</label>
+                    <div class="radio-group">
+                        <label class="radio-item ${selectedReport.isReal === 'yes' ? 'selected' : ''}" id="editRealYes" onclick="selectRadio('editRealYes')">
+                            <input type="radio" name="editIsReal" value="yes" ${selectedReport.isReal === 'yes' ? 'checked' : ''}>
+                            <div class="radio-circle"></div>
+                            <span class="radio-label">نعم</span>
+                        </label>
+                        <label class="radio-item ${selectedReport.isReal === 'no' ? 'selected' : ''}" id="editRealNo" onclick="selectRadio('editRealNo')">
+                            <input type="radio" name="editIsReal" value="no" ${selectedReport.isReal === 'no' ? 'checked' : ''}>
+                            <div class="radio-circle"></div>
+                            <span class="radio-label">لا</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">سبب البلاغ</label>
+                    <textarea class="form-textarea" id="editReason">${selectedReport.reason}</textarea>
+                </div>
+            `;
+
+            openModal('editModal');
+            lucide.createIcons();
+        }
+
+        // Save Report Changes
+        function saveReportChanges() {
+            if (!selectedReport) return;
+
+            const status = document.getElementById('editStatus').value;
+            const isRealYes = document.getElementById('editRealYes').classList.contains('selected');
+            const reason = document.getElementById('editReason').value;
+
+            const index = reportsData.findIndex(r => r.id === selectedReport.id);
+            if (index !== -1) {
+                reportsData[index].status = status;
+                reportsData[index].isReal = isRealYes ? 'yes' : 'no';
+                reportsData[index].reason = reason;
+            }
+
+            closeModal('editModal');
+            filterReports();
+            updateStats();
+            showToast('success', 'تم الحفظ', 'تم حفظ التغييرات بنجاح');
+        }
+
+        // Delete Report
+        function deleteReport(id) {
+            deleteTarget = id;
+            document.getElementById('deleteMessage').textContent = `هل أنت متأكد من حذف البلاغ رقم #${id}؟ لا يمكن التراجع عن هذا الإجراء.`;
+            openModal('deleteModal');
+        }
+
+        // Confirm Delete
+        function confirmDelete() {
+            if (deleteTarget) {
+                reportsData = reportsData.filter(r => r.id !== deleteTarget);
+                filteredData = filteredData.filter(r => r.id !== deleteTarget);
+                closeModal('deleteModal');
+                renderTable();
+                updateStats();
+                showToast('success', 'تم الحذف', 'تم حذف البلاغ بنجاح');
+                deleteTarget = null;
+            }
+        }
+
+        // Open Add Report Modal
+        function openAddReportModal() {
+            document.getElementById('newReporterId').value = '';
+            document.getElementById('newReporterName').value = '';
+            document.getElementById('newItemType').value = 'job';
+            document.getElementById('newItemTitle').value = '';
+            document.getElementById('newOwnerId').value = '';
+            document.getElementById('newOwnerName').value = '';
+            document.getElementById('newReason').value = '';
+            document.getElementById('newStatus').value = 'pending';
+            document.getElementById('realYes').classList.remove('selected');
+            document.getElementById('realNo').classList.remove('selected');
+            openModal('addModal');
+        }
+
+        // Add New Report
+        function addNewReport() {
+            const reporterId = document.getElementById('newReporterId').value.trim();
+            const reporterName = document.getElementById('newReporterName').value.trim();
+            const itemType = document.getElementById('newItemType').value;
+            const itemTitle = document.getElementById('newItemTitle').value.trim();
+            const ownerId = document.getElementById('newOwnerId').value.trim();
+            const ownerName = document.getElementById('newOwnerName').value.trim();
+            const reason = document.getElementById('newReason').value.trim();
+            const status = document.getElementById('newStatus').value;
+            const isRealYes = document.getElementById('realYes').classList.contains('selected');
+
+            if (!reporterId || !reporterName || !itemTitle || !ownerId || !ownerName || !reason) {
+                showToast('error', 'خطأ', 'يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            const newReport = {
+                id: Math.max(...reportsData.map(r => r.id)) + 1,
+                reporterId,
+                reporterName,
+                itemType,
+                itemTitle,
+                itemId: `${itemType === 'job' ? 'JOB' : 'TRN'}-${Math.floor(Math.random() * 900) + 100}`,
+                ownerId,
+                ownerName,
+                isReal: isRealYes ? 'yes' : 'no',
+                reason,
+                status,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+
+            reportsData.unshift(newReport);
+            filteredData = [...reportsData];
+            closeModal('addModal');
+            renderTable();
+            updateStats();
+            showToast('success', 'تمت الإضافة', 'تم إضافة البلاغ الجديد بنجاح');
+        }
+
+        // Open Action Modal
+        function openActionModal(action) {
+            currentAction = action;
+            const titles = {
+                'suspend_item': 'تعليق العنصر',
+                'delete_item': 'حذف العنصر',
+                'suspend_user': 'تعليق الحساب',
+                'delete_user': 'حذف المستخدم'
+            };
+
+            const messages = {
+                'suspend_item': `هل أنت متأكد من تعليق ${selectedReport.itemType === 'job' ? 'الوظيفة' : 'التدريب'} "${selectedReport.itemTitle}"؟`,
+                'delete_item': `هل أنت متأكد من حذف ${selectedReport.itemType === 'job' ? 'الوظيفة' : 'التدريب'} "${selectedReport.itemTitle}"؟ لا يمكن التراجع عن هذا الإجراء.`,
+                'suspend_user': `هل أنت متأكد من تعليق حساب "${selectedReport.ownerName}"؟`,
+                'delete_user': `هل أنت متأكد من حذف المستخدم "${selectedReport.ownerName}"؟ سيتم حذف جميع محتوياته.`
+            };
+
+            const btnClass = action.includes('delete') ? 'btn-danger' : 'btn-primary';
+
+            document.getElementById('actionModalTitle').innerHTML = `
+                <i data-lucide="${action.includes('suspend') ? 'pause' : 'trash-2'}"></i>
+                ${titles[action]}
+            `;
+
+            document.getElementById('actionModalBody').innerHTML = `
+                <div style="text-align: center; padding: 20px 0;">
+                    <p style="font-size: 15px; color: var(--iconAndUl-colors); margin-bottom: 24px;">${messages[action]}</p>
+                    ${action.includes('item') ? `
+                        <div class="info-grid" style="text-align: right;">
+                            <div class="info-item">
+                                <div class="info-label">العنوان</div>
+                                <div class="info-value">${selectedReport.itemTitle}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">النوع</div>
+                                <div class="info-value">${selectedReport.itemType === 'job' ? 'وظيفة' : 'تدريب'}</div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="info-grid" style="text-align: right;">
+                            <div class="info-item">
+                                <div class="info-label">الاسم</div>
+                                <div class="info-value">${selectedReport.ownerName}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">المعرف</div>
+                                <div class="info-value">${selectedReport.ownerId}</div>
+                            </div>
+                        </div>
+                    `}
+                </div>
+            `;
+
+            document.getElementById('actionConfirmBtn').className = `btn ${btnClass}`;
+            document.getElementById('actionConfirmBtn').innerHTML = `
+                <i data-lucide="${action.includes('suspend') ? 'pause' : 'trash-2'}" style="width: 18px; height: 18px;"></i>
+                ${action.includes('suspend') ? 'تعليق' : 'حذف'}
+            `;
+
+            openModal('actionModal');
+            lucide.createIcons();
+        }
+
+        // Execute Action
+        function executeAction() {
+            const messages = {
+                'suspend_item': 'تم تعليق العنصر بنجاح',
+                'delete_item': 'تم حذف العنصر بنجاح',
+                'suspend_user': 'تم تعليق الحساب بنجاح',
+                'delete_user': 'تم حذف المستخدم بنجاح'
+            };
+
+            if (currentAction === 'delete_item' || currentAction === 'delete_user') {
+                // Remove the report as well for delete actions
+                reportsData = reportsData.filter(r => r.id !== selectedReport.id);
+                filteredData = filteredData.filter(r => r.id !== selectedReport.id);
+                renderTable();
+                updateStats();
+            }
+
+            closeModal('actionModal');
+            closeModal('viewModal');
+            showToast('success', 'تم التنفيذ', messages[currentAction]);
+            currentAction = null;
+        }
+
+        // Go To Item
+        function goToItem(itemId) {
+            showToast('info', 'تنبيه', `جاري الانتقال إلى العنصر ${itemId}...`);
+            // In real implementation, this would navigate to the item page
+        }
+
+        // Select Radio
+        function selectRadio(id) {
+            const parent = document.getElementById(id).parentElement;
+            parent.querySelectorAll('.radio-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.getElementById(id).classList.add('selected');
+        }
+
+        // Toggle Select All
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            selectAllCheckbox.classList.toggle('checked');
+
+            if (selectAllCheckbox.classList.contains('checked')) {
+                filteredData.forEach(report => selectedItems.add(report.id));
+            } else {
+                selectedItems.clear();
+            }
+            renderTable();
+        }
+
+        // Toggle Item Selection
+        function toggleItemSelection(id) {
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+            } else {
+                selectedItems.add(id);
+            }
+            renderTable();
+        }
+
+        // Open Modal
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Update Stats
+        function updateStats() {
+            const total = reportsData.length;
+            const pending = reportsData.filter(r => r.status === 'pending').length;
+            const review = reportsData.filter(r => r.status === 'review').length;
+            const resolved = reportsData.filter(r => r.status === 'resolved').length;
+
+            document.getElementById('totalReports').textContent = total;
+            document.getElementById('pendingReports').textContent = pending;
+            document.getElementById('reviewReports').textContent = review;
+            document.getElementById('resolvedReports').textContent = resolved;
+            document.getElementById('reportsBadge').textContent = pending;
+        }
+
+        // Helper Functions
+        function getAvatarColor(id) {
+            const colors = ['#8BBA40', '#5AB06A', '#1E4565', '#7F23CF', '#e74c3c', '#f39c12'];
+            const index = parseInt(id.replace(/\D/g, '')) % colors.length;
+            return colors[index];
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'pending': 'بانتظار الاستلام',
+                'review': 'قيد المراجعة',
+                'resolved': 'تم الحل'
+            };
+            return texts[status] || status;
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'pending': 'clock',
+                'review': 'eye',
+                'resolved': 'check-circle'
+            };
+            return icons[status] || 'circle';
+        }
+
+        // Show Toast
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'x-circle' : 'alert-circle'}"></i>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i data-lucide="x"></i>
+                </button>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        // Export Data
+        function exportData() {
+            const csv = [
+                ['رقم البلاغ', 'معرف المُبلِّغ', 'اسم المُبلِّغ', 'النوع', 'العنوان', 'معرف العنصر', 'معرف صاحب العنصر', 'اسم صاحب العنصر', 'حقيقي؟', 'السبب', 'الحالة', 'التاريخ'].join(','),
+                ...filteredData.map(r => [
+                    r.id,
+                    r.reporterId,
+                    r.reporterName,
+                    r.itemType === 'job' ? 'وظيفة' : 'تدريب',
+                    `"${r.itemTitle}"`,
+                    r.itemId,
+                    r.ownerId,
+                    r.ownerName,
+                    r.isReal === 'yes' ? 'نعم' : 'لا',
+                    `"${r.reason}"`,
+                    getStatusText(r.status),
+                    r.createdAt
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `reports_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            showToast('success', 'تم التصدير', 'تم تصدير البيانات بنجاح');
+        }
+
+        // Show Suspended Items
+        function showSuspendedItems() {
+            showToast('info', 'العناصر المعلقة', 'جاري عرض العناصر المعلقة...');
+        }
+
+        // Show Blocked Users
+        function showBlockedUsers() {
+            showToast('info', 'المستخدمين المحظورين', 'جاري عرض قائمة المحظورين...');
+        }
+
+        // Global Search
+        function handleGlobalSearch(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('searchInput').value = event.target.value;
+                filterReports();
+            }
+        }
+
+        // Show Notifications
+        function showNotifications() {
+            showToast('info', 'الإشعارات', 'لديك 3 إشعارات جديدة');
+        }
+
+        // Edit Current Report (from view modal)
+        function editCurrentReport() {
+            closeModal('viewModal');
+            editReport(selectedReport.id);
+        }
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

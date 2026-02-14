@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الخبراء - المجال الزراعي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8BBA40',
+                        secondary: '#5AB06A',
+                        third: '#1E4565',
+                        background: '#FBFBFB',
+                        bgIcon: '#D9D9D9',
+                        bgFooter: '#212121',
+                        textColor: '#FFFFFF',
+                        error: '#e74c3c',
+                        success: '#27ae60',
+                        warning: '#f39c12',
+                        iconUl: '#2D2D2D',
+                        green1: '#52FF55',
+                        green2: '#EBFCF1',
+                        green3: '#DCFCE7',
+                        red1: '#FF8A8C',
+                        red2: '#FFD8EF',
+                        red3: '#80141B',
+                        purble1: '#F3E8FF',
+                        purble2: '#7F23CF',
+                        yellow1: '#FFFAC4',
+                        yellow2: '#A16006',
+                        yellow3: '#FFCC00',
+                        browen1: '#91410F',
+                        white0: '#CCCCCC',
+                        white1: '#ECECEC',
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif'],
+                        'cairo': ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #FBFBFB;
+        }
+        
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E45665;
+            --background-color: #FBFBFB;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #8BBA40, #5AB06A);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #5AB06A, #1E4565);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        .animate-slideInRight {
+            animation: slideInRight 0.5s ease-out forwards;
+        }
+        
+        .animate-slideInLeft {
+            animation: slideInLeft 0.5s ease-out forwards;
+        }
+        
+        .animate-scaleIn {
+            animation: scaleIn 0.3s ease-out forwards;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* Table Row Hover */
+        .table-row-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .table-row-hover:hover {
+            background: linear-gradient(90deg, rgba(139, 186, 64, 0.08), rgba(90, 176, 106, 0.08));
+            transform: scale(1.002);
+        }
+        
+        /* Button Effects */
+        .btn-primary {
+            background: linear-gradient(135deg, #8BBA40, #5AB06A);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 186, 64, 0.4);
+        }
+        
+        /* Card Styles */
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #8BBA40, #5AB06A);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(30, 69, 101, 0.15);
+        }
+        
+        /* Tab Styles */
+        .tab-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8BBA40, #5AB06A);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        .tab-btn.active::after {
+            width: 100%;
+        }
+        
+        .tab-btn.active {
+            color: #8BBA40;
+            background: rgba(139, 186, 64, 0.1);
+        }
+        
+        /* Input Focus */
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus:focus {
+            border-color: #8BBA40;
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.15);
+        }
+        
+        /* Sidebar */
+        .sidebar-item {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #8BBA40;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .sidebar-item:hover::before,
+        .sidebar-item.active::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(139, 186, 64, 0.1);
+            color: #8BBA40;
+        }
+        
+        /* Status Badge */
+        .badge-active {
+            background: linear-gradient(135deg, #DCFCE7, #EBFCF1);
+            color: #166534;
+            border: 1px solid #86EFAC;
+        }
+        
+        .badge-inactive {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+            color: #991B1B;
+            border: 1px solid #FCA5A5;
+        }
+        
+        .badge-pending {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            color: #92400E;
+            border: 1px solid #FCD34D;
+        }
+        
+        /* Image Preview */
+        .image-preview {
+            transition: all 0.3s ease;
+        }
+        
+        .image-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8BBA40;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Checkbox Custom */
+        .checkbox-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D9D9D9;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .checkbox-custom:checked {
+            background: linear-gradient(135deg, #8BBA40, #5AB06A);
+            border-color: #8BBA40;
+        }
+        
+        .checkbox-custom:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Notification Toast */
+        .toast {
+            animation: slideInRight 0.5s ease-out forwards;
+        }
+        
+        /* Background Pattern */
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(139, 186, 64, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(90, 176, 106, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 69, 101, 0.03) 0%, transparent 50%);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(100%);
+                position: fixed;
+                z-index: 50;
+                height: 100vh;
+                top: 0;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+        
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background bg-pattern min-h-screen">
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 left-4 z-[100] flex flex-col gap-3"></div>
+    
+    <!-- Main Layout -->
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar w-72 bg-white shadow-xl h-screen sticky top-0 flex flex-col transition-transform duration-300">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-seedling text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-third font-cairo">زراعة تك</h1>
+                        <p class="text-xs text-gray-500">لوحة التحكم</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 overflow-y-auto">
+                <p class="text-xs text-gray-400 font-medium mb-3 px-3">القائمة الرئيسية</p>
+                
+                <a href="#" class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-home w-5"></i>
+                    <span>الرئيسية</span>
+                </a>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-chart-pie w-5"></i>
+                    <span>الإحصائيات</span>
+                </a>
+                
+                <p class="text-xs text-gray-400 font-medium mb-3 mt-6 px-3">إدارة المستخدمين</p>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2 bg-green2">
+                    <i class="fas fa-user-tie w-5 text-primary"></i>
+                    <span class="font-medium text-primary">الخبراء</span>
+                    <span class="mr-auto bg-primary text-white text-xs px-2 py-1 rounded-full" id="expertsCountBadge">0</span>
+                </a>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-users w-5"></i>
+                    <span>الطلاب</span>
+                </a>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-user-cog w-5"></i>
+                    <span>الإداريين</span>
+                </a>
+                
+                <p class="text-xs text-gray-400 font-medium mb-3 mt-6 px-3">إدارة المحتوى</p>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-book w-5"></i>
+                    <span>الكورسات</span>
+                </a>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-file-alt w-5"></i>
+                    <span>الاختبارات</span>
+                </a>
+                
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 mb-2">
+                    <i class="fas fa-comments w-5"></i>
+                    <span>التعليقات</span>
+                </a>
+            </nav>
+            
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-100">
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=8BBA40&color=fff" 
+                         alt="Admin" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-800">مدير النظام</p>
+                        <p class="text-xs text-gray-500">admin@ziraatak.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-error transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white shadow-sm sticky top-0 z-40 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <button id="menuToggle" class="lg:hidden text-gray-600 hover:text-primary transition-colors">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-2xl font-bold text-third font-cairo">إدارة الخبراء</h2>
+                            <p class="text-sm text-gray-500">عرض وإدارة جميع الخبراء في المنصة</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <button class="relative text-gray-500 hover:text-primary transition-colors">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 w-4 h-4 bg-error text-white text-xs rounded-full flex items-center justify-center">3</span>
+                        </button>
+                        
+                        <button id="addExpertBtn" class="btn-primary text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2">
+                            <i class="fas fa-plus"></i>
+                            <span>إضافة خبير جديد</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="flex-1 p-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card p-6 animate-fadeInUp opacity-0 stagger-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-14 h-14 bg-gradient-to-br from-green2 to-green3 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-user-tie text-primary text-2xl"></i>
+                            </div>
+                            <span class="text-xs text-success bg-green2 px-3 py-1 rounded-full font-medium">
+                                <i class="fas fa-arrow-up ml-1"></i>12%
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="totalExperts">0</h3>
+                        <p class="text-gray-500 text-sm">إجمالي الخبراء</p>
+                    </div>
+                    
+                    <div class="stat-card p-6 animate-fadeInUp opacity-0 stagger-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-14 h-14 bg-gradient-to-br from-green3 to-primary/20 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-user-check text-secondary text-2xl"></i>
+                            </div>
+                            <span class="text-xs text-success bg-green2 px-3 py-1 rounded-full font-medium">نشط</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="activeExperts">0</h3>
+                        <p class="text-gray-500 text-sm">الخبراء النشطون</p>
+                    </div>
+                    
+                    <div class="stat-card p-6 animate-fadeInUp opacity-0 stagger-3">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-14 h-14 bg-gradient-to-br from-yellow1 to-yellow3/20 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-user-clock text-yellow2 text-2xl"></i>
+                            </div>
+                            <span class="text-xs text-warning bg-yellow1 px-3 py-1 rounded-full font-medium">معلق</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="pendingExperts">0</h3>
+                        <p class="text-gray-500 text-sm">الحسابات المعلقة</p>
+                    </div>
+                    
+                    <div class="stat-card p-6 animate-fadeInUp opacity-0 stagger-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-14 h-14 bg-gradient-to-br from-purble1 to-purble2/20 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-book-open text-purble2 text-2xl"></i>
+                            </div>
+                            <span class="text-xs text-purble2 bg-purble1 px-3 py-1 rounded-full font-medium">كورس</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-third mb-1" id="totalCourses">0</h3>
+                        <p class="text-gray-500 text-sm">إجمالي الكورسات</p>
+                    </div>
+                </div>
+                
+                <!-- Search and Filter Section -->
+                <div class="bg-white rounded-2xl shadow-sm p-6 mb-6 animate-fadeInUp opacity-0" style="animation-delay: 0.5s;">
+                    <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+                        <!-- Search -->
+                        <div class="flex-1 w-full lg:max-w-2xl">
+                            <div class="relative">
+                                <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="searchInput" placeholder="البحث بالمعرف، الاسم، البريد، الهاتف، الدولة..."
+                                       class="w-full pr-12 pl-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white transition-all">
+                            </div>
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <!-- Age Filter -->
+                            <div class="relative">
+                                <select id="ageFilter" class="appearance-none bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 pl-10 outline-none input-focus cursor-pointer">
+                                    <option value="">جميع الأعمار</option>
+                                    <option value="20-30">20 - 30 سنة</option>
+                                    <option value="30-40">30 - 40 سنة</option>
+                                    <option value="40-50">40 - 50 سنة</option>
+                                    <option value="50+">أكثر من 50 سنة</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                            
+                            <!-- Status Filter -->
+                            <div class="relative">
+                                <select id="statusFilter" class="appearance-none bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 pl-10 outline-none input-focus cursor-pointer">
+                                    <option value="">جميع الحالات</option>
+                                    <option value="active">نشط</option>
+                                    <option value="inactive">غير نشط</option>
+                                    <option value="pending">معلق</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                            
+                            <!-- Delete All Button -->
+                            <button id="deleteAllBtn" class="bg-error/10 text-error px-4 py-3 rounded-xl font-medium hover:bg-error hover:text-white transition-all flex items-center gap-2">
+                                <i class="fas fa-trash-alt"></i>
+                                <span class="hidden sm:inline">حذف الكل</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Experts Table -->
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden animate-fadeInUp opacity-0" style="animation-delay: 0.6s;">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-l from-gray-50 to-white border-b border-gray-100">
+                                <tr>
+                                    <th class="text-right py-4 px-6 text-sm font-semibold text-gray-600">
+                                        <input type="checkbox" id="selectAll" class="checkbox-custom">
+                                    </th>
+                                    <th class="text-right py-4 px-6 text-sm font-semibold text-gray-600">الخبير</th>
+                                    <th class="text-right py-4 px-6 text-sm font-semibold text-gray-600">معلومات الاتصال</th>
+                                    <th class="text-right py-4 px-6 text-sm font-semibold text-gray-600">الدور والتاريخ</th>
+                                    <th class="text-right py-4 px-6 text-sm font-semibold text-gray-600">الدولة والحالة</th>
+                                    <th class="text-right py-4 px-6 text-sm font-semibold text-gray-600">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expertsTableBody">
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="p-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p class="text-sm text-gray-500">
+                            عرض <span id="showingFrom">1</span> - <span id="showingTo">10</span> من <span id="totalRecords">0</span> خبير
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <button id="prevPage" class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div id="paginationNumbers" class="flex items-center gap-2">
+                                <!-- Page numbers will be inserted here -->
+                            </div>
+                            <button id="nextPage" class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- View Expert Modal -->
+    <div id="viewModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeViewModal()"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden animate-scaleIn">
+                <!-- Modal Header -->
+                <div class="bg-gradient-to-l from-third to-third/90 p-6 text-white relative">
+                    <button onclick="closeViewModal()" class="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="flex items-center gap-4">
+                        <img id="viewExpertImage" src="" alt="" class="w-20 h-20 rounded-2xl border-4 border-white/30 object-cover">
+                        <div>
+                            <h3 id="viewExpertName" class="text-2xl font-bold"></h3>
+                            <p id="viewExpertTitle" class="text-primary/80 font-medium"></p>
+                            <p id="viewExpertId" class="text-white/60 text-sm mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="border-b border-gray-100 overflow-x-auto">
+                    <div class="flex">
+                        <button class="tab-btn active px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="info">
+                            <i class="fas fa-user ml-2"></i>معلومات المستخدم
+                        </button>
+                        <button class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="courses">
+                            <i class="fas fa-book ml-2"></i>الكورسات
+                        </button>
+                        <button class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="comments">
+                            <i class="fas fa-comments ml-2"></i>التعليقات
+                        </button>
+                        <button class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="ratings">
+                            <i class="fas fa-star ml-2"></i>التقييمات
+                        </button>
+                        <button class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="about">
+                            <i class="fas fa-info-circle ml-2"></i>عن الخبير
+                        </button>
+                        <button class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="stats">
+                            <i class="fas fa-chart-bar ml-2"></i>الإحصائيات
+                        </button>
+                        <button class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 whitespace-nowrap" data-tab="exams">
+                            <i class="fas fa-clipboard-list ml-2"></i>الاختبارات
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="p-6 max-h-[50vh] overflow-y-auto">
+                    <!-- Info Tab -->
+                    <div id="tab-info" class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">الاسم الأول</label>
+                                    <p id="viewFirstName" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">الاسم الثاني</label>
+                                    <p id="viewLastName" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">البريد الإلكتروني</label>
+                                    <p id="viewEmail" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">رقم الهاتف</label>
+                                    <p id="viewPhone" class="font-medium text-gray-800"></p>
+                                    <span id="viewPhoneVerified" class="text-xs"></span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">الدولة</label>
+                                    <p id="viewCountry" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">العنوان</label>
+                                    <p id="viewAddress" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">الدور</label>
+                                    <p id="viewRole" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">تاريخ الميلاد</label>
+                                    <p id="viewBirthDate" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <label class="text-xs text-gray-500 block mb-1">تاريخ الانضمام</label>
+                                    <p id="viewJoinDate" class="font-medium text-gray-800"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Courses Tab -->
+                    <div id="tab-courses" class="tab-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-gray-800">إجمالي الكورسات: <span id="viewTotalCourses" class="text-primary">0</span></h4>
+                        </div>
+                        <div id="viewCoursesList" class="space-y-3">
+                            <!-- Courses will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Comments Tab -->
+                    <div id="tab-comments" class="tab-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-gray-800">إجمالي التعليقات: <span id="viewTotalComments" class="text-primary">0</span></h4>
+                        </div>
+                        <div id="viewCommentsList" class="space-y-3">
+                            <!-- Comments will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Ratings Tab -->
+                    <div id="tab-ratings" class="tab-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-gray-800">إجمالي التقييمات: <span id="viewTotalRatings" class="text-primary">0</span></h4>
+                        </div>
+                        <div id="viewRatingsList" class="space-y-3">
+                            <!-- Ratings will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- About Tab -->
+                    <div id="tab-about" class="tab-content hidden">
+                        <div class="space-y-6">
+                            <div class="bg-gray-50 rounded-xl p-5">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="font-medium text-gray-700">لقب الخبير</label>
+                                    <button class="text-primary hover:text-secondary transition-colors text-sm">
+                                        <i class="fas fa-edit ml-1"></i>تعديل
+                                    </button>
+                                </div>
+                                <p id="viewExpertTitleAbout" class="text-gray-600"></p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-5">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="font-medium text-gray-700">الخبرة والتعليم</label>
+                                    <button class="text-primary hover:text-secondary transition-colors text-sm">
+                                        <i class="fas fa-edit ml-1"></i>تعديل
+                                    </button>
+                                </div>
+                                <p id="viewExpertBio" class="text-gray-600 leading-relaxed"></p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-5">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="font-medium text-gray-700">معرض الأعمال</label>
+                                    <button class="text-primary hover:text-secondary transition-colors text-sm">
+                                        <i class="fas fa-edit ml-1"></i>تعديل
+                                    </button>
+                                </div>
+                                <div id="viewPortfolio" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <!-- Portfolio images will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Tab -->
+                    <div id="tab-stats" class="tab-content hidden">
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="bg-gradient-to-br from-green2 to-green3 rounded-2xl p-5 text-center">
+                                <i class="fas fa-users text-3xl text-primary mb-3"></i>
+                                <p id="viewTotalStudents" class="text-2xl font-bold text-third">0</p>
+                                <p class="text-sm text-gray-600">الطلاب المسجلون</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-yellow1 to-yellow3/30 rounded-2xl p-5 text-center">
+                                <i class="fas fa-star text-3xl text-yellow3 mb-3"></i>
+                                <p id="viewAvgRating" class="text-2xl font-bold text-third">0</p>
+                                <p class="text-sm text-gray-600">متوسط التقييم</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-purble1 to-purble2/20 rounded-2xl p-5 text-center">
+                                <i class="fas fa-clipboard-check text-3xl text-purble2 mb-3"></i>
+                                <p id="viewTotalExams" class="text-2xl font-bold text-third">0</p>
+                                <p class="text-sm text-gray-600">الاختبارات</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-5 text-center">
+                                <i class="fas fa-clock text-3xl text-blue-500 mb-3"></i>
+                                <p id="viewWatchHours" class="text-2xl font-bold text-third">0</p>
+                                <p class="text-sm text-gray-600">ساعات المشاهدة</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-5 text-center">
+                                <i class="fas fa-play-circle text-3xl text-orange-500 mb-3"></i>
+                                <p id="viewTotalLessons" class="text-2xl font-bold text-third">0</p>
+                                <p class="text-sm text-gray-600">الدروس</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-5 text-center">
+                                <i class="fas fa-dollar-sign text-3xl text-success mb-3"></i>
+                                <p id="viewTotalEarnings" class="text-2xl font-bold text-third">0</p>
+                                <p class="text-sm text-gray-600">الأرباح ($)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Exams Tab -->
+                    <div id="tab-exams" class="tab-content hidden">
+                        <div id="viewExamsList" class="space-y-3">
+                            <!-- Exams will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit/Create Expert Modal -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeEditModal()"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-scaleIn">
+                <!-- Modal Header -->
+                <div class="bg-gradient-to-l from-primary to-secondary p-6 text-white relative">
+                    <button onclick="closeEditModal()" class="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h3 id="editModalTitle" class="text-xl font-bold">تعديل بيانات الخبير</h3>
+                    <p class="text-white/80 text-sm">قم بتعديل البيانات المطلوبة ثم اضغط حفظ</p>
+                </div>
+                
+                <!-- Form -->
+                <form id="expertForm" class="p-6 max-h-[70vh] overflow-y-auto">
+                    <input type="hidden" id="editExpertId">
+                    
+                    <!-- Account Status -->
+                    <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                        <label class="font-medium text-gray-700 block mb-3">حالة الحساب</label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="accountStatus" value="active" class="w-5 h-5 text-primary">
+                                <span class="text-gray-700">نشط</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="accountStatus" value="inactive" class="w-5 h-5 text-primary">
+                                <span class="text-gray-700">غير نشط</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="accountStatus" value="pending" class="w-5 h-5 text-primary">
+                                <span class="text-gray-700">معلق</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Expert Title -->
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">لقب الخبير</label>
+                        <input type="text" id="editExpertTitle" placeholder="مثال: خبير الزراعة العضوية"
+                               class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                    </div>
+                    
+                    <!-- About Expert -->
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">عن الخبير</label>
+                        <textarea id="editExpertBio" rows="4" placeholder="اكتب نبذة عن الخبير وخبراته..."
+                                  class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white resize-none"></textarea>
+                    </div>
+                    
+                    <!-- Portfolio Images -->
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">معرض الأعمال</label>
+                        <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('portfolioInput').click()">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-500">اضغط لرفع الصور أو اسحبها هنا</p>
+                            <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF حتى 5MB</p>
+                            <input type="file" id="portfolioInput" multiple accept="image/*" class="hidden" onchange="handlePortfolioUpload(event)">
+                        </div>
+                        <div id="portfolioPreview" class="grid grid-cols-4 gap-3 mt-3">
+                            <!-- Preview images will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <hr class="my-6 border-gray-100">
+                    
+                    <!-- Personal Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الأول</label>
+                            <input type="text" id="editFirstName" required
+                                   class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثاني</label>
+                            <input type="text" id="editLastName" required
+                                   class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                            <input type="email" id="editEmail" required
+                                   class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
+                            <input type="tel" id="editPhone"
+                                   class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الدولة</label>
+                            <select id="editCountry" class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                                <option value="">اختر الدولة</option>
+                                <option value="السعودية">السعودية</option>
+                                <option value="مصر">مصر</option>
+                                <option value="الإمارات">الإمارات</option>
+                                <option value="الكويت">الكويت</option>
+                                <option value="قطر">قطر</option>
+                                <option value="البحرين">البحرين</option>
+                                <option value="عمان">عمان</option>
+                                <option value="الأردن">الأردن</option>
+                                <option value="المغرب">المغرب</option>
+                                <option value="تونس">تونس</option>
+                                <option value="الجزائر">الجزائر</option>
+                                <option value="السودان">السودان</option>
+                                <option value="سوريا">سوريا</option>
+                                <option value="لبنان">لبنان</option>
+                                <option value="العراق">العراق</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">العنوان</label>
+                            <input type="text" id="editAddress"
+                                   class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الدور</label>
+                            <select id="editRole" class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                                <option value="خبير زراعي">خبير زراعي</option>
+                                <option value="خبير تربة">خبير تربة</option>
+                                <option value="خبير ري">خبير ري</option>
+                                <option value="خبير محاصيل">خبير محاصيل</option>
+                                <option value="خبير عضوي">خبير عضوي</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">تاريخ الميلاد</label>
+                            <input type="date" id="editBirthDate"
+                                   class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl input-focus outline-none bg-gray-50 focus:bg-white">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">صورة المستخدم</label>
+                        <div class="flex items-center gap-4">
+                            <img id="editImagePreview" src="https://ui-avatars.com/api/?name=Expert&background=8BBA40&color=fff" 
+                                 alt="Preview" class="w-20 h-20 rounded-xl object-cover border-2 border-gray-100">
+                            <div>
+                                <input type="file" id="editImageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                                <button type="button" onclick="document.getElementById('editImageInput').click()" 
+                                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors text-sm">
+                                    <i class="fas fa-camera ml-2"></i>تغيير الصورة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Footer -->
+                <div class="p-6 border-t border-gray-100 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeEditModal()" 
+                            class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium">
+                        إلغاء
+                    </button>
+                    <button type="button" onclick="saveExpert()" 
+                            class="btn-primary text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2">
+                        <i class="fas fa-save"></i>
+                        <span>حفظ التغييرات</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeDeleteModal()"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-scaleIn p-8 text-center">
+                <div class="w-20 h-20 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-exclamation-triangle text-4xl text-error"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">تأكيد الحذف</h3>
+                <p id="deleteMessage" class="text-gray-500 mb-6">هل أنت متأكد من حذف هذا الخبير؟ لا يمكن التراجع عن هذا الإجراء.</p>
+                <div class="flex items-center justify-center gap-3">
+                    <button onclick="closeDeleteModal()" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium">
+                        إلغاء
+                    </button>
+                    <button onclick="confirmDelete()" class="px-6 py-3 bg-error text-white rounded-xl hover:bg-red-600 transition-colors font-medium">
+                        <i class="fas fa-trash-alt ml-2"></i>حذف
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // Data Store
+        // ============================================
+        let experts = [
+            {
+                id: 'EXP001',
+                firstName: 'أحمد',
+                lastName: 'الزهراني',
+                email: 'ahmed@ziraatak.com',
+                phone: '+966501234567',
+                country: 'السعودية',
+                address: 'الرياض، حي النخيل',
+                role: 'خبير زراعي',
+                status: 'active',
+                birthDate: '1985-03-15',
+                joinDate: '2023-01-10',
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+                expertTitle: 'خبير الزراعة العضوية',
+                expertBio: 'خبير في مجال الزراعة العضوية المستدامة مع أكثر من 15 عاماً من الخبرة في تطوير المزارع العضوية وتحسين إنتاجية التربة.',
+                portfolio: [
+                    'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=200&h=200&fit=crop'
+                ],
+                phoneVerified: true,
+                courses: [
+                    { id: 1, title: 'أساسيات الزراعة العضوية', date: '2023-02-15', category: 'زراعة عضوية' },
+                    { id: 2, title: 'تقنيات الري الحديثة', date: '2023-04-20', category: 'ري' },
+                    { id: 3, title: 'إدارة التربة والمحاصيل', date: '2023-06-10', category: 'تربة' }
+                ],
+                comments: [
+                    { id: 1, content: 'شكراً على هذه المعلومات القيمة، أستفدت كثيراً من الكورس', date: '2023-07-01' },
+                    { id: 2, content: 'الشرح ممتاز والامثلة عملية جداً', date: '2023-07-05' }
+                ],
+                ratings: [
+                    { id: 1, content: 'كورس رائع ومفيد جداً', rating: 5, date: '2023-07-01' },
+                    { id: 2, content: 'محتوى جيد لكن يحتاج المزيد من الأمثلة', rating: 4, date: '2023-07-05' },
+                    { id: 3, content: 'أفضل كورس في هذا المجال', rating: 5, date: '2023-07-10' }
+                ],
+                stats: {
+                    totalStudents: 1250,
+                    avgRating: 4.8,
+                    totalExams: 12,
+                    watchHours: 4500,
+                    totalLessons: 85,
+                    totalEarnings: 15600
+                },
+                exams: [
+                    { id: 1, title: 'اختبار أساسيات الزراعة العضوية' },
+                    { id: 2, title: 'اختبار تقنيات الري' },
+                    { id: 3, title: 'اختبار إدارة التربة' }
+                ]
+            },
+            {
+                id: 'EXP002',
+                firstName: 'محمد',
+                lastName: 'المصري',
+                email: 'mohamed@ziraatak.com',
+                phone: '+201234567890',
+                country: 'مصر',
+                address: 'القاهرة، مدينة نصر',
+                role: 'خبير تربة',
+                status: 'active',
+                birthDate: '1978-08-22',
+                joinDate: '2023-02-15',
+                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop',
+                expertTitle: 'أستاذ علوم التربة',
+                expertBio: 'أستاذ في علوم التربة بجامعة القاهرة، متخصص في تحسين جودة التربة ومعالجة مشاكل التآكل والملوحة.',
+                portfolio: [
+                    'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=200&h=200&fit=crop'
+                ],
+                phoneVerified: true,
+                courses: [
+                    { id: 4, title: 'علم التربة المتقدم', date: '2023-03-10', category: 'تربة' },
+                    { id: 5, title: 'معالجة التربة المالحة', date: '2023-05-25', category: 'تربة' }
+                ],
+                comments: [
+                    { id: 3, content: 'أفضل شرح لعلم التربة باللغة العربية', date: '2023-06-15' }
+                ],
+                ratings: [
+                    { id: 4, content: 'محتوى علمي ممتاز', rating: 5, date: '2023-06-15' }
+                ],
+                stats: {
+                    totalStudents: 890,
+                    avgRating: 4.9,
+                    totalExams: 8,
+                    watchHours: 2800,
+                    totalLessons: 45,
+                    totalEarnings: 9800
+                },
+                exams: [
+                    { id: 4, title: 'اختبار علم التربة' },
+                    { id: 5, title: 'اختبار معالجة التربة المالحة' }
+                ]
+            },
+            {
+                id: 'EXP003',
+                firstName: 'فاطمة',
+                lastName: 'الهاجري',
+                email: 'fatima@ziraatak.com',
+                phone: '+97450123456',
+                country: 'قطر',
+                address: 'الدوحة، الخليج الغربي',
+                role: 'خبير ري',
+                status: 'pending',
+                birthDate: '1990-12-05',
+                joinDate: '2023-04-01',
+                image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+                expertTitle: 'مهندسة أنظمة الري',
+                expertBio: 'مهندسة متخصصة في تصميم وتنفيذ أنظمة الري الذكية، مع خبرة في الزراعة المائية والهيدروبونيك.',
+                portfolio: [
+                    'https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=200&h=200&fit=crop'
+                ],
+                phoneVerified: false,
+                courses: [
+                    { id: 6, title: 'أنظمة الري الذكية', date: '2023-05-15', category: 'ري' }
+                ],
+                comments: [],
+                ratings: [
+                    { id: 5, content: 'شرح واضح ومفهوم', rating: 4, date: '2023-06-20' }
+                ],
+                stats: {
+                    totalStudents: 420,
+                    avgRating: 4.5,
+                    totalExams: 5,
+                    watchHours: 1200,
+                    totalLessons: 25,
+                    totalEarnings: 4500
+                },
+                exams: [
+                    { id: 6, title: 'اختبار أنظمة الري' }
+                ]
+            },
+            {
+                id: 'EXP004',
+                firstName: 'عمر',
+                lastName: 'الكويتي',
+                email: 'omar@ziraatak.com',
+                phone: '+96550123456',
+                country: 'الكويت',
+                address: 'الكويت، السالمية',
+                role: 'خبير محاصيل',
+                status: 'inactive',
+                birthDate: '1982-06-18',
+                joinDate: '2023-01-25',
+                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
+                expertTitle: 'خبير إنتاج المحاصيل',
+                expertBio: 'متخصص في تحسين إنتاجية المحاصيل وتطوير أصناف جديدة مقاومة للأمراض والظروف المناخية القاسية.',
+                portfolio: [
+                    'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=200&h=200&fit=crop'
+                ],
+                phoneVerified: true,
+                courses: [
+                    { id: 7, title: 'إنتاج المحاصيل الصيفية', date: '2023-03-20', category: 'محاصيل' },
+                    { id: 8, title: 'زراعة الخضروات المحمية', date: '2023-06-15', category: 'محاصيل' }
+                ],
+                comments: [
+                    { id: 4, content: 'معلومات قيمة جداً للمزارعين', date: '2023-07-01' },
+                    { id: 5, content: 'شكراً على النصائح العملية', date: '2023-07-02' }
+                ],
+                ratings: [
+                    { id: 6, content: 'محتوى ممتاز', rating: 5, date: '2023-07-01' }
+                ],
+                stats: {
+                    totalStudents: 680,
+                    avgRating: 4.7,
+                    totalExams: 7,
+                    watchHours: 2100,
+                    totalLessons: 38,
+                    totalEarnings: 7200
+                },
+                exams: [
+                    { id: 7, title: 'اختبار إنتاج المحاصيل' },
+                    { id: 8, title: 'اختبار الزراعة المحمية' }
+                ]
+            },
+            {
+                id: 'EXP005',
+                firstName: 'سارة',
+                lastName: 'العمانية',
+                email: 'sara@ziraatak.com',
+                phone: '+96850123456',
+                country: 'عمان',
+                address: 'مسقط، الخوير',
+                role: 'خبير عضوي',
+                status: 'active',
+                birthDate: '1988-11-30',
+                joinDate: '2023-03-10',
+                image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+                expertTitle: 'مستشار الزراعة العضوية',
+                expertBio: 'مستجمعات الشهادات الدولية في الزراعة العضوية، مساعدة المزارعين في التحول من الزراعة التقليدية إلى العضوية.',
+                portfolio: [
+                    'https://images.unsplash.com/photo-1595855759920-86582396756a?w=200&h=200&fit=crop',
+                    'https://images.unsplash.com/photo-1592419044706-39796d40f98c?w=200&h=200&fit=crop'
+                ],
+                phoneVerified: true,
+                courses: [
+                    { id: 9, title: 'التحول للزراعة العضوية', date: '2023-04-25', category: 'زراعة عضوية' },
+                    { id: 10, title: 'إنتاج السماد العضوي', date: '2023-07-10', category: 'زراعة عضوية' }
+                ],
+                comments: [
+                    { id: 6, content: 'كورس غير حياتي المهنية تماماً', date: '2023-07-15' }
+                ],
+                ratings: [
+                    { id: 7, content: 'أفضل استثمار قمت به', rating: 5, date: '2023-07-15' },
+                    { id: 8, content: 'معلومات عملية ومفيدة', rating: 5, date: '2023-07-18' }
+                ],
+                stats: {
+                    totalStudents: 950,
+                    avgRating: 4.9,
+                    totalExams: 9,
+                    watchHours: 3200,
+                    totalLessons: 52,
+                    totalEarnings: 11500
+                },
+                exams: [
+                    { id: 9, title: 'اختبار الزراعة العضوية' },
+                    { id: 10, title: 'اختبار إنتاج السماد العضوي' }
+                ]
+            }
+        ];
+        
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredExperts = [...experts];
+        let deleteTargetId = null;
+        let deleteAllMode = false;
+        
+        // ============================================
+        // Utility Functions
+        // ============================================
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+        
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('ar-EG', options);
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-error' : 'bg-warning';
+            toast.className = `toast ${bgColor} text-white px-6 py-4 rounded-xl shadow-lg flex items-center gap-3 min-w-[300px]`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'fadeIn 0.3s ease-out reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        function getStatusBadge(status) {
+            const statusMap = {
+                active: { class: 'badge-active', text: 'نشط' },
+                inactive: { class: 'badge-inactive', text: 'غير نشط' },
+                pending: { class: 'badge-pending', text: 'معلق' }
+            };
+            const s = statusMap[status] || statusMap.inactive;
+            return `<span class="${s.class} text-xs px-3 py-1 rounded-full font-medium">${s.text}</span>`;
+        }
+        
+        // ============================================
+        // Render Functions
+        // ============================================
+        function updateStats() {
+            const totalExperts = experts.length;
+            const activeExperts = experts.filter(e => e.status === 'active').length;
+            const pendingExperts = experts.filter(e => e.status === 'pending').length;
+            const totalCourses = experts.reduce((sum, e) => sum + e.courses.length, 0);
+            
+            document.getElementById('totalExperts').textContent = totalExperts;
+            document.getElementById('activeExperts').textContent = activeExperts;
+            document.getElementById('pendingExperts').textContent = pendingExperts;
+            document.getElementById('totalCourses').textContent = totalCourses;
+            document.getElementById('expertsCountBadge').textContent = totalExperts;
+        }
+        
+        function renderTable() {
+            const tbody = document.getElementById('expertsTableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageExperts = filteredExperts.slice(start, end);
+            
+            tbody.innerHTML = pageExperts.map((expert, index) => `
+                <tr class="table-row-hover border-b border-gray-50" style="animation: fadeInUp 0.5s ease-out ${index * 0.05}s forwards; opacity: 0;">
+                    <td class="py-4 px-6">
+                        <input type="checkbox" class="checkbox-custom expert-checkbox" data-id="${expert.id}">
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-3">
+                            <img src="${expert.image}" alt="${expert.firstName}" 
+                                 class="w-12 h-12 rounded-xl object-cover border-2 border-gray-100">
+                            <div>
+                                <p class="font-semibold text-gray-800">${expert.firstName} ${expert.lastName}</p>
+                                <p class="text-xs text-gray-400">${expert.id}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <p class="text-gray-700 text-sm">${expert.email}</p>
+                        <p class="text-xs text-gray-400">${expert.phone}</p>
+                    </td>
+                    <td class="py-4 px-6">
+                        <p class="text-gray-700 text-sm">${expert.role}</p>
+                        <p class="text-xs text-gray-400">${formatDate(expert.joinDate)}</p>
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-2 mb-1">
+                            <i class="fas fa-map-marker-alt text-primary text-xs"></i>
+                            <p class="text-gray-700 text-sm">${expert.country}</p>
+                        </div>
+                        ${getStatusBadge(expert.status)}
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-2">
+                            <button onclick="viewExpert('${expert.id}')" 
+                                    class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center"
+                                    title="عرض">
+                                <i class="fas fa-eye text-sm"></i>
+                            </button>
+                            <button onclick="editExpert('${expert.id}')" 
+                                    class="w-9 h-9 rounded-xl bg-green-50 text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center"
+                                    title="تعديل">
+                                <i class="fas fa-edit text-sm"></i>
+                            </button>
+                            <button onclick="deleteExpert('${expert.id}')" 
+                                    class="w-9 h-9 rounded-xl bg-red-50 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center"
+                                    title="حذف">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            renderPagination();
+        }
+        
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredExperts.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, filteredExperts.length);
+            
+            document.getElementById('showingFrom').textContent = filteredExperts.length ? start : 0;
+            document.getElementById('showingTo').textContent = end;
+            document.getElementById('totalRecords').textContent = filteredExperts.length;
+            
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
+            
+            const paginationNumbers = document.getElementById('paginationNumbers');
+            let html = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<button class="w-10 h-10 rounded-xl bg-primary text-white font-medium">${i}</button>`;
+                } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button onclick="goToPage(${i})" class="w-10 h-10 rounded-xl border border-gray-200 text-gray-600 hover:bg-primary hover:text-white hover:border-primary transition-all">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span class="px-2 text-gray-400">...</span>`;
+                }
+            }
+            
+            paginationNumbers.innerHTML = html;
+        }
+        
+        // ============================================
+        // Event Handlers
+        // ============================================
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+        }
+        
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        });
+        
+        document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredExperts.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        });
+        
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            filteredExperts = experts.filter(expert => 
+                expert.id.toLowerCase().includes(query) ||
+                `${expert.firstName} ${expert.lastName}`.toLowerCase().includes(query) ||
+                expert.email.toLowerCase().includes(query) ||
+                expert.phone.includes(query) ||
+                expert.country.toLowerCase().includes(query)
+            );
+            currentPage = 1;
+            renderTable();
+        });
+        
+        // Age Filter
+        document.getElementById('ageFilter').addEventListener('change', (e) => {
+            const ageRange = e.target.value;
+            if (!ageRange) {
+                filteredExperts = [...experts];
+            } else {
+                filteredExperts = experts.filter(expert => {
+                    const age = calculateAge(expert.birthDate);
+                    if (ageRange === '20-30') return age >= 20 && age <= 30;
+                    if (ageRange === '30-40') return age >= 30 && age <= 40;
+                    if (ageRange === '40-50') return age >= 40 && age <= 50;
+                    if (ageRange === '50+') return age >= 50;
+                    return true;
+                });
+            }
+            currentPage = 1;
+            renderTable();
+        });
+        
+        // Status Filter
+        document.getElementById('statusFilter').addEventListener('change', (e) => {
+            const status = e.target.value;
+            if (!status) {
+                filteredExperts = [...experts];
+            } else {
+                filteredExperts = experts.filter(expert => expert.status === status);
+            }
+            currentPage = 1;
+            renderTable();
+        });
+        
+        // Select All
+        document.getElementById('selectAll').addEventListener('change', (e) => {
+            document.querySelectorAll('.expert-checkbox').forEach(cb => {
+                cb.checked = e.target.checked;
+            });
+        });
+        
+        // Delete All
+        document.getElementById('deleteAllBtn').addEventListener('click', () => {
+            deleteAllMode = true;
+            deleteTargetId = null;
+            document.getElementById('deleteMessage').textContent = 'هل أنت متأكد من حذف جميع الخبراء؟ لا يمكن التراجع عن هذا الإجراء.';
+            document.getElementById('deleteModal').classList.remove('hidden');
+        });
+        
+        // Add Expert
+        document.getElementById('addExpertBtn').addEventListener('click', () => {
+            document.getElementById('editModalTitle').textContent = 'إضافة خبير جديد';
+            document.getElementById('editExpertId').value = '';
+            document.getElementById('expertForm').reset();
+            document.getElementById('editImagePreview').src = 'https://ui-avatars.com/api/?name=Expert&background=8BBA40&color=fff';
+            document.getElementById('portfolioPreview').innerHTML = '';
+            document.querySelector('input[name="accountStatus"][value="active"]').checked = true;
+            document.getElementById('editModal').classList.remove('hidden');
+        });
+        
+        // ============================================
+        // Modal Functions
+        // ============================================
+        function viewExpert(id) {
+            const expert = experts.find(e => e.id === id);
+            if (!expert) return;
+            
+            // Header
+            document.getElementById('viewExpertImage').src = expert.image;
+            document.getElementById('viewExpertName').textContent = `${expert.firstName} ${expert.lastName}`;
+            document.getElementById('viewExpertTitle').textContent = expert.expertTitle;
+            document.getElementById('viewExpertId').textContent = `المعرف: ${expert.id}`;
+            
+            // Info Tab
+            document.getElementById('viewFirstName').textContent = expert.firstName;
+            document.getElementById('viewLastName').textContent = expert.lastName;
+            document.getElementById('viewEmail').textContent = expert.email;
+            document.getElementById('viewPhone').textContent = expert.phone;
+            document.getElementById('viewPhoneVerified').innerHTML = expert.phoneVerified 
+                ? '<i class="fas fa-check-circle text-success ml-1"></i><span class="text-success">تم التأكيد</span>'
+                : '<i class="fas fa-times-circle text-error ml-1"></i><span class="text-error">لم يتم التأكيد</span>';
+            document.getElementById('viewCountry').textContent = expert.country;
+            document.getElementById('viewAddress').textContent = expert.address;
+            document.getElementById('viewRole').textContent = expert.role;
+            document.getElementById('viewBirthDate').textContent = formatDate(expert.birthDate);
+            document.getElementById('viewJoinDate').textContent = formatDate(expert.joinDate);
+            
+            // Courses Tab
+            document.getElementById('viewTotalCourses').textContent = expert.courses.length;
+            document.getElementById('viewCoursesList').innerHTML = expert.courses.length ? expert.courses.map(course => `
+                <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                        <p class="font-medium text-gray-800">${course.title}</p>
+                        <p class="text-xs text-gray-500">${formatDate(course.date)} - ${course.category}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="w-8 h-8 rounded-lg bg-green-50 text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center">
+                            <i class="fas fa-edit text-xs"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-lg bg-red-50 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('') : '<p class="text-gray-500 text-center py-8">لا توجد كورسات</p>';
+            
+            // Comments Tab
+            document.getElementById('viewTotalComments').textContent = expert.comments.length;
+            document.getElementById('viewCommentsList').innerHTML = expert.comments.length ? expert.comments.map(comment => `
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-400">${formatDate(comment.date)}</span>
+                        <div class="flex items-center gap-2">
+                            <button class="w-8 h-8 rounded-lg bg-green-50 text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center">
+                                <i class="fas fa-edit text-xs"></i>
+                            </button>
+                            <button class="w-8 h-8 rounded-lg bg-red-50 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">${comment.content}</p>
+                </div>
+            `).join('') : '<p class="text-gray-500 text-center py-8">لا توجد تعليقات</p>';
+            
+            // Ratings Tab
+            document.getElementById('viewTotalRatings').textContent = expert.ratings.length;
+            document.getElementById('viewRatingsList').innerHTML = expert.ratings.length ? expert.ratings.map(rating => `
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-1">
+                            ${Array(5).fill(0).map((_, i) => `<i class="fas fa-star ${i < rating.rating ? 'text-yellow3' : 'text-gray-300'} text-sm"></i>`).join('')}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="w-8 h-8 rounded-lg bg-green-50 text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center">
+                                <i class="fas fa-edit text-xs"></i>
+                            </button>
+                            <button class="w-8 h-8 rounded-lg bg-red-50 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">${rating.content}</p>
+                </div>
+            `).join('') : '<p class="text-gray-500 text-center py-8">لا توجد تقييمات</p>';
+            
+            // About Tab
+            document.getElementById('viewExpertTitleAbout').textContent = expert.expertTitle;
+            document.getElementById('viewExpertBio').textContent = expert.expertBio;
+            document.getElementById('viewPortfolio').innerHTML = expert.portfolio.length ? expert.portfolio.map(img => `
+                <img src="${img}" alt="Portfolio" class="w-full h-24 rounded-xl object-cover image-preview cursor-pointer">
+            `).join('') : '<p class="text-gray-500 col-span-4 text-center py-8">لا توجد صور</p>';
+            
+            // Stats Tab
+            document.getElementById('viewTotalStudents').textContent = expert.stats.totalStudents.toLocaleString();
+            document.getElementById('viewAvgRating').textContent = expert.stats.avgRating;
+            document.getElementById('viewTotalExams').textContent = expert.stats.totalExams;
+            document.getElementById('viewWatchHours').textContent = expert.stats.watchHours.toLocaleString();
+            document.getElementById('viewTotalLessons').textContent = expert.stats.totalLessons;
+            document.getElementById('viewTotalEarnings').textContent = expert.stats.totalEarnings.toLocaleString();
+            
+            // Exams Tab
+            document.getElementById('viewExamsList').innerHTML = expert.exams.length ? expert.exams.map(exam => `
+                <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-between">
+                    <p class="font-medium text-gray-800">${exam.title}</p>
+                    <div class="flex items-center gap-2">
+                        <button class="w-8 h-8 rounded-lg bg-green-50 text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center">
+                            <i class="fas fa-edit text-xs"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-lg bg-red-50 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('') : '<p class="text-gray-500 text-center py-8">لا توجد اختبارات</p>';
+            
+            document.getElementById('viewModal').classList.remove('hidden');
+        }
+        
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.add('hidden');
+        }
+        
+        function editExpert(id) {
+            const expert = experts.find(e => e.id === id);
+            if (!expert) return;
+            
+            document.getElementById('editModalTitle').textContent = 'تعديل بيانات الخبير';
+            document.getElementById('editExpertId').value = expert.id;
+            
+            // Set form values
+            document.getElementById('editFirstName').value = expert.firstName;
+            document.getElementById('editLastName').value = expert.lastName;
+            document.getElementById('editEmail').value = expert.email;
+            document.getElementById('editPhone').value = expert.phone;
+            document.getElementById('editCountry').value = expert.country;
+            document.getElementById('editAddress').value = expert.address;
+            document.getElementById('editRole').value = expert.role;
+            document.getElementById('editBirthDate').value = expert.birthDate;
+            document.getElementById('editExpertTitle').value = expert.expertTitle;
+            document.getElementById('editExpertBio').value = expert.expertBio;
+            document.getElementById('editImagePreview').src = expert.image;
+            
+            // Set status
+            document.querySelector(`input[name="accountStatus"][value="${expert.status}"]`).checked = true;
+            
+            // Portfolio preview
+            const portfolioPreview = document.getElementById('portfolioPreview');
+            portfolioPreview.innerHTML = expert.portfolio.map((img, i) => `
+                <div class="relative group">
+                    <img src="${img}" alt="Portfolio" class="w-full h-20 rounded-xl object-cover">
+                    <button type="button" onclick="removePortfolioImage(${i})" 
+                            class="absolute -top-2 -left-2 w-6 h-6 bg-error text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+        
+        function saveExpert() {
+            const id = document.getElementById('editExpertId').value;
+            const isNew = !id;
+            
+            const expertData = {
+                id: id || 'EXP' + String(experts.length + 1).padStart(3, '0'),
+                firstName: document.getElementById('editFirstName').value,
+                lastName: document.getElementById('editLastName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                country: document.getElementById('editCountry').value,
+                address: document.getElementById('editAddress').value,
+                role: document.getElementById('editRole').value,
+                birthDate: document.getElementById('editBirthDate').value,
+                expertTitle: document.getElementById('editExpertTitle').value,
+                expertBio: document.getElementById('editExpertBio').value,
+                status: document.querySelector('input[name="accountStatus"]:checked').value,
+                image: document.getElementById('editImagePreview').src,
+                joinDate: isNew ? new Date().toISOString().split('T')[0] : experts.find(e => e.id === id)?.joinDate,
+                portfolio: [],
+                phoneVerified: isNew ? false : experts.find(e => e.id === id)?.phoneVerified,
+                courses: isNew ? [] : experts.find(e => e.id === id)?.courses || [],
+                comments: isNew ? [] : experts.find(e => e.id === id)?.comments || [],
+                ratings: isNew ? [] : experts.find(e => e.id === id)?.ratings || [],
+                stats: isNew ? { totalStudents: 0, avgRating: 0, totalExams: 0, watchHours: 0, totalLessons: 0, totalEarnings: 0 } : experts.find(e => e.id === id)?.stats,
+                exams: isNew ? [] : experts.find(e => e.id === id)?.exams || []
+            };
+            
+            // Get portfolio images
+            document.querySelectorAll('#portfolioPreview img').forEach(img => {
+                expertData.portfolio.push(img.src);
+            });
+            
+            if (isNew) {
+                experts.push(expertData);
+                showToast('تم إضافة الخبير بنجاح');
+            } else {
+                const index = experts.findIndex(e => e.id === id);
+                if (index !== -1) {
+                    experts[index] = expertData;
+                }
+                showToast('تم تحديث بيانات الخبير بنجاح');
+            }
+            
+            filteredExperts = [...experts];
+            updateStats();
+            renderTable();
+            closeEditModal();
+        }
+        
+        function deleteExpert(id) {
+            deleteAllMode = false;
+            deleteTargetId = id;
+            document.getElementById('deleteMessage').textContent = 'هل أنت متأكد من حذف هذا الخبير؟ لا يمكن التراجع عن هذا الإجراء.';
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            deleteTargetId = null;
+            deleteAllMode = false;
+        }
+        
+        function confirmDelete() {
+            if (deleteAllMode) {
+                experts = [];
+                showToast('تم حذف جميع الخبراء بنجاح', 'warning');
+            } else if (deleteTargetId) {
+                experts = experts.filter(e => e.id !== deleteTargetId);
+                showToast('تم حذف الخبير بنجاح');
+            }
+            
+            filteredExperts = [...experts];
+            updateStats();
+            renderTable();
+            closeDeleteModal();
+        }
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('editImagePreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function handlePortfolioUpload(event) {
+            const files = event.target.files;
+            const preview = document.getElementById('portfolioPreview');
+            
+            for (let file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative group';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Portfolio" class="w-full h-20 rounded-xl object-cover">
+                        <button type="button" onclick="this.parentElement.remove()" 
+                                class="absolute -top-2 -left-2 w-6 h-6 bg-error text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function removePortfolioImage(index) {
+            const preview = document.getElementById('portfolioPreview');
+            const images = preview.querySelectorAll('div');
+            if (images[index]) {
+                images[index].remove();
+            }
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                
+                btn.classList.add('active');
+                document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
+            });
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+        
+        // ============================================
+        // Initialize
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            renderTable();
+        });
+    </script>
+</body>
+</html>

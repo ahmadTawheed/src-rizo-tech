@@ -1,0 +1,3307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الزراعة الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+            --overMode-color: #000000;
+            --green1: #52FF55;
+            --green2: #EBFCF1;
+            --green3: #DCFCE7;
+            --red1: #FF8A8C;
+            --red2: #FFD8EF;
+            --red3: #80141B;
+            --purble1: #F3E8FF;
+            --purble2: #7F23CF;
+            --yellow1: #FFFAC4;
+            --yellow2: #A16006;
+            --yellow3: #FFCC00;
+            --browen1: #91410F;
+            --white0: #CCCCCC;
+            --white1: #ECECEC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-color);
+            color: var(--iconAndUl-colors);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--third-color) 0%, #0D2233 100%);
+            padding: 20px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar.collapsed .logo-text,
+        .sidebar.collapsed .menu-text,
+        .sidebar.collapsed .user-info {
+            display: none;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .logo-text h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--primary-color);
+            font-size: 12px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .menu-item i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: 280px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-right: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background: var(--green3);
+            color: var(--third-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--background-color);
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 400px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary-color);
+            background: white;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+        }
+
+        .search-box i {
+            color: var(--bg-icon);
+            margin-left: 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            border: none;
+            background: var(--green3);
+            color: var(--secondary-color);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 15px;
+            background: var(--green3);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-details span {
+            font-size: 12px;
+            color: var(--secondary-color);
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--third-color);
+        }
+
+        .page-title .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            font-size: 13px;
+            color: var(--bg-icon);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-color), transparent);
+            opacity: 0.1;
+            border-radius: 0 16px 0 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.green {
+            background: var(--green3);
+            color: var(--secondary-color);
+        }
+
+        .stat-icon.blue {
+            background: var(--purble1);
+            color: var(--purble2);
+        }
+
+        .stat-icon.yellow {
+            background: var(--yellow1);
+            color: var(--yellow2);
+        }
+
+        .stat-icon.red {
+            background: var(--red2);
+            color: var(--red3);
+        }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--third-color);
+        }
+
+        .stat-info p {
+            font-size: 13px;
+            color: var(--bg-icon);
+            margin-top: 3px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .stat-change.up {
+            background: var(--green2);
+            color: var(--success-color);
+        }
+
+        .stat-change.down {
+            background: var(--red2);
+            color: var(--error-color);
+        }
+
+        /* Cards Container */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--white1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--third-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary-color);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139, 186, 64, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--green3);
+            color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-color), var(--red3));
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), var(--yellow2));
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 8px;
+            justify-content: center;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: var(--green3);
+        }
+
+        .data-table th {
+            padding: 15px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--third-color);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--white1);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--green2);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--green2);
+            color: var(--success-color);
+        }
+
+        .badge-warning {
+            background: var(--yellow1);
+            color: var(--yellow2);
+        }
+
+        .badge-danger {
+            background: var(--red2);
+            color: var(--error-color);
+        }
+
+        .badge-info {
+            background: var(--purble1);
+            color: var(--purble2);
+        }
+
+        /* Course Card */
+        .course-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .course-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .course-level {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .course-price-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .course-price-tag.free {
+            background: var(--green2);
+            color: var(--success-color);
+        }
+
+        .course-price-tag.paid {
+            background: var(--yellow1);
+            color: var(--yellow2);
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--third-color);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .course-instructor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .instructor-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--green3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        .instructor-name {
+            font-size: 13px;
+            color: var(--bg-icon);
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: var(--bg-icon);
+            padding-top: 15px;
+            border-top: 1px solid var(--white1);
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .course-meta i {
+            color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.65);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--white1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--third-color), #0D2233);
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--error-color);
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: calc(90vh - 140px);
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid var(--white1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
+            background: var(--background-color);
+            padding: 5px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--bg-icon);
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--third-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--third-color);
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: var(--error-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--background-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--bg-icon);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            background: var(--background-color);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232D2D2D' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 16px center;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--bg-icon);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--background-color);
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background: var(--green2);
+        }
+
+        .file-upload i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .file-upload p {
+            color: var(--bg-icon);
+            font-size: 14px;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        /* Checkbox & Radio */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .form-check input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+
+        .form-check label {
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Points List */
+        .points-container {
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            padding: 15px;
+            background: var(--background-color);
+        }
+
+        .point-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .point-item input {
+            flex: 1;
+        }
+
+        .point-item .remove-point {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: none;
+            background: var(--red2);
+            color: var(--error-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .point-item .remove-point:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .add-point-btn {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--primary-color);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-point-btn:hover {
+            background: var(--green2);
+        }
+
+        /* Quiz Builder */
+        .quiz-builder {
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: var(--background-color);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 2px solid var(--white1);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .option-item.correct {
+            border-color: var(--success-color);
+            background: var(--green2);
+        }
+
+        .option-item input[type="radio"] {
+            accent-color: var(--success-color);
+        }
+
+        .option-item input[type="text"] {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+        }
+
+        .option-item input[type="text"]:focus {
+            outline: none;
+        }
+
+        /* Rating Stars */
+        .rating {
+            display: flex;
+            gap: 3px;
+        }
+
+        .rating i {
+            color: var(--yellow3);
+            font-size: 14px;
+        }
+
+        .rating i.empty {
+            color: var(--bg-icon);
+        }
+
+        /* User Info Card */
+        .user-info-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info-card .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-info-card .info h4 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .user-info-card .info p {
+            font-size: 12px;
+            color: var(--bg-icon);
+        }
+
+        /* Search Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .filter-bar .search-input {
+            position: relative;
+        }
+
+        .filter-bar .search-input input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-bar .search-input i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bg-icon);
+        }
+
+        .filter-bar select {
+            padding: 12px 40px 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        /* Status Toggle */
+        .status-toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: var(--bg-icon);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-toggle.active {
+            background: var(--success-color);
+        }
+
+        .status-toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .status-toggle.active::after {
+            right: 26px;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-right .search-box {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .toast.success {
+            background: var(--success-color);
+        }
+
+        .toast.error {
+            background: var(--error-color);
+        }
+
+        .toast.warning {
+            background: var(--warning-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 80px;
+            color: var(--bg-icon);
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: var(--third-color);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--bg-icon);
+            font-size: 14px;
+        }
+
+        /* Preview Card */
+        .preview-card {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Lesson Item */
+        .lesson-item {
+            background: var(--background-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid var(--white1);
+            transition: all 0.3s ease;
+        }
+
+        .lesson-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .lesson-number {
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* Charts placeholder */
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, var(--green2), var(--green3));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <div class="logo-text">
+                <h1>زراعة ذكية</h1>
+                <span>لوحة التحكم</span>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <div class="menu-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">الرئيسية</span>
+            </div>
+            <div class="menu-item" data-page="courses" onclick="navigateTo('courses')">
+                <i class="fas fa-book-open"></i>
+                <span class="menu-text">الكورسات</span>
+            </div>
+            <div class="menu-item" data-page="specializations" onclick="navigateTo('specializations')">
+                <i class="fas fa-th-large"></i>
+                <span class="menu-text">التخصصات</span>
+            </div>
+            <div class="menu-item" data-page="instructors" onclick="navigateTo('instructors')">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span class="menu-text">الخبراء</span>
+            </div>
+            <div class="menu-item" data-page="students" onclick="navigateTo('students')">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">الطلاب</span>
+            </div>
+            <div class="menu-item" data-page="reports" onclick="navigateTo('reports')">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">التقارير</span>
+            </div>
+        </nav>
+
+        <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+            <div class="menu-item" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">تسجيل الخروج</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-right">
+                <button class="toggle-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="ابحث عن كورس، خبير، طالب...">
+                </div>
+            </div>
+            <div class="header-left">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+                <div class="user-profile">
+                    <div class="user-avatar">م</div>
+                    <div class="user-details">
+                        <h4>مدير النظام</h4>
+                        <span>مسؤول</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area" id="contentArea">
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page active">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>لوحة التحكم</h2>
+                        <div class="breadcrumb">
+                            <a href="#">الرئيسية</a>
+                            <i class="fas fa-chevron-left"></i>
+                            <span>لوحة التحكم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCourses">24</h3>
+                            <p>إجمالي الكورسات</p>
+                            <span class="stat-change up"><i class="fas fa-arrow-up"></i> 12% هذا الشهر</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalStudents">1,458</h3>
+                            <p>إجمالي الطلاب</p>
+                            <span class="stat-change up"><i class="fas fa-arrow-up"></i> 8% هذا الشهر</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon yellow">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalInstructors">18</h3>
+                            <p>الخبراء</p>
+                            <span class="stat-change up"><i class="fas fa-arrow-up"></i> 3 جدد</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalRevenue">45,230</h3>
+                            <p>الإيرادات (ريال)</p>
+                            <span class="stat-change up"><i class="fas fa-arrow-up"></i> 15% هذا الشهر</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Courses & Activity -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-clock"></i> أحدث الكورسات</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="navigateTo('courses')">عرض الكل</button>
+                        </div>
+                        <div class="card-body" id="recentCoursesList">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-bell"></i> آخر النشاطات</h3>
+                        </div>
+                        <div class="card-body" id="recentActivities">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Page -->
+            <div id="coursesPage" class="page" style="display: none;">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>إدارة الكورسات</h2>
+                        <div class="breadcrumb">
+                            <a href="#" onclick="navigateTo('dashboard')">الرئيسية</a>
+                            <i class="fas fa-chevron-left"></i>
+                            <span>الكورسات</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-danger" onclick="deleteAllCourses()">
+                            <i class="fas fa-trash-alt"></i> حذف الكل
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddCourseModal()">
+                            <i class="fas fa-plus"></i> إضافة كورس جديد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="courseSearch" placeholder="ابحث عن اسم الكورس، الخبير، البريد، الدولة..." onkeyup="filterCourses()">
+                    </div>
+                    <select id="filterCategory" onchange="filterCourses()">
+                        <option value="">جميع التخصصات</option>
+                    </select>
+                    <select id="filterLevel" onchange="filterCourses()">
+                        <option value="">جميع المستويات</option>
+                        <option value="مبتدئ">مبتدئ</option>
+                        <option value="متوسط">متوسط</option>
+                        <option value="متقدم">متقدم</option>
+                    </select>
+                    <select id="filterPrice" onchange="filterCourses()">
+                        <option value="">الكل</option>
+                        <option value="free">مجاني</option>
+                        <option value="paid">مدفوع</option>
+                    </select>
+                </div>
+
+                <!-- Courses Table -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCourses" onchange="toggleSelectAll()"></th>
+                                        <th>الكورس</th>
+                                        <th>الخبير</th>
+                                        <th>التخصص</th>
+                                        <th>المستوى</th>
+                                        <th>النوع</th>
+                                        <th>التاريخ</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coursesTableBody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specializations Page -->
+            <div id="specializationsPage" class="page" style="display: none;">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>إدارة التخصصات</h2>
+                        <div class="breadcrumb">
+                            <a href="#" onclick="navigateTo('dashboard')">الرئيسية</a>
+                            <i class="fas fa-chevron-left"></i>
+                            <span>التخصصات</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddSpecializationModal()">
+                        <i class="fas fa-plus"></i> إضافة تخصص جديد
+                    </button>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="search-input" style="flex: 1;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="specSearch" placeholder="ابحث عن اسم التخصص..." onkeyup="filterSpecializations()">
+                    </div>
+                </div>
+
+                <!-- Specializations Table -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>التخصص</th>
+                                        <th>عدد الكورسات</th>
+                                        <th>الحالة</th>
+                                        <th>تاريخ الإضافة</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="specializationsTableBody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Pages Placeholders -->
+            <div id="instructorsPage" class="page" style="display: none;">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>إدارة الخبراء</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="empty-state">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <h3>قريباً</h3>
+                            <p>هذا القسم قيد التطوير</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="studentsPage" class="page" style="display: none;">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>إدارة الطلاب</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>قريباً</h3>
+                            <p>هذا القسم قيد التطوير</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reportsPage" class="page" style="display: none;">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>التقارير والإحصائيات</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="empty-state">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>قريباً</h3>
+                            <p>هذا القسم قيد التطوير</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Course Modal -->
+    <div class="modal-overlay" id="courseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="courseModalTitle">إضافة كورس جديد</h3>
+                <button class="modal-close" onclick="closeCourseModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('courseDetails')">تفاصيل الكورس</button>
+                    <button class="tab-btn" onclick="switchTab('courseLessons')">الدروس</button>
+                    <button class="tab-btn" onclick="switchTab('courseQuiz')">الاختبار</button>
+                    <button class="tab-btn" onclick="switchTab('coursePreview')">المعاينة</button>
+                </div>
+
+                <!-- Tab 1: Course Details -->
+                <div class="tab-content active" id="courseDetails">
+                    <form id="courseForm">
+                        <input type="hidden" id="courseId">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">صورة الكورس <span class="required">*</span></label>
+                                <div class="file-upload" onclick="document.getElementById('courseImage').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p id="courseImageName">اضغط لتحميل الصورة</p>
+                                    <input type="file" id="courseImage" accept="image/*" onchange="handleImageUpload(this)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">عنوان الكورس <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="courseTitle" placeholder="أدخل عنوان الكورس" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">الخبير المسؤول <span class="required">*</span></label>
+                                <select class="form-select" id="courseInstructor" required>
+                                    <option value="">اختر الخبير</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">التخصص <span class="required">*</span></label>
+                                <select class="form-select" id="courseCategory" required>
+                                    <option value="">اختر التخصص</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">وصف بسيط <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="courseShortDesc" placeholder="وصف مختصر يظهر في البطاقة" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">وصف تفصيلي <span class="required">*</span></label>
+                            <textarea class="form-control" id="courseFullDesc" placeholder="وصف تفصيلي للكورس" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">ماذا سنتعلم؟</label>
+                            <div class="points-container" id="learningPoints">
+                                <div class="point-item">
+                                    <input type="text" class="form-control" placeholder="نقطة التعلم">
+                                    <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <button type="button" class="add-point-btn" onclick="addLearningPoint()">
+                                <i class="fas fa-plus"></i> إضافة نقطة
+                            </button>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">مدة الكورس <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="courseDuration" placeholder="مثال: 10 ساعات" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">مستوى الكورس <span class="required">*</span></label>
+                                <select class="form-select" id="courseLevel" required>
+                                    <option value="">اختر المستوى</option>
+                                    <option value="مبتدئ">مبتدئ</option>
+                                    <option value="متوسط">متوسط</option>
+                                    <option value="متقدم">متقدم</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">شهادة معتمدة</label>
+                                <select class="form-select" id="courseCertificate">
+                                    <option value="yes">نعم</option>
+                                    <option value="no">لا</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">حالة الكورس <span class="required">*</span></label>
+                                <select class="form-select" id="coursePriceType" onchange="togglePriceField()" required>
+                                    <option value="free">مجاني</option>
+                                    <option value="paid">مدفوع</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="priceField" style="display: none;">
+                            <label class="form-label">سعر الكورس (ريال) <span class="required">*</span></label>
+                            <input type="number" class="form-control" id="coursePrice" placeholder="أدخل السعر">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">فيديو المقدمة</label>
+                            <div class="form-row">
+                                <div style="flex: 2;">
+                                    <input type="text" class="form-control" id="courseVideoUrl" placeholder="رابط الفيديو (YouTube, Vimeo...)">
+                                </div>
+                                <div style="flex: 1;">
+                                    <div class="file-upload" onclick="document.getElementById('courseVideoFile').click()" style="padding: 12px;">
+                                        <i class="fas fa-video"></i>
+                                        <p style="font-size: 12px;">أو تحميل ملف</p>
+                                        <input type="file" id="courseVideoFile" accept="video/*" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab 2: Lessons -->
+                <div class="tab-content" id="courseLessons">
+                    <div id="lessonsContainer">
+                        <!-- Lessons will be added here dynamically -->
+                    </div>
+                    <button type="button" class="add-point-btn" onclick="addNewLesson()">
+                        <i class="fas fa-plus"></i> إضافة درس جديد
+                    </button>
+                </div>
+
+                <!-- Tab 3: Quiz -->
+                <div class="tab-content" id="courseQuiz">
+                    <div class="form-check" style="margin-bottom: 20px;">
+                        <input type="checkbox" id="hasQuiz" onchange="toggleQuizBuilder()">
+                        <label for="hasQuiz">إضافة اختبار للكورس</label>
+                    </div>
+                    
+                    <div id="quizContainer" style="display: none;">
+                        <div id="questionsContainer">
+                            <!-- Questions will be added here -->
+                        </div>
+                        <button type="button" class="add-point-btn" onclick="addNewQuestion()">
+                            <i class="fas fa-plus"></i> إضافة سؤال جديد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Preview -->
+                <div class="tab-content" id="coursePreview">
+                    <div class="preview-card course-card">
+                        <div class="course-image" id="previewImage">
+                            <i class="fas fa-image" style="font-size: 50px; color: white;"></i>
+                            <span class="course-level" id="previewLevel">مبتدئ</span>
+                            <span class="course-price-tag free" id="previewPriceTag">مجاني</span>
+                        </div>
+                        <div class="course-content">
+                            <h3 class="course-title" id="previewTitle">عنوان الكورس</h3>
+                            <p style="color: #666; font-size: 14px; margin-bottom: 15px;" id="previewShortDesc">وصف بسيط للكورس</p>
+                            <div class="course-instructor">
+                                <div class="instructor-avatar" id="previewInstructorAvatar">خ</div>
+                                <span class="instructor-name" id="previewInstructor">اسم الخبير</span>
+                            </div>
+                            <div class="course-meta">
+                                <span><i class="fas fa-clock"></i> <span id="previewDuration">0 ساعات</span></span>
+                                <span><i class="fas fa-users"></i> <span id="previewStudents">0 طالب</span></span>
+                                <span><i class="fas fa-star"></i> <span id="previewRating">0</span></span>
+                            </div>
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                                <span style="font-size: 20px; font-weight: 700; color: var(--primary-color);" id="previewPriceDisplay">مجاني</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCourseModal()">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveCourse()">
+                    <i class="fas fa-save"></i> حفظ الكورس
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Course Modal -->
+    <div class="modal-overlay" id="viewCourseModal">
+        <div class="modal" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h3 class="modal-title">تفاصيل الكورس</h3>
+                <button class="modal-close" onclick="closeViewModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchViewTab('viewDetails')">تفاصيل الكورس</button>
+                    <button class="tab-btn" onclick="switchViewTab('viewLessons')">دروس الكورس</button>
+                    <button class="tab-btn" onclick="switchViewTab('viewStats')">إحصائيات الكورس</button>
+                    <button class="tab-btn" onclick="switchViewTab('viewInstructor')">معلومات الخبير</button>
+                    <button class="tab-btn" onclick="switchViewTab('viewComments')">التعليقات</button>
+                    <button class="tab-btn" onclick="switchViewTab('viewRatings')">التقييمات</button>
+                    <button class="tab-btn" onclick="switchViewTab('viewCertificates')">الشهادات</button>
+                </div>
+
+                <!-- View Details Tab -->
+                <div class="tab-content active" id="viewDetails">
+                    <div id="viewDetailsContent"></div>
+                </div>
+
+                <!-- View Lessons Tab -->
+                <div class="tab-content" id="viewLessons">
+                    <div id="viewLessonsContent"></div>
+                </div>
+
+                <!-- View Stats Tab -->
+                <div class="tab-content" id="viewStats">
+                    <div id="viewStatsContent"></div>
+                </div>
+
+                <!-- View Instructor Tab -->
+                <div class="tab-content" id="viewInstructor">
+                    <div id="viewInstructorContent"></div>
+                </div>
+
+                <!-- View Comments Tab -->
+                <div class="tab-content" id="viewComments">
+                    <div id="viewCommentsContent"></div>
+                </div>
+
+                <!-- View Ratings Tab -->
+                <div class="tab-content" id="viewRatings">
+                    <div id="viewRatingsContent"></div>
+                </div>
+
+                <!-- View Certificates Tab -->
+                <div class="tab-content" id="viewCertificates">
+                    <div id="viewCertificatesContent"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeViewModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Specialization Modal -->
+    <div class="modal-overlay" id="specializationModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="specModalTitle">إضافة تخصص جديد</h3>
+                <button class="modal-close" onclick="closeSpecModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="specForm">
+                    <input type="hidden" id="specId">
+                    <div class="form-group">
+                        <label class="form-label">اسم التخصص <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="specName" placeholder="أدخل اسم التخصص" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الحالة</label>
+                        <select class="form-select" id="specStatus">
+                            <option value="active">نشط</option>
+                            <option value="inactive">معلق</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeSpecModal()">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveSpecialization()">
+                    <i class="fas fa-save"></i> حفظ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA STORE ====================
+        let courses = [];
+        let specializations = [];
+        let instructors = [];
+        let lessons = [];
+        let questions = [];
+        let currentCourseId = null;
+        let courseImageData = null;
+
+        // Sample Data
+        const sampleInstructors = [
+            { id: 1, firstName: 'أحمد', lastName: 'المحمدي', email: 'ahmed@farm.com', phone: '0501234567', country: 'السعودية', address: 'الرياض', image: null },
+            { id: 2, firstName: 'سارة', lastName: 'العتيبي', email: 'sara@farm.com', phone: '0507654321', country: 'السعودية', address: 'جدة', image: null },
+            { id: 3, firstName: 'محمد', lastName: 'القحطاني', email: 'mohammed@farm.com', phone: '0509876543', country: 'السعودية', address: 'الدمام', image: null },
+            { id: 4, firstName: 'فاطمة', lastName: 'السعيد', email: 'fatima@farm.com', phone: '0503456789', country: 'مصر', address: 'القاهرة', image: null },
+            { id: 5, firstName: 'عمر', lastName: 'النجار', email: 'omar@farm.com', phone: '0502345678', country: 'الأردن', address: 'عمان', image: null }
+        ];
+
+        const sampleSpecializations = [
+            { id: 1, name: 'الزراعة العضوية', status: 'active', createdAt: '2024-01-15', courseCount: 5 },
+            { id: 2, name: 'الري الحديث', status: 'active', createdAt: '2024-01-20', courseCount: 3 },
+            { id: 3, name: 'تربية الماشية', status: 'active', createdAt: '2024-02-01', courseCount: 4 },
+            { id: 4, name: 'الصوب الزراعية', status: 'active', createdAt: '2024-02-10', courseCount: 2 },
+            { id: 5, name: 'تسميد التربة', status: 'active', createdAt: '2024-02-15', courseCount: 6 },
+            { id: 6, name: 'مكافحة الآفات', status: 'inactive', createdAt: '2024-02-20', courseCount: 3 },
+            { id: 7, name: 'زراعة المحاصيل', status: 'active', createdAt: '2024-03-01', courseCount: 8 },
+            { id: 8, name: 'تقنيات الحصاد', status: 'active', createdAt: '2024-03-05', courseCount: 2 }
+        ];
+
+        const sampleCourses = [
+            {
+                id: 1,
+                title: 'أساسيات الزراعة العضوية للمبتدئين',
+                shortDesc: 'تعلم أساسيات الزراعة العضوية من الصفر حتى الاحتراف',
+                fullDesc: 'هذا الكورس الشامل يغطي جميع جوانب الزراعة العضوية من إعداد التربة حتى الحصاد. ستتعلم كيفية زراعة محاصيل صحية دون استخدام المواد الكيميائية الضارة.',
+                instructorId: 1,
+                categoryId: 1,
+                level: 'مبتدئ',
+                duration: '15 ساعة',
+                certificate: 'yes',
+                priceType: 'paid',
+                price: 299,
+                image: null,
+                videoUrl: 'https://youtube.com/sample',
+                learningPoints: ['فهم مبادئ الزراعة العضوية', 'إعداد التربة الطبيعية', 'اختيار البذور المناسبة', 'مكافحة الآفات طبيعياً'],
+                createdAt: '2024-01-25',
+                views: 1250,
+                students: 89,
+                rating: 4.8,
+                ratingCount: 45,
+                commentCount: 23,
+                earnings: 26611
+            },
+            {
+                id: 2,
+                title: 'أنظمة الري الذكي والري بالتنقيط',
+                shortDesc: 'دورة متكاملة في أنظمة الري الحديثة وتقنيات توفير المياه',
+                fullDesc: 'تعلم كيفية تركيب وصيانة أنظمة الري بالتنقيط والري الذكي. يشمل الكورس تصميم شبكات الري والتحكم الآلي في الري.',
+                instructorId: 2,
+                categoryId: 2,
+                level: 'متوسط',
+                duration: '12 ساعة',
+                certificate: 'yes',
+                priceType: 'paid',
+                price: 399,
+                image: null,
+                videoUrl: '',
+                learningPoints: ['تركيب أنظمة الري بالتنقيط', 'برمجة أجهزة التحكم', 'صيانة شبكات الري', 'توفير استهلاك المياه'],
+                createdAt: '2024-02-05',
+                views: 890,
+                students: 56,
+                rating: 4.6,
+                ratingCount: 28,
+                commentCount: 15,
+                earnings: 22344
+            },
+            {
+                id: 3,
+                title: 'تربية الأغنام والماعز',
+                shortDesc: 'دليلك الشامل لتربية الأغنام والماعز بشكل احترافي',
+                fullDesc: 'كورس متكامل يغطي جميع جوانب تربية الأغنام والماعز من اختيار السلالات إلى التسويق.',
+                instructorId: 3,
+                categoryId: 3,
+                level: 'مبتدئ',
+                duration: '20 ساعة',
+                certificate: 'yes',
+                priceType: 'free',
+                price: 0,
+                image: null,
+                videoUrl: '',
+                learningPoints: ['اختيار السلالات المناسبة', 'التغذية السليمة', 'الرعاية الصحية', 'التسويق والبيع'],
+                createdAt: '2024-02-15',
+                views: 2100,
+                students: 156,
+                rating: 4.9,
+                ratingCount: 78,
+                commentCount: 45,
+                earnings: 0
+            },
+            {
+                id: 4,
+                title: 'إدارة الصوب الزراعية المتقدمة',
+                shortDesc: 'تقنيات حديثة في إدارة ومراقبة الصوب الزراعية',
+                fullDesc: 'تعلم كيفية إدارة الصوب الزراعية باستخدام أحدث التقنيات وأنظمة المراقبة الآلية.',
+                instructorId: 1,
+                categoryId: 4,
+                level: 'متقدم',
+                duration: '25 ساعة',
+                certificate: 'yes',
+                priceType: 'paid',
+                price: 599,
+                image: null,
+                videoUrl: '',
+                learningPoints: ['تصميم الصوب الزراعية', 'أنظمة التحكم البيئي', 'الزراعة المائية', 'الأتمتة والمراقبة'],
+                createdAt: '2024-03-01',
+                views: 650,
+                students: 34,
+                rating: 4.7,
+                ratingCount: 18,
+                commentCount: 12,
+                earnings: 20366
+            },
+            {
+                id: 5,
+                title: 'تحليل التربة والتسميد المتوازن',
+                shortDesc: 'فهم تركيبة التربة وتحديد الاحتياجات السمادية بدقة',
+                fullDesc: 'كورس متخصص في تحليل أنواع التربة وتحديد الاحتياجات الغذائية للنباتات.',
+                instructorId: 4,
+                categoryId: 5,
+                level: 'متوسط',
+                duration: '18 ساعة',
+                certificate: 'yes',
+                priceType: 'paid',
+                price: 449,
+                image: null,
+                videoUrl: '',
+                learningPoints: ['أخذ عينات التربة', 'قراءة نتائج التحليل', 'برامج التسميد', 'معالجة مشاكل التربة'],
+                createdAt: '2024-03-10',
+                views: 480,
+                students: 28,
+                rating: 4.5,
+                ratingCount: 12,
+                commentCount: 8,
+                earnings: 12572
+            }
+        ];
+
+        const sampleComments = [
+            { id: 1, courseId: 1, lessonId: 1, userId: 101, userName: 'خالد العمري', comment: 'شكراً على الشرح الواضح، استفدت كثيراً', date: '2024-03-15' },
+            { id: 2, courseId: 1, lessonId: 2, userId: 102, userName: 'نورة السالم', comment: 'هل يمكن الحصول على المصادر المذكورة؟', date: '2024-03-16' },
+            { id: 3, courseId: 1, lessonId: 1, userId: 103, userName: 'عبدالله الحربي', comment: 'ممتاز، أنتظر الدرس القادم', date: '2024-03-17' }
+        ];
+
+        const sampleRatings = [
+            { id: 1, courseId: 1, userId: 101, userName: 'خالد العمري', rating: 5, review: 'كورس ممتاز وشامل، أنصح به بشدة', date: '2024-03-15' },
+            { id: 2, courseId: 1, userId: 102, userName: 'نورة السالم', rating: 4, review: 'جيد جداً لكن يحتاج المزيد من الأمثلة العملية', date: '2024-03-16' },
+            { id: 3, courseId: 1, userId: 103, userName: 'عبدالله الحربي', rating: 5, review: 'أفضل كورس في هذا المجال', date: '2024-03-17' }
+        ];
+
+        const sampleCertificates = [
+            { id: 1, courseId: 1, userId: 101, userName: 'خالد العمري', completionDate: '2024-03-10', certificateId: 'CERT-2024-001' },
+            { id: 2, courseId: 1, userId: 102, userName: 'نورة السالم', completionDate: '2024-03-12', certificateId: 'CERT-2024-002' },
+            { id: 3, courseId: 1, userId: 104, userName: 'فهد العنزي', completionDate: '2024-03-14', certificateId: 'CERT-2024-003' }
+        ];
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from localStorage or use sample data
+            courses = JSON.parse(localStorage.getItem('courses')) || [...sampleCourses];
+            specializations = JSON.parse(localStorage.getItem('specializations')) || [...sampleSpecializations];
+            instructors = [...sampleInstructors];
+            
+            // Save initial data
+            saveData();
+            
+            // Initialize UI
+            populateInstructorsDropdown();
+            populateCategoriesDropdown();
+            renderCoursesTable();
+            renderSpecializationsTable();
+            renderDashboardStats();
+            renderRecentCourses();
+            renderRecentActivities();
+        });
+
+        function saveData() {
+            localStorage.setItem('courses', JSON.stringify(courses));
+            localStorage.setItem('specializations', JSON.stringify(specializations));
+        }
+
+        // ==================== NAVIGATION ====================
+        function navigateTo(page) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            
+            // Show selected page
+            document.getElementById(page + 'Page').style.display = 'block';
+            
+            // Update menu active state
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === page) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'exclamation-circle';
+            toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // ==================== COURSES CRUD ====================
+        function openAddCourseModal() {
+            currentCourseId = null;
+            lessons = [];
+            questions = [];
+            courseImageData = null;
+            
+            document.getElementById('courseModalTitle').textContent = 'إضافة كورس جديد';
+            document.getElementById('courseForm').reset();
+            document.getElementById('courseId').value = '';
+            document.getElementById('learningPoints').innerHTML = `
+                <div class="point-item">
+                    <input type="text" class="form-control" placeholder="نقطة التعلم">
+                    <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+            document.getElementById('lessonsContainer').innerHTML = '';
+            document.getElementById('questionsContainer').innerHTML = '';
+            document.getElementById('hasQuiz').checked = false;
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('priceField').style.display = 'none';
+            document.getElementById('courseImageName').textContent = 'اضغط لتحميل الصورة';
+            
+            switchTab('courseDetails');
+            document.getElementById('courseModal').classList.add('active');
+        }
+
+        function openEditCourseModal(id) {
+            const course = courses.find(c => c.id === id);
+            if (!course) return;
+            
+            currentCourseId = id;
+            lessons = course.lessons || [];
+            questions = course.questions || [];
+            
+            document.getElementById('courseModalTitle').textContent = 'تعديل الكورس';
+            document.getElementById('courseId').value = course.id;
+            document.getElementById('courseTitle').value = course.title;
+            document.getElementById('courseInstructor').value = course.instructorId;
+            document.getElementById('courseCategory').value = course.categoryId;
+            document.getElementById('courseShortDesc').value = course.shortDesc;
+            document.getElementById('courseFullDesc').value = course.fullDesc;
+            document.getElementById('courseDuration').value = course.duration;
+            document.getElementById('courseLevel').value = course.level;
+            document.getElementById('courseCertificate').value = course.certificate;
+            document.getElementById('coursePriceType').value = course.priceType;
+            document.getElementById('coursePrice').value = course.price || '';
+            document.getElementById('courseVideoUrl').value = course.videoUrl || '';
+            
+            togglePriceField();
+            
+            // Load learning points
+            const pointsContainer = document.getElementById('learningPoints');
+            pointsContainer.innerHTML = '';
+            course.learningPoints.forEach(point => {
+                addLearningPoint(point);
+            });
+            
+            // Load lessons
+            renderLessonsInForm();
+            
+            // Load questions
+            if (questions.length > 0) {
+                document.getElementById('hasQuiz').checked = true;
+                document.getElementById('quizContainer').style.display = 'block';
+                renderQuestionsInForm();
+            }
+            
+            switchTab('courseDetails');
+            document.getElementById('courseModal').classList.add('active');
+        }
+
+        function closeCourseModal() {
+            document.getElementById('courseModal').classList.remove('active');
+        }
+
+        function saveCourse() {
+            const title = document.getElementById('courseTitle').value.trim();
+            const instructorId = parseInt(document.getElementById('courseInstructor').value);
+            const categoryId = parseInt(document.getElementById('courseCategory').value);
+            const shortDesc = document.getElementById('courseShortDesc').value.trim();
+            const fullDesc = document.getElementById('courseFullDesc').value.trim();
+            const duration = document.getElementById('courseDuration').value.trim();
+            const level = document.getElementById('courseLevel').value;
+            const certificate = document.getElementById('courseCertificate').value;
+            const priceType = document.getElementById('coursePriceType').value;
+            const price = priceType === 'paid' ? parseFloat(document.getElementById('coursePrice').value) || 0 : 0;
+            const videoUrl = document.getElementById('courseVideoUrl').value.trim();
+            
+            // Validation
+            if (!title || !instructorId || !categoryId || !shortDesc || !fullDesc || !duration || !level) {
+                showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            // Get learning points
+            const learningPoints = [];
+            document.querySelectorAll('#learningPoints .point-item input').forEach(input => {
+                if (input.value.trim()) {
+                    learningPoints.push(input.value.trim());
+                }
+            });
+            
+            // Get lessons data
+            const lessonsData = getLessonsData();
+            
+            // Get questions data
+            const questionsData = document.getElementById('hasQuiz').checked ? getQuestionsData() : [];
+            
+            const courseData = {
+                title,
+                instructorId,
+                categoryId,
+                shortDesc,
+                fullDesc,
+                duration,
+                level,
+                certificate,
+                priceType,
+                price,
+                videoUrl,
+                image: courseImageData,
+                learningPoints,
+                lessons: lessonsData,
+                questions: questionsData
+            };
+            
+            if (currentCourseId) {
+                // Update existing course
+                const index = courses.findIndex(c => c.id === currentCourseId);
+                if (index !== -1) {
+                    courses[index] = { ...courses[index], ...courseData };
+                    showToast('تم تحديث الكورس بنجاح');
+                }
+            } else {
+                // Add new course
+                const newCourse = {
+                    id: Date.now(),
+                    ...courseData,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    views: 0,
+                    students: 0,
+                    rating: 0,
+                    ratingCount: 0,
+                    commentCount: 0,
+                    earnings: 0
+                };
+                courses.push(newCourse);
+                showToast('تم إضافة الكورس بنجاح');
+            }
+            
+            saveData();
+            renderCoursesTable();
+            renderDashboardStats();
+            renderRecentCourses();
+            closeCourseModal();
+        }
+
+        function deleteCourse(id) {
+            if (confirm('هل أنت متأكد من حذف هذا الكورس؟')) {
+                courses = courses.filter(c => c.id !== id);
+                saveData();
+                renderCoursesTable();
+                renderDashboardStats();
+                renderRecentCourses();
+                showToast('تم حذف الكورس بنجاح');
+            }
+        }
+
+        function deleteAllCourses() {
+            if (confirm('هل أنت متأكد من حذف جميع الكورسات؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                courses = [];
+                saveData();
+                renderCoursesTable();
+                renderDashboardStats();
+                renderRecentCourses();
+                showToast('تم حذف جميع الكورسات');
+            }
+        }
+
+        function renderCoursesTable() {
+            const tbody = document.getElementById('coursesTableBody');
+            const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('filterCategory').value;
+            const levelFilter = document.getElementById('filterLevel').value;
+            const priceFilter = document.getElementById('filterPrice').value;
+            
+            let filteredCourses = courses.filter(course => {
+                const instructor = instructors.find(i => i.id === course.instructorId);
+                const matchesSearch = course.title.toLowerCase().includes(searchTerm) ||
+                    (instructor && (instructor.firstName + ' ' + instructor.lastName).toLowerCase().includes(searchTerm)) ||
+                    (instructor && instructor.email.toLowerCase().includes(searchTerm)) ||
+                    (instructor && instructor.country.toLowerCase().includes(searchTerm));
+                const matchesCategory = !categoryFilter || course.categoryId === parseInt(categoryFilter);
+                const matchesLevel = !levelFilter || course.level === levelFilter;
+                const matchesPrice = !priceFilter || course.priceType === priceFilter;
+                
+                return matchesSearch && matchesCategory && matchesLevel && matchesPrice;
+            });
+            
+            if (filteredCourses.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <i class="fas fa-book-open"></i>
+                                <h3>لا توجد كورسات</h3>
+                                <p>لم يتم العثور على كورسات مطابقة</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filteredCourses.map((course, index) => {
+                const instructor = instructors.find(i => i.id === course.instructorId);
+                const category = specializations.find(s => s.id === course.categoryId);
+                const instructorName = instructor ? `${instructor.firstName} ${instructor.lastName}` : 'غير محدد';
+                const categoryName = category ? category.name : 'غير محدد';
+                
+                return `
+                    <tr>
+                        <td><input type="checkbox" class="course-checkbox" data-id="${course.id}"></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 60px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-book" style="color: white;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">${course.title}</div>
+                                    <div style="font-size: 12px; color: var(--bg-icon);">ID: ${course.id}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="user-info-card">
+                                <div class="avatar" style="width: 35px; height: 35px; font-size: 14px;">${instructorName.charAt(0)}</div>
+                                <div class="info">
+                                    <h4 style="font-size: 13px;">${instructorName}</h4>
+                                    <p>ID: ${course.instructorId}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-info">${categoryName}</span></td>
+                        <td><span class="badge badge-${course.level === 'مبتدئ' ? 'success' : course.level === 'متوسط' ? 'warning' : 'info'}">${course.level}</span></td>
+                        <td><span class="badge badge-${course.priceType === 'free' ? 'success' : 'warning'}">${course.priceType === 'free' ? 'مجاني' : course.price + ' ريال'}</span></td>
+                        <td>${course.createdAt}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-secondary btn-icon" onclick="viewCourse(${course.id})" title="عرض">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-warning btn-icon" onclick="openEditCourseModal(${course.id})" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-icon" onclick="deleteCourse(${course.id})" title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterCourses() {
+            renderCoursesTable();
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAllCourses').checked;
+            document.querySelectorAll('.course-checkbox').forEach(cb => cb.checked = selectAll);
+        }
+
+        // ==================== VIEW COURSE DETAILS ====================
+        function viewCourse(id) {
+            const course = courses.find(c => c.id === id);
+            if (!course) return;
+            
+            const instructor = instructors.find(i => i.id === course.instructorId);
+            const category = specializations.find(s => s.id === course.categoryId);
+            
+            // Details Tab
+            document.getElementById('viewDetailsContent').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--third-color);">معلومات الكورس</h4>
+                        <table style="width: 100%;">
+                            <tr><td style="padding: 8px 0; color: var(--bg-icon);">العنوان:</td><td style="font-weight: 600;">${course.title}</td></tr>
+                            <tr><td style="padding: 8px 0; color: var(--bg-icon);">التخصص:</td><td>${category ? category.name : 'غير محدد'}</td></tr>
+                            <tr><td style="padding: 8px 0; color: var(--bg-icon);">المستوى:</td><td>${course.level}</td></tr>
+                            <tr><td style="padding: 8px 0; color: var(--bg-icon);">المدة:</td><td>${course.duration}</td></tr>
+                            <tr><td style="padding: 8px 0; color: var(--bg-icon);">السعر:</td><td>${course.priceType === 'free' ? 'مجاني' : course.price + ' ريال'}</td></tr>
+                            <tr><td style="padding: 8px 0; color: var(--bg-icon);">شهادة:</td><td>${course.certificate === 'yes' ? 'نعم' : 'لا'}</td></tr>
+                        </table>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--third-color);">الوصف التفصيلي</h4>
+                        <p style="color: var(--iconAndUl-colors); line-height: 1.8;">${course.fullDesc}</p>
+                        <h4 style="margin: 20px 0 15px; color: var(--third-color);">ماذا سنتعلم؟</h4>
+                        <ul style="list-style: none;">
+                            ${course.learningPoints.map(point => `
+                                <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
+                                    ${point}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            // Lessons Tab
+            document.getElementById('viewLessonsContent').innerHTML = course.lessons && course.lessons.length > 0 ?
+                course.lessons.map((lesson, index) => `
+                    <div class="lesson-item">
+                        <div class="lesson-header">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="lesson-number">${index + 1}</span>
+                                <span style="font-weight: 600; font-size: 16px;">${lesson.title}</span>
+                            </div>
+                            <span style="color: var(--bg-icon); font-size: 13px;">${lesson.duration || 'غير محدد'}</span>
+                        </div>
+                        <p style="color: var(--iconAndUl-colors); font-size: 14px;">${lesson.description}</p>
+                    </div>
+                `).join('') :
+                '<div class="empty-state"><i class="fas fa-video"></i><h3>لا توجد دروس</h3><p>لم يتم إضافة دروس لهذا الكورس بعد</p></div>';
+            
+            // Stats Tab
+            document.getElementById('viewStatsContent').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-comments"></i></div>
+                        <div class="stat-info">
+                            <h3>${course.commentCount || 0}</h3>
+                            <p>التعليقات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-star"></i></div>
+                        <div class="stat-info">
+                            <h3>${course.ratingCount || 0}</h3>
+                            <p>التقييمات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon yellow"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <h3>${course.students || 0}</h3>
+                            <p>الطلاب المسجلين</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="fas fa-coins"></i></div>
+                        <div class="stat-info">
+                            <h3>${course.earnings || 0}</h3>
+                            <p>الأرباح (ريال)</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <div>
+                        <h4 style="margin-bottom: 15px;">إحصائيات إضافية</h4>
+                        <table style="width: 100%;">
+                            <tr><td style="padding: 10px 0; color: var(--bg-icon);">المشاهدات:</td><td style="font-weight: 600;">${course.views || 0} مشاهدة</td></tr>
+                            <tr><td style="padding: 10px 0; color: var(--bg-icon);">التقييم:</td><td style="font-weight: 600;">${course.rating || 0} / 5</td></tr>
+                            <tr><td style="padding: 10px 0; color: var(--bg-icon);">عدد الدروس:</td><td style="font-weight: 600;">${course.lessons ? course.lessons.length : 0} درس</td></tr>
+                            <tr><td style="padding: 10px 0; color: var(--bg-icon);">عدد الأسئلة:</td><td style="font-weight: 600;">${course.questions ? course.questions.length : 0} سؤال</td></tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            // Instructor Tab
+            const instData = instructor || { firstName: 'غير', lastName: 'محدد', email: '-', phone: '-', country: '-', address: '-' };
+            document.getElementById('viewInstructorContent').innerHTML = `
+                <div style="display: flex; gap: 30px; align-items: flex-start;">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; font-weight: 700;">
+                        ${instData.firstName.charAt(0)}
+                    </div>
+                    <div style="flex: 1;">
+                        <h3 style="font-size: 22px; margin-bottom: 20px;">${instData.firstName} ${instData.lastName}</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="padding: 15px; background: var(--background-color); border-radius: 10px;">
+                                <div style="color: var(--bg-icon); font-size: 12px; margin-bottom: 5px;">البريد الإلكتروني</div>
+                                <div style="font-weight: 600;">${instData.email}</div>
+                            </div>
+                            <div style="padding: 15px; background: var(--background-color); border-radius: 10px;">
+                                <div style="color: var(--bg-icon); font-size: 12px; margin-bottom: 5px;">الهاتف</div>
+                                <div style="font-weight: 600;">${instData.phone}</div>
+                            </div>
+                            <div style="padding: 15px; background: var(--background-color); border-radius: 10px;">
+                                <div style="color: var(--bg-icon); font-size: 12px; margin-bottom: 5px;">الدولة</div>
+                                <div style="font-weight: 600;">${instData.country}</div>
+                            </div>
+                            <div style="padding: 15px; background: var(--background-color); border-radius: 10px;">
+                                <div style="color: var(--bg-icon); font-size: 12px; margin-bottom: 5px;">العنوان</div>
+                                <div style="font-weight: 600;">${instData.address}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Comments Tab
+            document.getElementById('viewCommentsContent').innerHTML = sampleComments.length > 0 ?
+                sampleComments.map(comment => `
+                    <div style="display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid var(--white1);">
+                        <div style="width: 45px; height: 45px; background: var(--green3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--secondary-color);">${comment.userName.charAt(0)}</div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-weight: 600;">${comment.userName}</span>
+                                <span style="font-size: 12px; color: var(--bg-icon);">${comment.date}</span>
+                            </div>
+                            <p style="color: var(--iconAndUl-colors); font-size: 14px;">${comment.comment}</p>
+                        </div>
+                    </div>
+                `).join('') :
+                '<div class="empty-state"><i class="fas fa-comments"></i><h3>لا توجد تعليقات</h3></div>';
+            
+            // Ratings Tab
+            document.getElementById('viewRatingsContent').innerHTML = sampleRatings.length > 0 ?
+                sampleRatings.map(rating => `
+                    <div style="padding: 15px; border-bottom: 1px solid var(--white1);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 40px; height: 40px; background: var(--green3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--secondary-color);">${rating.userName.charAt(0)}</div>
+                                <span style="font-weight: 600;">${rating.userName}</span>
+                            </div>
+                            <div class="rating">
+                                ${Array(5).fill().map((_, i) => `<i class="fas fa-star ${i < rating.rating ? '' : 'empty'}"></i>`).join('')}
+                            </div>
+                        </div>
+                        <p style="color: var(--iconAndUl-colors); font-size: 14px;">${rating.review}</p>
+                        <div style="font-size: 12px; color: var(--bg-icon); margin-top: 5px;">${rating.date}</div>
+                    </div>
+                `).join('') :
+                '<div class="empty-state"><i class="fas fa-star"></i><h3>لا توجد تقييمات</h3></div>';
+            
+            // Certificates Tab
+            document.getElementById('viewCertificatesContent').innerHTML = sampleCertificates.length > 0 ?
+                `<table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>الطالب</th>
+                            <th>تاريخ الإكمال</th>
+                            <th>رقم الشهادة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${sampleCertificates.map(cert => `
+                            <tr>
+                                <td>${cert.userName}</td>
+                                <td>${cert.completionDate}</td>
+                                <td>${cert.certificateId}</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> تحميل</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>` :
+                '<div class="empty-state"><i class="fas fa-certificate"></i><h3>لا توجد شهادات</h3></div>';
+            
+            switchViewTab('viewDetails');
+            document.getElementById('viewCourseModal').classList.add('active');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewCourseModal').classList.remove('active');
+        }
+
+        function switchViewTab(tabId) {
+            document.querySelectorAll('#viewCourseModal .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#viewCourseModal .tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ==================== SPECIALIZATIONS CRUD ====================
+        function openAddSpecializationModal() {
+            document.getElementById('specModalTitle').textContent = 'إضافة تخصص جديد';
+            document.getElementById('specForm').reset();
+            document.getElementById('specId').value = '';
+            document.getElementById('specializationModal').classList.add('active');
+        }
+
+        function openEditSpecializationModal(id) {
+            const spec = specializations.find(s => s.id === id);
+            if (!spec) return;
+            
+            document.getElementById('specModalTitle').textContent = 'تعديل التخصص';
+            document.getElementById('specId').value = spec.id;
+            document.getElementById('specName').value = spec.name;
+            document.getElementById('specStatus').value = spec.status;
+            document.getElementById('specializationModal').classList.add('active');
+        }
+
+        function closeSpecModal() {
+            document.getElementById('specializationModal').classList.remove('active');
+        }
+
+        function saveSpecialization() {
+            const id = document.getElementById('specId').value;
+            const name = document.getElementById('specName').value.trim();
+            const status = document.getElementById('specStatus').value;
+            
+            if (!name) {
+                showToast('يرجى إدخال اسم التخصص', 'error');
+                return;
+            }
+            
+            if (id) {
+                // Update
+                const index = specializations.findIndex(s => s.id === parseInt(id));
+                if (index !== -1) {
+                    specializations[index].name = name;
+                    specializations[index].status = status;
+                    showToast('تم تحديث التخصص بنجاح');
+                }
+            } else {
+                // Add new
+                specializations.push({
+                    id: Date.now(),
+                    name,
+                    status,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    courseCount: 0
+                });
+                showToast('تم إضافة التخصص بنجاح');
+            }
+            
+            saveData();
+            renderSpecializationsTable();
+            populateCategoriesDropdown();
+            closeSpecModal();
+        }
+
+        function deleteSpecialization(id) {
+            if (confirm('هل أنت متأكد من حذف هذا التخصص؟')) {
+                specializations = specializations.filter(s => s.id !== id);
+                saveData();
+                renderSpecializationsTable();
+                populateCategoriesDropdown();
+                showToast('تم حذف التخصص بنجاح');
+            }
+        }
+
+        function toggleSpecializationStatus(id) {
+            const spec = specializations.find(s => s.id === id);
+            if (spec) {
+                spec.status = spec.status === 'active' ? 'inactive' : 'active';
+                saveData();
+                renderSpecializationsTable();
+                showToast('تم تحديث حالة التخصص');
+            }
+        }
+
+        function renderSpecializationsTable() {
+            const tbody = document.getElementById('specializationsTableBody');
+            const searchTerm = document.getElementById('specSearch').value.toLowerCase();
+            
+            let filteredSpecs = specializations.filter(spec => 
+                spec.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredSpecs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-th-large"></i>
+                                <h3>لا توجد تخصصات</h3>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filteredSpecs.map((spec, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td style="font-weight: 600;">${spec.name}</td>
+                    <td>${spec.courseCount} كورس</td>
+                    <td>
+                        <div class="status-toggle ${spec.status === 'active' ? 'active' : ''}" onclick="toggleSpecializationStatus(${spec.id})"></div>
+                    </td>
+                    <td>${spec.createdAt}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-warning btn-icon" onclick="openEditSpecializationModal(${spec.id})" title="تعديل">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-icon" onclick="deleteSpecialization(${spec.id})" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterSpecializations() {
+            renderSpecializationsTable();
+        }
+
+        // ==================== HELPER FUNCTIONS ====================
+        function populateInstructorsDropdown() {
+            const select = document.getElementById('courseInstructor');
+            select.innerHTML = '<option value="">اختر الخبير</option>' +
+                instructors.map(i => `<option value="${i.id}">${i.firstName} ${i.lastName} (${i.country})</option>`).join('');
+        }
+
+        function populateCategoriesDropdown() {
+            const selects = ['courseCategory', 'filterCategory'];
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    if (id === 'filterCategory') {
+                        select.innerHTML = '<option value="">جميع التخصصات</option>' +
+                            specializations.filter(s => s.status === 'active').map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                    } else {
+                        select.innerHTML = '<option value="">اختر التخصص</option>' +
+                            specializations.filter(s => s.status === 'active').map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                    }
+                }
+            });
+        }
+
+        function togglePriceField() {
+            const priceType = document.getElementById('coursePriceType').value;
+            const priceField = document.getElementById('priceField');
+            priceField.style.display = priceType === 'paid' ? 'block' : 'none';
+        }
+
+        function handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    courseImageData = e.target.result;
+                    document.getElementById('courseImageName').textContent = input.files[0].name;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('#courseModal .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#courseModal .tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update preview if switching to preview tab
+            if (tabId === 'coursePreview') {
+                updatePreview();
+            }
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('courseTitle').value || 'عنوان الكورس';
+            const shortDesc = document.getElementById('courseShortDesc').value || 'وصف بسيط للكورس';
+            const level = document.getElementById('courseLevel').value || 'مبتدئ';
+            const duration = document.getElementById('courseDuration').value || '0 ساعات';
+            const priceType = document.getElementById('coursePriceType').value;
+            const price = document.getElementById('coursePrice').value;
+            const instructorId = document.getElementById('courseInstructor').value;
+            
+            const instructor = instructors.find(i => i.id === parseInt(instructorId));
+            const instructorName = instructor ? `${instructor.firstName} ${instructor.lastName}` : 'اسم الخبير';
+            
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewShortDesc').textContent = shortDesc;
+            document.getElementById('previewLevel').textContent = level;
+            document.getElementById('previewDuration').textContent = duration;
+            document.getElementById('previewInstructor').textContent = instructorName;
+            document.getElementById('previewInstructorAvatar').textContent = instructorName.charAt(0);
+            
+            const priceTag = document.getElementById('previewPriceTag');
+            const priceDisplay = document.getElementById('previewPriceDisplay');
+            
+            if (priceType === 'free') {
+                priceTag.className = 'course-price-tag free';
+                priceTag.textContent = 'مجاني';
+                priceDisplay.textContent = 'مجاني';
+            } else {
+                priceTag.className = 'course-price-tag paid';
+                priceTag.textContent = price + ' ريال';
+                priceDisplay.textContent = price + ' ريال';
+            }
+            
+            if (courseImageData) {
+                document.getElementById('previewImage').innerHTML = `
+                    <img src="${courseImageData}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <span class="course-level">${level}</span>
+                    <span class="course-price-tag ${priceType === 'free' ? 'free' : 'paid'}">${priceType === 'free' ? 'مجاني' : price + ' ريال'}</span>
+                `;
+            }
+        }
+
+        // Learning Points
+        function addLearningPoint(value = '') {
+            const container = document.getElementById('learningPoints');
+            const div = document.createElement('div');
+            div.className = 'point-item';
+            div.innerHTML = `
+                <input type="text" class="form-control" placeholder="نقطة التعلم" value="${value}">
+                <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removePoint(btn) {
+            const items = document.querySelectorAll('#learningPoints .point-item');
+            if (items.length > 1) {
+                btn.parentElement.remove();
+            }
+        }
+
+        // Lessons
+        function addNewLesson() {
+            const container = document.getElementById('lessonsContainer');
+            const lessonId = Date.now();
+            const div = document.createElement('div');
+            div.className = 'lesson-item';
+            div.id = `lesson-${lessonId}`;
+            div.innerHTML = `
+                <div class="lesson-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="lesson-number">${container.children.length + 1}</span>
+                        <input type="text" class="form-control" placeholder="عنوان الدرس" style="width: 300px;" data-field="title">
+                    </div>
+                    <button type="button" class="btn btn-danger btn-icon" onclick="removeLesson('${lessonId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">وصف الدرس</label>
+                        <textarea class="form-control" placeholder="وصف الدرس" data-field="description" style="min-height: 80px;"></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">مدة الدرس</label>
+                        <input type="text" class="form-control" placeholder="مثال: 30 دقيقة" data-field="duration">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label class="form-label">ماذا سنتعلم في هذا الدرس؟</label>
+                    <div class="points-container lesson-points">
+                        <div class="point-item">
+                            <input type="text" class="form-control" placeholder="نقطة التعلم" data-field="learningPoint">
+                            <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-point-btn" onclick="addLessonPoint(this)">
+                        <i class="fas fa-plus"></i> إضافة نقطة
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">متطلبات الدرس</label>
+                        <div class="points-container lesson-requirements">
+                            <div class="point-item">
+                                <input type="text" class="form-control" placeholder="المتطلب" data-field="requirement">
+                                <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-point-btn" onclick="addLessonRequirement(this)">
+                            <i class="fas fa-plus"></i> إضافة متطلب
+                        </button>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">صورة مصغرة للدرس</label>
+                        <div class="file-upload" onclick="this.querySelector('input').click()" style="padding: 20px;">
+                            <i class="fas fa-image"></i>
+                            <p style="font-size: 12px;">تحميل صورة</p>
+                            <input type="file" accept="image/*" style="display: none;" data-field="image">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label class="form-label">اسكربت الدرس</label>
+                    <div class="form-check" style="margin-bottom: 10px;">
+                        <input type="checkbox" onchange="toggleScriptField(this)">
+                        <label>الدرس له اسكربت</label>
+                    </div>
+                    <textarea class="form-control" placeholder="اكتب اسكربت الدرس هنا..." data-field="script" style="min-height: 100px; display: none;"></textarea>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label class="form-label">موارد الدرس</label>
+                    <div class="file-upload" onclick="this.querySelector('input').click()" style="padding: 20px;">
+                        <i class="fas fa-file-download"></i>
+                        <p style="font-size: 12px;">PDF, Excel, Word, PowerPoint, ZIP</p>
+                        <input type="file" accept=".pdf,.xlsx,.doc,.docx,.ppt,.pptx,.zip" multiple style="display: none;" data-field="resources">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeLesson(lessonId) {
+            document.getElementById(`lesson-${lessonId}`)?.remove();
+            // Renumber lessons
+            document.querySelectorAll('#lessonsContainer .lesson-item').forEach((item, index) => {
+                item.querySelector('.lesson-number').textContent = index + 1;
+            });
+        }
+
+        function addLessonPoint(btn) {
+            const container = btn.parentElement.querySelector('.lesson-points');
+            const div = document.createElement('div');
+            div.className = 'point-item';
+            div.innerHTML = `
+                <input type="text" class="form-control" placeholder="نقطة التعلم" data-field="learningPoint">
+                <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function addLessonRequirement(btn) {
+            const container = btn.parentElement.querySelector('.lesson-requirements');
+            const div = document.createElement('div');
+            div.className = 'point-item';
+            div.innerHTML = `
+                <input type="text" class="form-control" placeholder="المتطلب" data-field="requirement">
+                <button type="button" class="remove-point" onclick="removePoint(this)"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function toggleScriptField(checkbox) {
+            const textarea = checkbox.parentElement.nextElementSibling;
+            textarea.style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+        function renderLessonsInForm() {
+            const container = document.getElementById('lessonsContainer');
+            container.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                // Add lesson rendering logic here if needed
+            });
+        }
+
+        function getLessonsData() {
+            const lessonsData = [];
+            document.querySelectorAll('#lessonsContainer .lesson-item').forEach((item, index) => {
+                const title = item.querySelector('[data-field="title"]')?.value || '';
+                const description = item.querySelector('[data-field="description"]')?.value || '';
+                const duration = item.querySelector('[data-field="duration"]')?.value || '';
+                const script = item.querySelector('[data-field="script"]')?.value || '';
+                
+                const learningPoints = [];
+                item.querySelectorAll('.lesson-points input').forEach(input => {
+                    if (input.value.trim()) learningPoints.push(input.value.trim());
+                });
+                
+                const requirements = [];
+                item.querySelectorAll('.lesson-requirements input').forEach(input => {
+                    if (input.value.trim()) requirements.push(input.value.trim());
+                });
+                
+                if (title) {
+                    lessonsData.push({
+                        id: index + 1,
+                        title,
+                        description,
+                        duration,
+                        script,
+                        learningPoints,
+                        requirements
+                    });
+                }
+            });
+            return lessonsData;
+        }
+
+        // Quiz
+        function toggleQuizBuilder() {
+            const container = document.getElementById('quizContainer');
+            container.style.display = document.getElementById('hasQuiz').checked ? 'block' : 'none';
+        }
+
+        function addNewQuestion() {
+            const container = document.getElementById('questionsContainer');
+            const questionId = Date.now();
+            const questionNumber = container.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'quiz-builder';
+            div.id = `question-${questionId}`;
+            div.innerHTML = `
+                <div class="question-header">
+                    <span class="question-number">السؤال ${questionNumber}</span>
+                    <button type="button" class="btn btn-danger btn-icon" onclick="removeQuestion('${questionId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="اكتب السؤال هنا..." data-field="questionText" style="font-weight: 600;">
+                </div>
+                <div class="options-grid">
+                    <div class="option-item">
+                        <input type="radio" name="correct-${questionId}" value="1" checked>
+                        <input type="text" placeholder="الخيار الأول" data-field="option1">
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="correct-${questionId}" value="2">
+                        <input type="text" placeholder="الخيار الثاني" data-field="option2">
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="correct-${questionId}" value="3">
+                        <input type="text" placeholder="الخيار الثالث" data-field="option3">
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="correct-${questionId}" value="4">
+                        <input type="text" placeholder="الخيار الرابع" data-field="option4">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            
+            // Update correct answer styling on radio change
+            div.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    div.querySelectorAll('.option-item').forEach(opt => opt.classList.remove('correct'));
+                    this.closest('.option-item').classList.add('correct');
+                });
+            });
+        }
+
+        function removeQuestion(questionId) {
+            document.getElementById(`question-${questionId}`)?.remove();
+            // Renumber questions
+            document.querySelectorAll('#questionsContainer .quiz-builder').forEach((item, index) => {
+                item.querySelector('.question-number').textContent = `السؤال ${index + 1}`;
+            });
+        }
+
+        function renderQuestionsInForm() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            questions.forEach((q, index) => {
+                // Add question rendering logic here
+            });
+        }
+
+        function getQuestionsData() {
+            const questionsData = [];
+            document.querySelectorAll('#questionsContainer .quiz-builder').forEach((item, index) => {
+                const questionText = item.querySelector('[data-field="questionText"]')?.value || '';
+                const option1 = item.querySelector('[data-field="option1"]')?.value || '';
+                const option2 = item.querySelector('[data-field="option2"]')?.value || '';
+                const option3 = item.querySelector('[data-field="option3"]')?.value || '';
+                const option4 = item.querySelector('[data-field="option4"]')?.value || '';
+                const correctAnswer = item.querySelector('input[type="radio"]:checked')?.value || '1';
+                
+                if (questionText && option1 && option2 && option3 && option4) {
+                    questionsData.push({
+                        id: index + 1,
+                        question: questionText,
+                        options: [option1, option2, option3, option4],
+                        correctAnswer: parseInt(correctAnswer)
+                    });
+                }
+            });
+            return questionsData;
+        }
+
+        // ==================== DASHBOARD ====================
+        function renderDashboardStats() {
+            const totalCourses = courses.length;
+            const totalStudents = courses.reduce((sum, c) => sum + (c.students || 0), 0);
+            const totalRevenue = courses.reduce((sum, c) => sum + (c.earnings || 0), 0);
+            
+            document.getElementById('totalCourses').textContent = totalCourses;
+            document.getElementById('totalStudents').textContent = totalStudents.toLocaleString();
+            document.getElementById('totalInstructors').textContent = instructors.length;
+            document.getElementById('totalRevenue').textContent = totalRevenue.toLocaleString();
+        }
+
+        function renderRecentCourses() {
+            const container = document.getElementById('recentCoursesList');
+            const recentCourses = courses.slice(-5).reverse();
+            
+            if (recentCourses.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-book-open"></i><h3>لا توجد كورسات</h3></div>';
+                return;
+            }
+            
+            container.innerHTML = recentCourses.map(course => {
+                const instructor = instructors.find(i => i.id === course.instructorId);
+                const instructorName = instructor ? `${instructor.firstName} ${instructor.lastName}` : 'غير محدد';
+                
+                return `
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--white1);">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-book" style="color: white; font-size: 20px;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 5px;">${course.title}</div>
+                            <div style="font-size: 13px; color: var(--bg-icon);">
+                                <span>${instructorName}</span>
+                                <span style="margin: 0 10px;">•</span>
+                                <span>${course.students || 0} طالب</span>
+                            </div>
+                        </div>
+                        <span class="badge badge-${course.priceType === 'free' ? 'success' : 'warning'}">${course.priceType === 'free' ? 'مجاني' : course.price + ' ريال'}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRecentActivities() {
+            const container = document.getElementById('recentActivities');
+            const activities = [
+                { icon: 'user-plus', color: 'green', text: 'طالب جديد سجل في الكورس', time: 'منذ 5 دقائق' },
+                { icon: 'comment', color: 'blue', text: 'تعليق جديد على درس', time: 'منذ 15 دقيقة' },
+                { icon: 'star', color: 'yellow', text: 'تقييم جديد للكورس', time: 'منذ 30 دقيقة' },
+                { icon: 'certificate', color: 'red', text: 'شهادة صدرت لطالب', time: 'منذ ساعة' },
+                { icon: 'book', color: 'green', text: 'كورس جديد تم إضافته', time: 'منذ ساعتين' }
+            ];
+            
+            container.innerHTML = activities.map(activity => `
+                <div style="display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--white1);">
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--green3); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-${activity.icon}" style="color: var(--${activity.color === 'yellow' ? 'warning' : activity.color === 'blue' ? 'purble2' : 'secondary'}-color); font-size: 14px;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 13px;">${activity.text}</div>
+                        <div style="font-size: 11px; color: var(--bg-icon); margin-top: 3px;">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                showToast('تم تسجيل الخروج بنجاح', 'warning');
+            }
+        }
+
+        // ==================== KEYBOARD SHORTCUTS ====================
+        document.addEventListener('keydown', function(e) {
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                closeCourseModal();
+                closeSpecModal();
+                closeViewModal();
+            }
+        });
+    </script>
+</body>
+</html>

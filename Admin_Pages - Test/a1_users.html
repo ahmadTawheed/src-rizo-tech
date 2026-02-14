@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم زراعة - إدارة المستخدمين</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+            --overMode-color: #000000;
+            --green1: #52FF55;
+            --green2: #EBFCF1;
+            --green3: #DCFCE7;
+            --red1: #FF8A8C;
+            --red2: #FFD8EF;
+            --red3: #80141B;
+            --purble1: #F3E8FF;
+            --purble2: #7F23CF;
+            --yellow1: #FFFAC4;
+            --yellow2: #A16006;
+            --yellow3: #FFCC00;
+            --browen1: #91410F;
+            --white0: #CCCCCC;
+            --white1: #ECECEC;
+        }
+
+        * {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--background-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--white1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .animate-slideIn {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        .animate-slideOut {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+        .animate-scaleIn {
+            animation: scaleIn 0.3s ease-out forwards;
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--third-color) 0%, #0D2233 100%);
+            box-shadow: 5px 0 30px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        .sidebar-item:hover::before,
+        .sidebar-item.active::before {
+            transform: scaleY(1);
+        }
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(139, 186, 64, 0.15);
+        }
+
+        /* Cards */
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(139, 186, 64, 0.2);
+        }
+
+        /* Table */
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .custom-table thead th {
+            background: linear-gradient(135deg, var(--third-color), #2A5A80);
+            color: white;
+            padding: 16px 12px;
+            font-weight: 600;
+            text-align: right;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .custom-table thead th:first-child {
+            border-radius: 0 12px 0 0;
+        }
+        .custom-table thead th:last-child {
+            border-radius: 12px 0 0 0;
+        }
+        .custom-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        .custom-table tbody tr:hover {
+            background: var(--green2);
+        }
+        .custom-table tbody td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--white1);
+            vertical-align: middle;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 186, 64, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 186, 64, 0.4);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--third-color);
+            border: 2px solid var(--primary-color);
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Input Fields */
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.1);
+        }
+        .form-input::placeholder {
+            color: var(--white0);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-active {
+            background: var(--green3);
+            color: #166534;
+        }
+        .badge-inactive {
+            background: var(--red1);
+            color: var(--red3);
+        }
+        .badge-suspended {
+            background: var(--yellow1);
+            color: var(--yellow2);
+        }
+
+        /* Role Badges */
+        .role-student {
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+        }
+        .role-expert {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        .role-employer {
+            background: linear-gradient(135deg, var(--purble2), #5B21B6);
+            color: white;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .action-btn-view {
+            background: var(--green3);
+            color: var(--secondary-color);
+        }
+        .action-btn-view:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        .action-btn-edit {
+            background: var(--purble1);
+            color: var(--purble2);
+        }
+        .action-btn-edit:hover {
+            background: var(--purble2);
+            color: white;
+        }
+        .action-btn-delete {
+            background: #FEE2E2;
+            color: var(--error-color);
+        }
+        .action-btn-delete:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        /* Checkbox */
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Select */
+        .custom-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232D2D2D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 18px;
+        }
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.1);
+        }
+
+        /* Tabs */
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--iconAndUl-colors);
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast-success {
+            background: linear-gradient(135deg, var(--success-color), #1e8449);
+        }
+        .toast-error {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+        }
+        .toast-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d68910);
+        }
+
+        /* Stat Icon */
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Profile Avatar */
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--white1) 25%, var(--white0) 50%, var(--white1) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        /* Delete All Button */
+        .btn-delete-all {
+            background: linear-gradient(135deg, #DC2626, #B91C1C);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-delete-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        /* Search Container */
+        .search-container {
+            position: relative;
+        }
+        .search-container svg {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--white0);
+        }
+
+        /* Filter Dropdown */
+        .filter-dropdown {
+            position: relative;
+        }
+        .filter-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .filter-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                right: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                transition: right 0.3s ease;
+            }
+            .sidebar.active {
+                right: 0;
+            }
+            .main-content {
+                margin-right: 0 !important;
+            }
+        }
+
+        /* User Info Header */
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-header-info h4 {
+            font-weight: 700;
+            color: var(--third-color);
+        }
+        .user-header-info span {
+            font-size: 12px;
+            color: var(--white0);
+        }
+
+        /* Confirm Dialog */
+        .confirm-dialog {
+            text-align: center;
+            padding: 32px;
+        }
+        .confirm-dialog .icon-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #FEE2E2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar fixed right-0 top-0 bottom-0 w-[280px] z-50" id="sidebar">
+        <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">زراعة تيك</h1>
+                    <p class="text-white/50 text-xs">لوحة التحكم</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="py-6">
+            <p class="text-white/40 text-xs px-6 mb-4 uppercase tracking-wider">القائمة الرئيسية</p>
+            
+            <a href="#" class="sidebar-item active flex items-center gap-3 px-6 py-3 text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>المستخدمين</span>
+            </a>
+            
+            <a href="#" class="sidebar-item flex items-center gap-3 px-6 py-3 text-white/70 hover:text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+                <span>الكورسات</span>
+            </a>
+            
+            <a href="#" class="sidebar-item flex items-center gap-3 px-6 py-3 text-white/70 hover:text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                </svg>
+                <span>الوظائف</span>
+            </a>
+            
+            <a href="#" class="sidebar-item flex items-center gap-3 px-6 py-3 text-white/70 hover:text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                <span>التدريبات</span>
+            </a>
+            
+            <p class="text-white/40 text-xs px-6 mb-4 mt-8 uppercase tracking-wider">المالية والتقارير</p>
+            
+            <a href="#" class="sidebar-item flex items-center gap-3 px-6 py-3 text-white/70 hover:text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                <span>المدفوعات</span>
+            </a>
+            
+            <a href="#" class="sidebar-item flex items-center gap-3 px-6 py-3 text-white/70 hover:text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                </svg>
+                <span>التقارير</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 right-0 left-0 p-4 border-t border-white/10">
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center text-white font-bold">
+                    م
+                </div>
+                <div class="flex-1">
+                    <p class="text-white text-sm font-semibold">المدير العام</p>
+                    <p class="text-white/50 text-xs">admin@zira3a.com</p>
+                </div>
+                <button class="text-white/50 hover:text-white transition-colors">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content mr-[280px] min-h-screen" id="mainContent">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="px-8 py-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-[var(--third-color)]">إدارة المستخدمين</h2>
+                    <p class="text-sm text-gray-500">عرض وإدارة جميع المستخدمين في المنصة</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors relative">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <button class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleSidebar()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="p-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card animate-fadeIn" style="animation-delay: 0.1s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm mb-1">إجمالي المستخدمين</p>
+                            <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalUsers">0</h3>
+                            <p class="text-xs text-[var(--secondary-color)] mt-2">
+                                <span class="inline-flex items-center gap-1">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                    </svg>
+                                    +12% هذا الشهر
+                                </span>
+                            </p>
+                        </div>
+                        <div class="stat-icon bg-[var(--green2)]">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card animate-fadeIn" style="animation-delay: 0.2s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm mb-1">الطلاب والخريجين</p>
+                            <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalStudents">0</h3>
+                            <p class="text-xs text-[var(--primary-color)] mt-2">يبحثون عن تعلم</p>
+                        </div>
+                        <div class="stat-icon bg-blue-100">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card animate-fadeIn" style="animation-delay: 0.3s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm mb-1">الخبراء والمدربين</p>
+                            <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalExperts">0</h3>
+                            <p class="text-xs text-[var(--primary-color)] mt-2">يقدمون دورات</p>
+                        </div>
+                        <div class="stat-icon bg-[var(--green3)]">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4M12 8h.01"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card animate-fadeIn" style="animation-delay: 0.4s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm mb-1">أصحاب العمل</p>
+                            <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalEmployers">0</h3>
+                            <p class="text-xs text-[var(--purble2)] mt-2">يبحثون عن كفاءات</p>
+                        </div>
+                        <div class="stat-icon bg-[var(--purble1)]">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--purble2)" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Bar -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+                <div class="flex flex-wrap items-center gap-4">
+                    <!-- Search -->
+                    <div class="search-container flex-1 min-w-[300px]">
+                        <input type="text" 
+                               class="form-input pr-12" 
+                               placeholder="البحث عن مستخدم..."
+                               id="searchInput">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    
+                    <!-- Search Type -->
+                    <select class="custom-select w-48" id="searchType">
+                        <option value="all">كل الحقول</option>
+                        <option value="id">المعرف</option>
+                        <option value="name">اسم المستخدم</option>
+                        <option value="email">البريد الإلكتروني</option>
+                        <option value="phone">رقم الهاتف</option>
+                        <option value="country">الدولة</option>
+                    </select>
+                    
+                    <!-- Role Filter -->
+                    <div class="filter-dropdown">
+                        <button class="btn-secondary flex items-center gap-2" onclick="toggleFilter('roleFilter')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                            </svg>
+                            فلترة بالدور
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </button>
+                        <div class="filter-menu p-2" id="roleFilter">
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="student" onchange="applyFilters()">
+                                <span>طالب أو خريج زراعي</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="expert" onchange="applyFilters()">
+                                <span>خبير أو مدرب تقني</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="employer" onchange="applyFilters()">
+                                <span>صاحب عمل أو شركة</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Age Filter -->
+                    <div class="filter-dropdown">
+                        <button class="btn-secondary flex items-center gap-2" onclick="toggleFilter('ageFilter')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            فلترة بالعمر
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </button>
+                        <div class="filter-menu p-2" id="ageFilter">
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="18-25" onchange="applyFilters()">
+                                <span>18 - 25 سنة</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="26-35" onchange="applyFilters()">
+                                <span>26 - 35 سنة</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="36-45" onchange="applyFilters()">
+                                <span>36 - 45 سنة</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input type="checkbox" class="custom-checkbox" value="46+" onchange="applyFilters()">
+                                <span>46 سنة فأكثر</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Add User Button -->
+                    <button class="btn-primary flex items-center gap-2" onclick="openAddModal()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        إضافة مستخدم
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <!-- Table Header -->
+                <div class="p-4 border-b flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="custom-checkbox" id="selectAll" onchange="toggleSelectAll()">
+                            <span class="text-sm text-gray-600">تحديد الكل</span>
+                        </label>
+                        <button class="btn-delete-all hidden" id="deleteSelectedBtn" onclick="deleteSelected()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            حذف المحدد
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-500">
+                        عرض <span id="showingCount">0</span> من <span id="totalCount">0</span> مستخدم
+                    </p>
+                </div>
+                
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th class="w-12"></th>
+                                <th>المستخدم</th>
+                                <th>معلومات الاتصال</th>
+                                <th>الدور</th>
+                                <th>الدولة</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="hidden p-12 text-center" id="emptyState">
+                    <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <line x1="17" y1="14" x2="23" y2="14"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">لا يوجد مستخدمين</h3>
+                    <p class="text-gray-500 mb-4">لم يتم العثور على مستخدمين مطابقين للبحث</p>
+                    <button class="btn-primary" onclick="openAddModal()">إضافة مستخدم جديد</button>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="p-4 border-t flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-600">عرض</span>
+                        <select class="custom-select w-20" id="perPageSelect" onchange="changePerPage()">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="text-sm text-gray-600">في الصفحة</span>
+                    </div>
+                    <div class="flex items-center gap-2" id="pagination">
+                        <!-- Dynamic pagination -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal-content w-full max-w-2xl">
+            <div class="p-6 border-b flex items-center justify-between">
+                <h3 class="text-xl font-bold text-[var(--third-color)]" id="modalTitle">إضافة مستخدم جديد</h3>
+                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" onclick="closeModal('userModal')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="userForm" onsubmit="saveUser(event)">
+                <div class="p-6">
+                    <input type="hidden" id="userId">
+                    
+                    <!-- Avatar Upload -->
+                    <div class="mb-6 flex items-center gap-4">
+                        <div class="relative">
+                            <div class="w-20 h-20 rounded-xl bg-gray-100 overflow-hidden" id="avatarPreview">
+                                <img src="" alt="" class="w-full h-full object-cover hidden" id="avatarImg">
+                                <div class="w-full h-full flex items-center justify-center" id="avatarPlaceholder">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <label class="absolute -bottom-2 -left-2 w-8 h-8 bg-[var(--primary-color)] rounded-lg flex items-center justify-center cursor-pointer hover:bg-[var(--secondary-color)] transition-colors">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <input type="file" class="hidden" accept="image/*" onchange="previewAvatar(this)" id="avatarInput">
+                            </label>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-[var(--third-color)]">صورة المستخدم</p>
+                            <p class="text-sm text-gray-500">PNG, JPG بحد أقصى 2MB</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الأول *</label>
+                            <input type="text" class="form-input" id="firstName" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثاني *</label>
+                            <input type="text" class="form-input" id="lastName" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني *</label>
+                            <input type="email" class="form-input" id="email" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف *</label>
+                            <input type="tel" class="form-input" id="phone" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الدولة *</label>
+                            <select class="custom-select" id="country" required>
+                                <option value="">اختر الدولة</option>
+                                <option value="مصر">مصر</option>
+                                <option value="السعودية">السعودية</option>
+                                <option value="الإمارات">الإمارات</option>
+                                <option value="الكويت">الكويت</option>
+                                <option value="قطر">قطر</option>
+                                <option value="البحرين">البحرين</option>
+                                <option value="عمان">عمان</option>
+                                <option value="الأردن">الأردن</option>
+                                <option value="المغرب">المغرب</option>
+                                <option value="تونس">تونس</option>
+                                <option value="الجزائر">الجزائر</option>
+                                <option value="السودان">السودان</option>
+                                <option value="العراق">العراق</option>
+                                <option value="سوريا">سوريا</option>
+                                <option value="لبنان">لبنان</option>
+                                <option value="فلسطين">فلسطين</option>
+                                <option value="ليبيا">ليبيا</option>
+                                <option value="اليمن">اليمن</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">العنوان</label>
+                            <input type="text" class="form-input" id="address">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">تاريخ الميلاد *</label>
+                            <input type="date" class="form-input" id="birthDate" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الدور *</label>
+                            <select class="custom-select" id="role" required>
+                                <option value="">اختر الدور</option>
+                                <option value="student">طالب أو خريج زراعي</option>
+                                <option value="expert">خبير أو مدرب تقني</option>
+                                <option value="employer">صاحب عمل أو شركة</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Status (Edit Mode) -->
+                    <div class="mt-4 p-4 bg-gray-50 rounded-xl hidden" id="accountStatusSection">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">حالة الحساب</label>
+                        <div class="flex items-center gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="accountStatus" value="active" class="custom-checkbox" checked>
+                                <span class="text-sm">نشط</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="accountStatus" value="suspended" class="custom-checkbox">
+                                <span class="text-sm">معلق</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t bg-gray-50 flex items-center justify-end gap-4 rounded-b-2xl">
+                    <button type="button" class="btn-secondary" onclick="closeModal('userModal')">إلغاء</button>
+                    <button type="submit" class="btn-primary">حفظ المستخدم</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View User Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal-content w-full max-w-3xl">
+            <div class="p-6 border-b flex items-center justify-between">
+                <h3 class="text-xl font-bold text-[var(--third-color)]">تفاصيل المستخدم</h3>
+                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" onclick="closeModal('viewModal')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="border-b">
+                <div class="flex">
+                    <button class="tab-btn active" onclick="switchTab('infoTab')">معلومات المستخدم</button>
+                    <button class="tab-btn" onclick="switchTab('statsTab')">الإحصائيات</button>
+                </div>
+            </div>
+            
+            <!-- Info Tab -->
+            <div class="p-6" id="infoTab">
+                <div class="flex items-start gap-6 mb-6">
+                    <div class="w-24 h-24 rounded-xl overflow-hidden bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center text-white text-3xl font-bold" id="viewAvatar">
+                        م
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-2xl font-bold text-[var(--third-color)]" id="viewName">محمد أحمد</h2>
+                        <p class="text-gray-500" id="viewEmail">mohamed@example.com</p>
+                        <div class="mt-2">
+                            <span class="badge" id="viewRoleBadge">طالب</span>
+                            <span class="badge badge-active mr-2" id="viewStatusBadge">نشط</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-xs text-gray-500 mb-1">المعرف</p>
+                            <p class="font-semibold text-[var(--third-color)]" id="viewId">USR-001</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-xs text-gray-500 mb-1">رقم الهاتف</p>
+                            <p class="font-semibold text-[var(--third-color)]" id="viewPhone">+20 123 456 7890</p>
+                            <p class="text-xs mt-1" id="viewPhoneVerified">
+                                <span class="text-[var(--success-color)]">تم التأكيد</span>
+                            </p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-xs text-gray-500 mb-1">الدولة</p>
+                            <p class="font-semibold text-[var(--third-color)]" id="viewCountry">مصر</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-xs text-gray-500 mb-1">العنوان</p>
+                            <p class="font-semibold text-[var(--third-color)]" id="viewAddress">القاهرة، مصر</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-xs text-gray-500 mb-1">تاريخ الميلاد</p>
+                            <p class="font-semibold text-[var(--third-color)]" id="viewBirthDate">1 يناير 1995</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-xs text-gray-500 mb-1">تاريخ الانضمام</p>
+                            <p class="font-semibold text-[var(--third-color)]" id="viewJoinDate">15 مارس 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Tab -->
+            <div class="p-6 hidden" id="statsTab">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="p-4 bg-[var(--green2)] rounded-xl text-center">
+                        <div class="text-3xl font-bold text-[var(--secondary-color)]" id="statCourses">0</div>
+                        <p class="text-sm text-gray-600 mt-1">الكورسات المسجلة</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-xl text-center">
+                        <div class="text-3xl font-bold text-blue-600" id="statComments">0</div>
+                        <p class="text-sm text-gray-600 mt-1">التعليقات</p>
+                    </div>
+                    <div class="p-4 bg-[var(--yellow1)] rounded-xl text-center">
+                        <div class="text-3xl font-bold text-[var(--yellow2)]" id="statRatings">0</div>
+                        <p class="text-sm text-gray-600 mt-1">التقييمات</p>
+                    </div>
+                    <div class="p-4 bg-[var(--purble1)] rounded-xl text-center">
+                        <div class="text-3xl font-bold text-[var(--purble2)]" id="statTrainings">0</div>
+                        <p class="text-sm text-gray-600 mt-1">التدريبات</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-xl text-center">
+                        <div class="text-3xl font-bold text-orange-600" id="statJobs">0</div>
+                        <p class="text-sm text-gray-600 mt-1">الوظائف المتقدم لها</p>
+                    </div>
+                    <div class="p-4 bg-green-50 rounded-xl text-center">
+                        <div class="text-3xl font-bold text-green-600" id="statCertificates">0</div>
+                        <p class="text-sm text-gray-600 mt-1">الشهادات</p>
+                    </div>
+                    <div class="p-4 bg-emerald-50 rounded-xl text-center">
+                        <div class="text-3xl font-bold text-emerald-600" id="statPayments">0</div>
+                        <p class="text-sm text-gray-600 mt-1">المدفوعات (جنيه)</p>
+                    </div>
+                    <div class="p-4 bg-indigo-50 rounded-xl text-center">
+                        <div class="text-3xl font-bold text-indigo-600" id="statExams">0</div>
+                        <p class="text-sm text-gray-600 mt-1">الاختبارات</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t bg-gray-50 flex items-center justify-end gap-4 rounded-b-2xl">
+                <button class="btn-secondary" onclick="closeModal('viewModal')">إغلاق</button>
+                <button class="btn-primary" onclick="editFromView()">تعديل البيانات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content w-full max-w-md">
+            <div class="confirm-dialog">
+                <div class="icon-container">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[var(--third-color)] mb-2">تأكيد الحذف</h3>
+                <p class="text-gray-500 mb-6" id="deleteMessage">هل أنت متأكد من حذف هذا المستخدم؟</p>
+                <div class="flex items-center justify-center gap-4">
+                    <button class="btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button>
+                    <button class="btn-danger" onclick="confirmDelete()">حذف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== Data Store ====================
+        let users = [];
+        let filteredUsers = [];
+        let currentPage = 1;
+        let perPage = 10;
+        let selectedUsers = new Set();
+        let deleteUserId = null;
+        let currentViewUser = null;
+
+        // Sample Data
+        const sampleUsers = [
+            {
+                id: 'USR-001',
+                firstName: 'محمد',
+                lastName: 'أحمد علي',
+                email: 'mohamed.ahmed@email.com',
+                phone: '+20 123 456 7890',
+                country: 'مصر',
+                address: 'القاهرة، مدينة نصر',
+                birthDate: '1995-03-15',
+                role: 'student',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-01-15',
+                avatar: '',
+                stats: { courses: 5, comments: 23, ratings: 8, trainings: 3, jobs: 2, certificates: 1, payments: 2500, exams: 12 }
+            },
+            {
+                id: 'USR-002',
+                firstName: 'فاطمة',
+                lastName: 'محمود حسن',
+                email: 'fatima.hassan@email.com',
+                phone: '+966 50 123 4567',
+                country: 'السعودية',
+                address: 'الرياض، حي العليا',
+                birthDate: '1988-07-22',
+                role: 'expert',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-02-01',
+                avatar: '',
+                stats: { courses: 0, comments: 156, ratings: 45, trainings: 0, jobs: 0, certificates: 8, payments: 0, exams: 0 }
+            },
+            {
+                id: 'USR-003',
+                firstName: 'أحمد',
+                lastName: 'عبدالله سالم',
+                email: 'ahmed.salem@email.com',
+                phone: '+971 50 987 6543',
+                country: 'الإمارات',
+                address: 'دبي، الخليج التجاري',
+                birthDate: '1982-11-08',
+                role: 'employer',
+                status: 'active',
+                phoneVerified: false,
+                joinDate: '2024-02-10',
+                avatar: '',
+                stats: { courses: 0, comments: 5, ratings: 0, trainings: 0, jobs: 12, certificates: 0, payments: 15000, exams: 0 }
+            },
+            {
+                id: 'USR-004',
+                firstName: 'سارة',
+                lastName: 'خالد العمري',
+                email: 'sara.amri@email.com',
+                phone: '+962 79 555 1234',
+                country: 'الأردن',
+                address: 'عمان، عبدون',
+                birthDate: '1998-01-30',
+                role: 'student',
+                status: 'suspended',
+                phoneVerified: true,
+                joinDate: '2024-01-20',
+                avatar: '',
+                stats: { courses: 2, comments: 8, ratings: 3, trainings: 1, jobs: 0, certificates: 0, payments: 800, exams: 4 }
+            },
+            {
+                id: 'USR-005',
+                firstName: 'خالد',
+                lastName: 'إبراهيم محمد',
+                email: 'khaled.ibrahim@email.com',
+                phone: '+20 106 789 0123',
+                country: 'مصر',
+                address: 'الإسكندرية، سموحة',
+                birthDate: '1990-05-18',
+                role: 'expert',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-03-01',
+                avatar: '',
+                stats: { courses: 0, comments: 89, ratings: 32, trainings: 0, jobs: 0, certificates: 5, payments: 0, exams: 0 }
+            },
+            {
+                id: 'USR-006',
+                firstName: 'نورة',
+                lastName: 'سعيد أحمد',
+                email: 'noura.saeed@email.com',
+                phone: '+966 55 222 3333',
+                country: 'السعودية',
+                address: 'جدة، الحمراء',
+                birthDate: '1993-09-12',
+                role: 'student',
+                status: 'active',
+                phoneVerified: false,
+                joinDate: '2024-03-05',
+                avatar: '',
+                stats: { courses: 3, comments: 15, ratings: 6, trainings: 2, jobs: 1, certificates: 0, payments: 1200, exams: 7 }
+            },
+            {
+                id: 'USR-007',
+                firstName: 'عمر',
+                lastName: 'يوسف الحربي',
+                email: 'omar.harbi@email.com',
+                phone: '+966 56 444 5555',
+                country: 'السعودية',
+                address: 'الدمام، الفيصلية',
+                birthDate: '1975-12-25',
+                role: 'employer',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-02-15',
+                avatar: '',
+                stats: { courses: 0, comments: 3, ratings: 0, trainings: 0, jobs: 8, certificates: 0, payments: 8500, exams: 0 }
+            },
+            {
+                id: 'USR-008',
+                firstName: 'ليلى',
+                lastName: 'عبدالرحمن',
+                email: 'layla.abdulrahman@email.com',
+                phone: '+971 52 666 7777',
+                country: 'الإمارات',
+                address: 'أبوظبي، الريم',
+                birthDate: '2000-04-03',
+                role: 'student',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-03-10',
+                avatar: '',
+                stats: { courses: 1, comments: 4, ratings: 2, trainings: 0, jobs: 0, certificates: 0, payments: 400, exams: 2 }
+            },
+            {
+                id: 'USR-009',
+                firstName: 'حسن',
+                lastName: 'مصطفى علي',
+                email: 'hassan.mostafa@email.com',
+                phone: '+20 122 888 9999',
+                country: 'مصر',
+                address: 'المنصورة، الجامعة',
+                birthDate: '1985-08-17',
+                role: 'expert',
+                status: 'suspended',
+                phoneVerified: true,
+                joinDate: '2024-01-25',
+                avatar: '',
+                stats: { courses: 0, comments: 67, ratings: 28, trainings: 0, jobs: 0, certificates: 6, payments: 0, exams: 0 }
+            },
+            {
+                id: 'USR-010',
+                firstName: 'مريم',
+                lastName: 'صلاح الدين',
+                email: 'mariam.salah@email.com',
+                phone: '+20 155 111 2222',
+                country: 'مصر',
+                address: 'طنطا، المحلة',
+                birthDate: '1997-06-20',
+                role: 'student',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-02-28',
+                avatar: '',
+                stats: { courses: 4, comments: 19, ratings: 9, trainings: 4, jobs: 3, certificates: 2, payments: 1800, exams: 15 }
+            },
+            {
+                id: 'USR-011',
+                firstName: 'ياسر',
+                lastName: 'الشمري',
+                email: 'yasser.shamri@email.com',
+                phone: '+966 59 333 4444',
+                country: 'السعودية',
+                address: 'الخبر، الراكة',
+                birthDate: '1991-02-14',
+                role: 'employer',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-03-08',
+                avatar: '',
+                stats: { courses: 0, comments: 2, ratings: 0, trainings: 0, jobs: 5, certificates: 0, payments: 5000, exams: 0 }
+            },
+            {
+                id: 'USR-012',
+                firstName: 'هدى',
+                lastName: 'المنصوري',
+                email: 'huda.mansouri@email.com',
+                phone: '+971 56 777 8888',
+                country: 'الإمارات',
+                address: 'الشارقة، النخيلة',
+                birthDate: '1989-10-05',
+                role: 'expert',
+                status: 'active',
+                phoneVerified: true,
+                joinDate: '2024-01-30',
+                avatar: '',
+                stats: { courses: 0, comments: 134, ratings: 56, trainings: 0, jobs: 0, certificates: 10, payments: 0, exams: 0 }
+            }
+        ];
+
+        // ==================== Initialization ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from localStorage or use sample data
+            const storedUsers = localStorage.getItem('users');
+            if (storedUsers) {
+                users = JSON.parse(storedUsers);
+            } else {
+                users = [...sampleUsers];
+                saveToStorage();
+            }
+            
+            filteredUsers = [...users];
+            renderUsers();
+            updateStats();
+            
+            // Search input handler
+            document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+            
+            // Close dropdowns on outside click
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.filter-dropdown')) {
+                    document.querySelectorAll('.filter-menu').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+        });
+
+        // ==================== Storage ====================
+        function saveToStorage() {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // ==================== Rendering ====================
+        function renderUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageUsers = filteredUsers.slice(start, end);
+            
+            document.getElementById('showingCount').textContent = pageUsers.length;
+            document.getElementById('totalCount').textContent = filteredUsers.length;
+            
+            if (pageUsers.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = pageUsers.map((user, index) => `
+                <tr style="animation: fadeIn 0.3s ease-out forwards; animation-delay: ${index * 0.05}s; opacity: 0;">
+                    <td>
+                        <input type="checkbox" class="custom-checkbox user-checkbox" 
+                               data-id="${user.id}" 
+                               ${selectedUsers.has(user.id) ? 'checked' : ''}
+                               onchange="toggleUserSelection('${user.id}')">
+                    </td>
+                    <td>
+                        <div class="user-header">
+                            <div class="avatar">${user.firstName.charAt(0)}${user.lastName.charAt(0)}</div>
+                            <div class="user-header-info">
+                                <h4>${user.firstName} ${user.lastName}</h4>
+                                <span>${user.id}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <p class="font-medium text-gray-800">${user.email}</p>
+                        <p class="text-sm text-gray-500">${user.phone}</p>
+                    </td>
+                    <td>
+                        <span class="badge ${getRoleBadgeClass(user.role)}">${getRoleName(user.role)}</span>
+                        <p class="text-xs text-gray-400 mt-1">${formatDate(user.joinDate)}</p>
+                    </td>
+                    <td>
+                        <p class="font-medium text-gray-800">${user.country}</p>
+                    </td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(user.status)}">${getStatusName(user.status)}</span>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <button class="action-btn action-btn-view" onclick="viewUser('${user.id}')" title="عرض">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn action-btn-edit" onclick="editUser('${user.id}')" title="تعديل">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn action-btn-delete" onclick="deleteUser('${user.id}')" title="حذف">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredUsers.length / perPage);
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            html += `
+                <button class="p-2 rounded-lg ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'hover:bg-gray-100'}" 
+                        ${currentPage === 1 ? 'disabled' : ''} 
+                        onclick="goToPage(${currentPage - 1})">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `
+                        <button class="w-10 h-10 rounded-lg font-medium ${i === currentPage ? 'bg-[var(--primary-color)] text-white' : 'hover:bg-gray-100'}" 
+                                onclick="goToPage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += '<span class="px-2">...</span>';
+                }
+            }
+            
+            // Next button
+            html += `
+                <button class="p-2 rounded-lg ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'hover:bg-gray-100'}" 
+                        ${currentPage === totalPages ? 'disabled' : ''} 
+                        onclick="goToPage(${currentPage + 1})">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+            `;
+            
+            pagination.innerHTML = html;
+        }
+
+        function updateStats() {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalStudents').textContent = users.filter(u => u.role === 'student').length;
+            document.getElementById('totalExperts').textContent = users.filter(u => u.role === 'expert').length;
+            document.getElementById('totalEmployers').textContent = users.filter(u => u.role === 'employer').length;
+        }
+
+        // ==================== Filtering ====================
+        function applyFilters() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase().trim();
+            const searchType = document.getElementById('searchType').value;
+            
+            // Get selected roles
+            const selectedRoles = [];
+            document.querySelectorAll('#roleFilter input:checked').forEach(cb => {
+                selectedRoles.push(cb.value);
+            });
+            
+            // Get selected ages
+            const selectedAges = [];
+            document.querySelectorAll('#ageFilter input:checked').forEach(cb => {
+                selectedAges.push(cb.value);
+            });
+            
+            filteredUsers = users.filter(user => {
+                // Search filter
+                let matchesSearch = true;
+                if (searchValue) {
+                    switch (searchType) {
+                        case 'id':
+                            matchesSearch = user.id.toLowerCase().includes(searchValue);
+                            break;
+                        case 'name':
+                            matchesSearch = `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchValue);
+                            break;
+                        case 'email':
+                            matchesSearch = user.email.toLowerCase().includes(searchValue);
+                            break;
+                        case 'phone':
+                            matchesSearch = user.phone.toLowerCase().includes(searchValue);
+                            break;
+                        case 'country':
+                            matchesSearch = user.country.toLowerCase().includes(searchValue);
+                            break;
+                        default:
+                            matchesSearch = user.id.toLowerCase().includes(searchValue) ||
+                                           `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchValue) ||
+                                           user.email.toLowerCase().includes(searchValue) ||
+                                           user.phone.toLowerCase().includes(searchValue) ||
+                                           user.country.toLowerCase().includes(searchValue);
+                    }
+                }
+                
+                // Role filter
+                let matchesRole = selectedRoles.length === 0 || selectedRoles.includes(user.role);
+                
+                // Age filter
+                let matchesAge = selectedAges.length === 0;
+                if (!matchesAge) {
+                    const age = calculateAge(user.birthDate);
+                    selectedAges.forEach(range => {
+                        if (range === '18-25' && age >= 18 && age <= 25) matchesAge = true;
+                        if (range === '26-35' && age >= 26 && age <= 35) matchesAge = true;
+                        if (range === '36-45' && age >= 36 && age <= 45) matchesAge = true;
+                        if (range === '46+' && age >= 46) matchesAge = true;
+                    });
+                }
+                
+                return matchesSearch && matchesRole && matchesAge;
+            });
+            
+            currentPage = 1;
+            renderUsers();
+        }
+
+        function toggleFilter(filterId) {
+            const menu = document.getElementById(filterId);
+            document.querySelectorAll('.filter-menu').forEach(m => {
+                if (m.id !== filterId) m.classList.remove('active');
+            });
+            menu.classList.toggle('active');
+        }
+
+        // ==================== Selection ====================
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageUsers = filteredUsers.slice(start, end);
+            
+            if (selectAll.checked) {
+                pageUsers.forEach(user => selectedUsers.add(user.id));
+            } else {
+                pageUsers.forEach(user => selectedUsers.delete(user.id));
+            }
+            
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateDeleteButton();
+        }
+
+        function toggleUserSelection(userId) {
+            if (selectedUsers.has(userId)) {
+                selectedUsers.delete(userId);
+            } else {
+                selectedUsers.add(userId);
+            }
+            updateDeleteButton();
+        }
+
+        function updateDeleteButton() {
+            const btn = document.getElementById('deleteSelectedBtn');
+            if (selectedUsers.size > 0) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        }
+
+        // ==================== CRUD Operations ====================
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'إضافة مستخدم جديد';
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            document.getElementById('accountStatusSection').classList.add('hidden');
+            resetAvatarPreview();
+            openModal('userModal');
+        }
+
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            document.getElementById('modalTitle').textContent = 'تعديل بيانات المستخدم';
+            document.getElementById('userId').value = user.id;
+            document.getElementById('firstName').value = user.firstName;
+            document.getElementById('lastName').value = user.lastName;
+            document.getElementById('email').value = user.email;
+            document.getElementById('phone').value = user.phone;
+            document.getElementById('country').value = user.country;
+            document.getElementById('address').value = user.address || '';
+            document.getElementById('birthDate').value = user.birthDate;
+            document.getElementById('role').value = user.role;
+            
+            // Account status
+            document.getElementById('accountStatusSection').classList.remove('hidden');
+            document.querySelector(`input[name="accountStatus"][value="${user.status}"]`).checked = true;
+            
+            // Avatar
+            if (user.avatar) {
+                document.getElementById('avatarImg').src = user.avatar;
+                document.getElementById('avatarImg').classList.remove('hidden');
+                document.getElementById('avatarPlaceholder').classList.add('hidden');
+            } else {
+                resetAvatarPreview();
+            }
+            
+            openModal('userModal');
+        }
+
+        function saveUser(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userId').value;
+            const isNew = !userId;
+            
+            const userData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                country: document.getElementById('country').value,
+                address: document.getElementById('address').value.trim(),
+                birthDate: document.getElementById('birthDate').value,
+                role: document.getElementById('role').value,
+            };
+            
+            const avatarImg = document.getElementById('avatarImg');
+            if (avatarImg.src && !avatarImg.classList.contains('hidden')) {
+                userData.avatar = avatarImg.src;
+            }
+            
+            if (isNew) {
+                // Generate new ID
+                const maxId = users.reduce((max, u) => {
+                    const num = parseInt(u.id.replace('USR-', ''));
+                    return num > max ? num : max;
+                }, 0);
+                
+                const newUser = {
+                    ...userData,
+                    id: `USR-${String(maxId + 1).padStart(3, '0')}`,
+                    status: 'active',
+                    phoneVerified: false,
+                    joinDate: new Date().toISOString().split('T')[0],
+                    stats: { courses: 0, comments: 0, ratings: 0, trainings: 0, jobs: 0, certificates: 0, payments: 0, exams: 0 }
+                };
+                
+                users.unshift(newUser);
+                showToast('تم إضافة المستخدم بنجاح', 'success');
+            } else {
+                // Update existing user
+                const index = users.findIndex(u => u.id === userId);
+                if (index !== -1) {
+                    const statusValue = document.querySelector('input[name="accountStatus"]:checked').value;
+                    users[index] = {
+                        ...users[index],
+                        ...userData,
+                        status: statusValue
+                    };
+                    showToast('تم تحديث بيانات المستخدم بنجاح', 'success');
+                }
+            }
+            
+            saveToStorage();
+            filteredUsers = [...users];
+            applyFilters();
+            updateStats();
+            closeModal('userModal');
+        }
+
+        function viewUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            currentViewUser = user;
+            
+            // Populate info tab
+            document.getElementById('viewName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('viewEmail').textContent = user.email;
+            document.getElementById('viewId').textContent = user.id;
+            document.getElementById('viewPhone').textContent = user.phone;
+            document.getElementById('viewCountry').textContent = user.country;
+            document.getElementById('viewAddress').textContent = user.address || 'غير محدد';
+            document.getElementById('viewBirthDate').textContent = formatDateArabic(user.birthDate);
+            document.getElementById('viewJoinDate').textContent = formatDateArabic(user.joinDate);
+            
+            // Role badge
+            const roleBadge = document.getElementById('viewRoleBadge');
+            roleBadge.textContent = getRoleName(user.role);
+            roleBadge.className = `badge ${getRoleBadgeClass(user.role)}`;
+            
+            // Status badge
+            const statusBadge = document.getElementById('viewStatusBadge');
+            statusBadge.textContent = getStatusName(user.status);
+            statusBadge.className = `badge ${getStatusBadgeClass(user.status)}`;
+            
+            // Phone verification
+            const phoneVerified = document.getElementById('viewPhoneVerified');
+            phoneVerified.innerHTML = user.phoneVerified 
+                ? '<span class="text-[var(--success-color)]">تم تأكيد رقم الهاتف</span>'
+                : '<span class="text-[var(--warning-color)]">لم يتم تأكيد رقم الهاتف</span>';
+            
+            // Avatar
+            const avatarDiv = document.getElementById('viewAvatar');
+            if (user.avatar) {
+                avatarDiv.innerHTML = `<img src="${user.avatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatarDiv.innerHTML = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+            }
+            
+            // Stats
+            document.getElementById('statCourses').textContent = user.stats.courses;
+            document.getElementById('statComments').textContent = user.stats.comments;
+            document.getElementById('statRatings').textContent = user.stats.ratings;
+            document.getElementById('statTrainings').textContent = user.stats.trainings;
+            document.getElementById('statJobs').textContent = user.stats.jobs;
+            document.getElementById('statCertificates').textContent = user.stats.certificates;
+            document.getElementById('statPayments').textContent = user.stats.payments;
+            document.getElementById('statExams').textContent = user.stats.exams;
+            
+            // Reset to info tab
+            switchTab('infoTab');
+            
+            openModal('viewModal');
+        }
+
+        function editFromView() {
+            if (currentViewUser) {
+                closeModal('viewModal');
+                editUser(currentViewUser.id);
+            }
+        }
+
+        function deleteUser(userId) {
+            deleteUserId = userId;
+            const user = users.find(u => u.id === userId);
+            document.getElementById('deleteMessage').textContent = `هل أنت متأكد من حذف المستخدم "${user.firstName} ${user.lastName}"؟`;
+            openModal('deleteModal');
+        }
+
+        function deleteSelected() {
+            if (selectedUsers.size === 0) return;
+            
+            deleteUserId = 'multiple';
+            document.getElementById('deleteMessage').textContent = `هل أنت متأكد من حذف ${selectedUsers.size} مستخدم محدد؟`;
+            openModal('deleteModal');
+        }
+
+        function confirmDelete() {
+            if (deleteUserId === 'multiple') {
+                users = users.filter(u => !selectedUsers.has(u.id));
+                selectedUsers.clear();
+                showToast('تم حذف المستخدمين المحددين بنجاح', 'success');
+            } else if (deleteUserId) {
+                users = users.filter(u => u.id !== deleteUserId);
+                showToast('تم حذف المستخدم بنجاح', 'success');
+            }
+            
+            saveToStorage();
+            filteredUsers = [...users];
+            applyFilters();
+            updateStats();
+            updateDeleteButton();
+            closeModal('deleteModal');
+            deleteUserId = null;
+        }
+
+        // ==================== Modal Functions ====================
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function switchTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.getElementById('infoTab').classList.add('hidden');
+            document.getElementById('statsTab').classList.add('hidden');
+            document.getElementById(tabId).classList.remove('hidden');
+        }
+
+        // ==================== Utility Functions ====================
+        function getRoleName(role) {
+            const roles = {
+                'student': 'طالب/خريج',
+                'expert': 'خبير/مدرب',
+                'employer': 'صاحب عمل'
+            };
+            return roles[role] || role;
+        }
+
+        function getRoleBadgeClass(role) {
+            const classes = {
+                'student': 'role-student',
+                'expert': 'role-expert',
+                'employer': 'role-employer'
+            };
+            return classes[role] || '';
+        }
+
+        function getStatusName(status) {
+            const statuses = {
+                'active': 'نشط',
+                'suspended': 'معلق',
+                'inactive': 'غير نشط'
+            };
+            return statuses[status] || status;
+        }
+
+        function getStatusBadgeClass(status) {
+            const classes = {
+                'active': 'badge-active',
+                'suspended': 'badge-suspended',
+                'inactive': 'badge-inactive'
+            };
+            return classes[status] || '';
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function formatDateArabic(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function generateId() {
+            return 'USR-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderUsers();
+        }
+
+        function changePerPage() {
+            perPage = parseInt(document.getElementById('perPageSelect').value);
+            currentPage = 1;
+            renderUsers();
+        }
+
+        // ==================== Avatar Handling ====================
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImg').src = e.target.result;
+                    document.getElementById('avatarImg').classList.remove('hidden');
+                    document.getElementById('avatarPlaceholder').classList.add('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function resetAvatarPreview() {
+            document.getElementById('avatarImg').src = '';
+            document.getElementById('avatarImg').classList.add('hidden');
+            document.getElementById('avatarPlaceholder').classList.remove('hidden');
+        }
+
+        // ==================== Toast Notifications ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = type === 'success' 
+                ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+                : type === 'error'
+                ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+                : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+            
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ==================== Sidebar Toggle ====================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = e.target.closest('[onclick="toggleSidebar()"]');
+            if (!sidebar.contains(e.target) && !toggleBtn && window.innerWidth < 1024) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم زراعي | Agricontrol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+            --overMode-color: #000000;
+            --green1: #52FF55;
+            --green2: #EBFCF1; 
+            --green3: #DCFCE7; 
+            --red1: #FF8A8C;
+            --red2: #FFD8EF; 
+            --red3: #80141B; 
+            --purble1: #F3E8FF; 
+            --purble2: #7F23CF; 
+            --yellow1: #FFFAC4;
+            --yellow2: #A16006;
+            --yellow3: #FFCC00;
+            --browen1: #91410F;
+            --white0:#CCCCCC;
+            --white1:#ECECEC;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--background-color);
+            color: var(--iconAndUl-colors);
+            overflow-x: hidden;
+        }
+
+        .font-almarai {
+            font-family: 'Almarai', sans-serif;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background: linear-gradient(180deg, var(--third-color) 0%, #0D2137 100%);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(100%);
+        }
+
+        .main-content {
+            margin-right: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-content.expanded {
+            margin-right: 0;
+        }
+
+        /* Menu Item Styles */
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(139, 186, 64, 0.1);
+            transition: width 0.3s ease;
+        }
+
+        .menu-item:hover::before {
+            width: 100%;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            color: var(--text-color);
+            background: rgba(139, 186, 64, 0.15);
+            border-right-color: var(--primary-color);
+        }
+
+        .menu-item.active {
+            background: rgba(139, 186, 64, 0.2);
+        }
+
+        /* Submenu */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .submenu.open {
+            max-height: 500px;
+        }
+
+        .submenu-item {
+            padding: 12px 20px 12px 40px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submenu-item:hover, .submenu-item.active {
+            color: var(--primary-color);
+            background: rgba(139, 186, 64, 0.1);
+        }
+
+        /* Cards */
+        .stat-card {
+            background: var(--text-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-color);
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 186, 64, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--third-color);
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: 2px solid var(--third-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: var(--third-color);
+            color: var(--text-color);
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        /* Input Styles */
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--white1);
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: var(--text-color);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.1);
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, var(--third-color) 0%, #2A5577 100%);
+            color: var(--text-color);
+            padding: 16px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .data-table th:first-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        .data-table th:last-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--white1);
+            background: var(--text-color);
+        }
+
+        .data-table tbody tr:hover td {
+            background: var(--green2);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--text-color);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 28px;
+            background: var(--white1);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--text-color);
+            border-radius: 50%;
+            top: 3px;
+            right: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active::after {
+            right: 31px;
+        }
+
+        /* Badge */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--green3);
+            color: var(--success-color);
+        }
+
+        .badge-warning {
+            background: var(--yellow1);
+            color: var(--yellow2);
+        }
+
+        .badge-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--error-color);
+        }
+
+        .badge-info {
+            background: var(--purble1);
+            color: var(--purble2);
+        }
+
+        /* Activity Log */
+        .activity-item {
+            position: relative;
+            padding: 16px 20px 16px 60px;
+            border-right: 2px solid var(--white1);
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid var(--text-color);
+        }
+
+        .activity-item.login::before { background: var(--success-color); }
+        .activity-item.logout::before { background: var(--warning-color); }
+        .activity-item.delete::before { background: var(--error-color); }
+        .activity-item.create::before { background: var(--purble2); }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+
+        /* Notification Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: var(--text-color);
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(-120%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success { background: var(--success-color); }
+        .toast.error { background: var(--error-color); }
+        .toast.warning { background: var(--warning-color); }
+        .toast.info { background: var(--third-color); }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-right: 45px;
+        }
+
+        .search-box svg {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bg-icon);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 8px;
+            background: var(--white1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 18px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Section Hidden */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Maintenance Mode Overlay */
+        .maintenance-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--text-color);
+        }
+
+        .maintenance-overlay.active {
+            display: flex;
+        }
+
+        /* Floating Particles */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); }
+            50% { transform: translateY(-10vh) rotate(180deg); }
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 250px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 8px 8px 0 0;
+            transition: height 0.5s ease;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(180deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        }
+
+        .chart-bar span {
+            position: absolute;
+            top: -25px;
+            right: 50%;
+            transform: translateX(50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--third-color);
+        }
+
+        /* Notification Item */
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--white1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: var(--green2);
+        }
+
+        .notification-item.unread {
+            background: rgba(139, 186, 64, 0.05);
+            border-right: 3px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="floating-particles" id="particles"></div>
+
+    <!-- Maintenance Mode Overlay -->
+    <div class="maintenance-overlay" id="maintenanceOverlay">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+        <h2 class="text-3xl font-bold mt-6 mb-4">الموقع في وضع الصيانة</h2>
+        <p class="text-xl opacity-70">نقوم بتحسينات لخدمة أفضل... يرجى الانتظار</p>
+        <button onclick="toggleMaintenance()" class="btn-primary mt-8">
+            إلغاء وضع الصيانة
+        </button>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-xl font-almarai">أجري كنترول</h1>
+                    <p class="text-white/50 text-sm">لوحة التحكم الذكية</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <nav class="py-4">
+            <!-- Dashboard -->
+            <div class="menu-item active" onclick="showSection('dashboard')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="9"/>
+                    <rect x="14" y="3" width="7" height="5"/>
+                    <rect x="14" y="12" width="7" height="9"/>
+                    <rect x="3" y="16" width="7" height="5"/>
+                </svg>
+                <span>لوحة القيادة</span>
+            </div>
+
+            <!-- Notifications -->
+            <div class="menu-item" onclick="toggleSubmenu('notificationsSubmenu')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span>الإشعارات</span>
+                <span class="bg-[var(--error-color)] text-white text-xs px-2 py-1 rounded-full mr-2" id="notifBadge">3</span>
+                <svg class="mr-auto transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="notificationsArrow">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+            <div class="submenu" id="notificationsSubmenu">
+                <div class="submenu-item" onclick="showSection('sendNotifications')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                    <span>إرسال إشعارات للمستخدمين</span>
+                </div>
+                <div class="submenu-item" onclick="showSection('systemNotifications')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>إشعارات النظام والبلاغات</span>
+                </div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="menu-item" onclick="toggleSubmenu('systemSubmenu')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                <span>إعدادات النظام</span>
+                <svg class="mr-auto transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="systemArrow">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+            <div class="submenu" id="systemSubmenu">
+                <div class="submenu-item" onclick="showSection('backup')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>النسخ الاحتياطي</span>
+                </div>
+                <div class="submenu-item" onclick="showSection('maintenance')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                    <span>وضع الصيانة</span>
+                </div>
+                <div class="submenu-item" onclick="showSection('withdrawal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    <span>الحد الأدنى للسحب</span>
+                </div>
+                <div class="submenu-item" onclick="showSection('commission')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    <span>نسبة العمولة</span>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="menu-item" onclick="showSection('activityLog')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                <span>سجل العمليات</span>
+            </div>
+
+            <!-- Reports -->
+            <div class="menu-item" onclick="showSection('reports')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span>التقارير والإحصائيات</span>
+            </div>
+        </nav>
+
+        <!-- User Info -->
+        <div class="absolute bottom-0 w-full p-4 border-t border-white/10 bg-black/20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center text-white font-bold">
+                    م
+                </div>
+                <div class="flex-1">
+                    <p class="text-white font-medium text-sm">مدير النظام</p>
+                    <p class="text-white/50 text-xs">admin@agricontrol.com</p>
+                </div>
+                <button onclick="logout()" class="text-white/50 hover:text-white transition" title="تسجيل الخروج">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box hidden md:block">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" class="input-field w-64" placeholder="بحث..." id="globalSearch" onkeyup="handleGlobalSearch(event)">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Notifications Bell -->
+                    <div class="relative">
+                        <button onclick="showSection('systemNotifications')" class="p-2 rounded-lg hover:bg-gray-100 relative">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                            </svg>
+                            <span class="absolute top-0 left-0 w-4 h-4 bg-[var(--error-color)] text-white text-xs rounded-full flex items-center justify-center" id="headerNotifBadge">3</span>
+                        </button>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="hidden md:flex items-center gap-2 text-gray-500">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="p-6">
+                <div class="mb-8 animate-fade-in-up">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">مرحبا بك في لوحة التحكم</h2>
+                    <p class="text-gray-500">نظرة عامة على أداء المنصة الزراعية</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card animate-fade-in-up stagger-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-[var(--green2)] flex items-center justify-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
+                            </div>
+                            <span class="badge badge-success">+5</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalNotifications">12</h3>
+                        <p class="text-gray-500 mt-1">إشعارات جديدة</p>
+                    </div>
+
+                    <div class="stat-card animate-fade-in-up stagger-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-[var(--purble1)] flex items-center justify-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purble2)" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <span class="badge badge-info">ناجح</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-[var(--third-color)]">45</h3>
+                        <p class="text-gray-500 mt-1">نسخ احتياطية</p>
+                    </div>
+
+                    <div class="stat-card animate-fade-in-up stagger-3">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-[var(--yellow1)] flex items-center justify-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow2)" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <span class="badge badge-warning">15%</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-[var(--third-color)]">18,230</h3>
+                        <p class="text-gray-500 mt-1">العمولة (ريال)</p>
+                    </div>
+
+                    <div class="stat-card animate-fade-in-up stagger-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-[rgba(231,76,60,0.15)] flex items-center justify-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--error-color)" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                            <span class="badge badge-danger">3</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-[var(--third-color)]">156</h3>
+                        <p class="text-gray-500 mt-1">عمليات اليوم</p>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Activity Chart -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-[var(--third-color)]">نشاط العمليات</h3>
+                            <select class="input-field w-32 text-sm">
+                                <option>هذا الأسبوع</option>
+                                <option>هذا الشهر</option>
+                                <option>هذا العام</option>
+                            </select>
+                        </div>
+                        <div class="chart-container" id="activityChart"></div>
+                        <div class="flex justify-between mt-2 text-xs text-gray-500">
+                            <span>السبت</span>
+                            <span>الأحد</span>
+                            <span>الاثنين</span>
+                            <span>الثلاثاء</span>
+                            <span>الأربعاء</span>
+                            <span>الخميس</span>
+                            <span>الجمعة</span>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">آخر العمليات</h3>
+                        <div class="space-y-4" id="recentActivity">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إجراءات سريعة</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button onclick="showSection('sendNotifications')" class="p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary-color)] hover:bg-[var(--green2)] transition-all group">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-400 group-hover:text-[var(--primary-color)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-600 group-hover:text-[var(--primary-color)]">إرسال إشعار</span>
+                        </button>
+                        <button onclick="showSection('backup')" class="p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary-color)] hover:bg-[var(--green2)] transition-all group">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-400 group-hover:text-[var(--primary-color)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-600 group-hover:text-[var(--primary-color)]">نسخ احتياطي</span>
+                        </button>
+                        <button onclick="showSection('maintenance')" class="p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary-color)] hover:bg-[var(--green2)] transition-all group">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-400 group-hover:text-[var(--primary-color)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-600 group-hover:text-[var(--primary-color)]">وضع الصيانة</span>
+                        </button>
+                        <button onclick="showSection('activityLog')" class="p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary-color)] hover:bg-[var(--green2)] transition-all group">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-400 group-hover:text-[var(--primary-color)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-600 group-hover:text-[var(--primary-color)]">سجل العمليات</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Send Notifications Section -->
+        <section class="section" id="sendNotifications">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">إرسال إشعارات للمستخدمين</h2>
+                    <p class="text-gray-500">إرسال إشعارات مخصصة للمستخدمين مع كتابة العنوان والوصف</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إنشاء إشعار جديد</h3>
+                        
+                        <form id="notificationForm" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">عنوان الإشعار</label>
+                                <input type="text" class="input-field" placeholder="أدخل عنوان الإشعار" id="notifTitle" required>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">وصف الإشعار</label>
+                                <textarea class="input-field" rows="4" placeholder="أدخل وصف الإشعار التفصيلي" id="notifDesc" required></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">نوع الإشعار</label>
+                                <select class="input-field" id="notifType">
+                                    <option value="info">معلومات</option>
+                                    <option value="success">نجاح</option>
+                                    <option value="warning">تحذير</option>
+                                    <option value="error">خطأ</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">المستلمون</label>
+                                <select class="input-field" id="notifRecipients">
+                                    <option value="all">جميع المستخدمين</option>
+                                    <option value="students">الطلاب فقط</option>
+                                    <option value="instructors">المدربون فقط</option>
+                                    <option value="admins">المدراء فقط</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">طريقة الإرسال</label>
+                                <div class="flex gap-4">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" checked class="w-4 h-4 accent-[var(--primary-color)]">
+                                        <span>داخل التطبيق</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary-color)]">
+                                        <span>بريد إلكتروني</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full justify-center">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                                إرسال الإشعار
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Sent Notifications -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">آخر الإشعارات المرسلة</h3>
+                        <div class="space-y-4" id="sentNotifications">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Notifications Section -->
+        <section class="section" id="systemNotifications">
+            <div class="p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">إشعارات النظام والبلاغات</h2>
+                        <p class="text-gray-500">جميع الإشعارات والبلاغات الواردة من النظام</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <select class="input-field" id="notifFilter" onchange="filterNotifications()">
+                            <option value="">جميع الأنواع</option>
+                            <option value="info">معلومات</option>
+                            <option value="warning">تحذيرات</option>
+                            <option value="error">أخطاء وبلاغات</option>
+                            <option value="success">نجاح</option>
+                        </select>
+                        <button onclick="markAllAsRead()" class="btn-secondary">
+                            تحديد الكل كمقروء
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div class="divide-y" id="systemNotificationsList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between mt-6">
+                    <p class="text-gray-500">عرض <span id="notifShowing">1-10</span> من <span id="notifTotal">25</span> إشعار</p>
+                    <div class="flex gap-2" id="notifPagination">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Backup Section -->
+        <section class="section" id="backup">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">النسخ الاحتياطي</h2>
+                    <p class="text-gray-500">حماية البيانات من الفقد عبر النسخ الاحتياطي المنتظم</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Create Backup -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إنشاء نسخة احتياطية</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="p-4 bg-[var(--green2)] rounded-xl">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="17 8 12 3 7 8"/>
+                                            <line x1="12" y1="3" x2="12" y2="15"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-[var(--third-color)]">آخر نسخة احتياطية</p>
+                                        <p class="text-sm text-gray-600" id="lastBackupDate">اليوم - 10:30 ص</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">نوع النسخ الاحتياطي</label>
+                                <select class="input-field" id="backupType">
+                                    <option value="full">نسخ كامل (قاعدة البيانات + الملفات)</option>
+                                    <option value="database">قاعدة البيانات فقط</option>
+                                    <option value="files">الملفات فقط</option>
+                                </select>
+                            </div>
+
+                            <button onclick="createBackup()" class="btn-primary w-full justify-center">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                إنشاء نسخة احتياطية الآن
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Backup History -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">سجل النسخ الاحتياطية</h3>
+                        <div class="space-y-3 max-h-80 overflow-y-auto" id="backupHistory">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Backup Settings -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm mt-6">
+                    <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إعدادات النسخ التلقائي</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <p class="font-medium text-[var(--third-color)]">النسخ التلقائي</p>
+                                <p class="text-sm text-gray-500">تفعيل النسخ التلقائي</p>
+                            </div>
+                            <div class="toggle-switch active" id="autoBackupToggle" onclick="toggleAutoBackup()"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">التكرار</label>
+                            <select class="input-field" id="backupFrequency">
+                                <option value="daily">يومياً</option>
+                                <option value="weekly">أسبوعياً</option>
+                                <option value="monthly">شهرياً</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">وقت النسخ</label>
+                            <input type="time" class="input-field" id="backupTime" value="02:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance Section -->
+        <section class="section" id="maintenance">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">وضع الصيانة</h2>
+                    <p class="text-gray-500">تفعيل وضع الصيانة لإجراء تحديثات على الموقع</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إعدادات وضع الصيانة</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div>
+                                    <p class="font-medium text-[var(--third-color)]">حالة الصيانة</p>
+                                    <p class="text-sm text-gray-500" id="maintenanceStatusText">غير مفعّل</p>
+                                </div>
+                                <div class="toggle-switch" id="maintenanceToggle" onclick="toggleMaintenance()"></div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">رسالة الصيانة</label>
+                                <textarea class="input-field" rows="3" id="maintenanceMessage" placeholder="أدخل رسالة الصيانة التي ستظهر للمستخدمين">الموقع قيد الصيانة حالياً، يرجى المحاولة لاحقاً</textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">المدة المتوقعة (بالدقائق)</label>
+                                <input type="number" class="input-field" id="maintenanceDuration" value="30" min="1">
+                            </div>
+
+                            <button onclick="saveMaintenanceSettings()" class="btn-primary w-full justify-center">
+                                حفظ الإعدادات
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">معاينة صفحة الصيانة</h3>
+                        <div class="bg-gray-900 rounded-xl p-8 text-center">
+                            <svg class="w-16 h-16 mx-auto text-[var(--primary-color)] mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                            <h4 class="text-xl font-bold text-white mb-2">الموقع في وضع الصيانة</h4>
+                            <p class="text-gray-400" id="previewMessage">الموقع قيد الصيانة حالياً، يرجى المحاولة لاحقاً</p>
+                            <div class="mt-4 text-sm text-gray-500">
+                                <span>المدة المتوقعة: </span>
+                                <span id="previewDuration">30</span> دقيقة
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Withdrawal Section -->
+        <section class="section" id="withdrawal">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">الحد الأدنى للسحب</h2>
+                    <p class="text-gray-500">إدارة إعدادات سحب الأرباح</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إعدادات السحب</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">الحد الأدنى للسحب (ريال)</label>
+                                <input type="number" class="input-field" id="minWithdrawal" value="100" min="1">
+                                <p class="text-sm text-gray-500 mt-2">أقل مكن يمكن سحبه من الأرباح</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">رسوم السحب (%)</label>
+                                <input type="number" class="input-field" id="withdrawalFee" value="2" min="0" max="100" step="0.5">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">مدة المعالجة (يوم)</label>
+                                <input type="number" class="input-field" id="processingDays" value="3" min="1">
+                            </div>
+
+                            <button onclick="saveWithdrawalSettings()" class="btn-primary w-full justify-center">
+                                حفظ الإعدادات
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pending Withdrawals -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">طلبات السحب المعلقة</h3>
+                        <div class="space-y-3 max-h-80 overflow-y-auto" id="pendingWithdrawals">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commission Section -->
+        <section class="section" id="commission">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">نسبة العمولة</h2>
+                    <p class="text-gray-500">إدارة نسب العمولة على الكورسات والتدريبات</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Commission Settings -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إعدادات العمولة</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">نسبة عمولة الكورسات</label>
+                                <div class="flex items-center gap-4">
+                                    <input type="number" class="input-field" value="15" id="courseCommission" min="0" max="100">
+                                    <span class="text-gray-500">%</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">النسبة المئوية التي يأخذها الموقع من كل كورس</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">نسبة عمولة التدريبات</label>
+                                <div class="flex items-center gap-4">
+                                    <input type="number" class="input-field" value="10" id="trainingCommission" min="0" max="100">
+                                    <span class="text-gray-500">%</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">النسبة المئوية التي يأخذها الموقع من كل تدريب</p>
+                            </div>
+
+                            <button onclick="saveCommissionSettings()" class="btn-primary w-full justify-center">
+                                حفظ الإعدادات
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Commission Stats -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إحصائيات العمولة</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-[var(--green2)] rounded-xl">
+                                <div>
+                                    <p class="text-sm text-gray-600">إجمالي عمولة الكورسات</p>
+                                    <p class="text-2xl font-bold text-[var(--primary-color)]">12,450 ريال</p>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-[var(--purble1)] rounded-xl">
+                                <div>
+                                    <p class="text-sm text-gray-600">إجمالي عمولة التدريبات</p>
+                                    <p class="text-2xl font-bold text-[var(--purble2)]">5,780 ريال</p>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purble2)" stroke-width="2">
+                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-[var(--yellow1)] rounded-xl">
+                                <div>
+                                    <p class="text-sm text-gray-600">إجمالي العمولة هذا الشهر</p>
+                                    <p class="text-2xl font-bold text-[var(--yellow2)]">18,230 ريال</p>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow2)" stroke-width="2">
+                                        <line x1="12" y1="1" x2="12" y2="23"/>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Log Section -->
+        <section class="section" id="activityLog">
+            <div class="p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">سجل العمليات</h2>
+                        <p class="text-gray-500">تتبع جميع العمليات في النظام (تسجيل دخول/خروج، إنشاء، تعديل، حذف)</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <select class="input-field" id="activityTypeFilter" onchange="filterActivity()">
+                            <option value="">جميع العمليات</option>
+                            <option value="login">تسجيل دخول</option>
+                            <option value="logout">تسجيل خروج</option>
+                            <option value="create">إنشاء</option>
+                            <option value="update">تعديل</option>
+                            <option value="delete">حذف</option>
+                        </select>
+                        <input type="date" class="input-field" id="activityDateFilter" onchange="filterActivity()">
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="space-y-2" id="activityLogList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section class="section" id="reports">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-[var(--third-color)] mb-2">التقارير والإحصائيات</h2>
+                    <p class="text-gray-500">نظرة شاملة على أداء المنصة</p>
+                </div>
+
+                <!-- Report Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-[var(--green2)] flex items-center justify-center">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <span class="text-gray-500">النسخ الاحتياطية</span>
+                        </div>
+                        <p class="text-3xl font-bold text-[var(--third-color)]">45</p>
+                        <div class="progress-bar mt-3">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-[var(--purble1)] flex items-center justify-center">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purble2)" stroke-width="2">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
+                            </div>
+                            <span class="text-gray-500">الإشعارات المرسلة</span>
+                        </div>
+                        <p class="text-3xl font-bold text-[var(--third-color)]">128</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-[var(--yellow1)] flex items-center justify-center">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--yellow2)" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <span class="text-gray-500">إجمالي العمولة</span>
+                        </div>
+                        <p class="text-3xl font-bold text-[var(--third-color)]">45K</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-[rgba(231,76,60,0.15)] flex items-center justify-center">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--error-color)" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                            <span class="text-gray-500">عمليات اليوم</span>
+                        </div>
+                        <p class="text-3xl font-bold text-[var(--third-color)]">156</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">النشاط الأسبوعي</h3>
+                        <div class="chart-container" id="weeklyActivityChart"></div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-[var(--third-color)] mb-6">إحصائيات النظام</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">معدل نجاح النسخ الاحتياطية</span>
+                                <span class="font-bold text-[var(--success-color)]">98%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 98%"></div>
+                            </div>
+
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-gray-600">وقت تشغيل النظام</span>
+                                <span class="font-bold text-[var(--primary-color)]">99.9%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 99.9%"></div>
+                            </div>
+
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-gray-600">معدل قراءة الإشعارات</span>
+                                <span class="font-bold text-[var(--purble2)]">85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ============================================
+        // DATA STORE
+        // ============================================
+        
+        let notifications = [
+            { id: 1, title: 'تسجيل مستخدم جديد', message: 'انضم أحمد محمد للمنصة', type: 'info', read: false, createdAt: '2024-03-25 10:30' },
+            { id: 2, title: 'طلب سحب جديد', message: 'طلب م. سارة سحب 500 ريال', type: 'warning', read: false, createdAt: '2024-03-25 09:15' },
+            { id: 3, title: 'تقرير بلاغ', message: 'تم الإبلاغ عن محتوى غير لائق في التعليقات', type: 'error', read: false, createdAt: '2024-03-24 16:45' },
+            { id: 4, title: 'نسخ احتياطي مكتمل', message: 'تم إنشاء نسخة احتياطية بنجاح - حجم 256 MB', type: 'success', read: true, createdAt: '2024-03-24 14:20' },
+            { id: 5, title: 'تحديث النظام', message: 'تم تحديث النظام للإصدار 2.5 بنجاح', type: 'info', read: true, createdAt: '2024-03-23 11:00' },
+            { id: 6, title: 'تنبيه أمان', message: 'تم اكتشاف محاولة دخول مشبوهة من IP غير معروف', type: 'warning', read: false, createdAt: '2024-03-22 08:30' },
+            { id: 7, title: 'خطأ في قاعدة البيانات', message: 'حدث خطأ مؤقت في الاتصال بقاعدة البيانات', type: 'error', read: true, createdAt: '2024-03-21 15:45' },
+            { id: 8, title: 'صيانة مجدولة', message: 'سيتم إجراء صيانة دورية غداً الساعة 2 صباحاً', type: 'info', read: true, createdAt: '2024-03-20 12:00' },
+        ];
+
+        let sentNotifications = [
+            { id: 1, title: 'صيانة مجدولة', message: 'سيتم إجراء صيانة للموقع غداً', recipients: 'all', sentAt: '2024-03-25 08:00', type: 'warning' },
+            { id: 2, title: 'عرض خاص', message: 'خصم 30% على جميع الكورسات', recipients: 'students', sentAt: '2024-03-24 10:00', type: 'success' },
+            { id: 3, title: 'تحديث شروط الاستخدام', message: 'تم تحديث شروط الاستخدام', recipients: 'all', sentAt: '2024-03-22 15:30', type: 'info' },
+            { id: 4, title: 'تذكير بالتدريب', message: 'يبدأ التدريب غداً الساعة 10 صباحاً', recipients: 'instructors', sentAt: '2024-03-21 09:00', type: 'info' },
+        ];
+
+        let activityLog = [
+            { id: 1, type: 'login', user: 'مدير النظام', action: 'تسجيل دخول', details: 'من جهاز كمبيوتر - Chrome - IP: 192.168.1.1', timestamp: '2024-03-25 10:30:15' },
+            { id: 2, type: 'create', user: 'مدير النظام', action: 'إرسال إشعار', details: 'إرسال إشعار "صيانة مجدولة" لجميع المستخدمين', timestamp: '2024-03-25 10:15:22' },
+            { id: 3, type: 'update', user: 'مدير النظام', action: 'تعديل إعدادات العمولة', details: 'تم تغيير نسبة عمولة الكورسات إلى 15%', timestamp: '2024-03-25 09:45:00' },
+            { id: 4, type: 'create', user: 'النظام', action: 'نسخ احتياطي تلقائي', details: 'تم إنشاء نسخة احتياطية كاملة - 256 MB', timestamp: '2024-03-25 02:00:00' },
+            { id: 5, type: 'delete', user: 'مدير النظام', action: 'حذف إشعار', details: 'تم حذف إشعار قديم', timestamp: '2024-03-24 16:20:30' },
+            { id: 6, type: 'update', user: 'مدير النظام', action: 'تفعيل وضع الصيانة', details: 'تم تفعيل وضع الصيانة لمدة 30 دقيقة', timestamp: '2024-03-24 15:10:00' },
+            { id: 7, type: 'login', user: 'مدير النظام', action: 'تسجيل دخول', details: 'من جهاز محمول - Safari', timestamp: '2024-03-24 14:30:22' },
+            { id: 8, type: 'update', user: 'مدير النظام', action: 'تعديل الحد الأدنى للسحب', details: 'تم تغيير الحد الأدنى إلى 100 ريال', timestamp: '2024-03-24 13:45:10' },
+            { id: 9, type: 'logout', user: 'مدير النظام', action: 'تسجيل خروج', details: 'جلسة مدتها ساعتان', timestamp: '2024-03-23 18:00:00' },
+            { id: 10, type: 'create', user: 'النظام', action: 'إنشاء تقرير', details: 'تم إنشاء تقرير الأداء الشهري', timestamp: '2024-03-23 12:00:00' },
+        ];
+
+        let backupHistory = [
+            { id: 1, type: 'full', size: '256 MB', status: 'success', createdAt: '2024-03-25 02:00' },
+            { id: 2, type: 'database', size: '128 MB', status: 'success', createdAt: '2024-03-24 02:00' },
+            { id: 3, type: 'full', size: '255 MB', status: 'success', createdAt: '2024-03-23 02:00' },
+            { id: 4, type: 'files', size: '180 MB', status: 'failed', createdAt: '2024-03-22 02:00' },
+            { id: 5, type: 'full', size: '254 MB', status: 'success', createdAt: '2024-03-21 02:00' },
+            { id: 6, type: 'database', size: '127 MB', status: 'success', createdAt: '2024-03-20 02:00' },
+        ];
+
+        let pendingWithdrawals = [
+            { id: 1, user: 'د. أحمد محمد', amount: 2500, requestedAt: '2024-03-25', method: 'تحويل بنكي' },
+            { id: 2, user: 'م. سارة علي', amount: 1800, requestedAt: '2024-03-24', method: 'PayPal' },
+            { id: 3, user: 'أ. خالد عبدالله', amount: 3200, requestedAt: '2024-03-23', method: 'تحويل بنكي' },
+            { id: 4, user: 'م. فاطمة أحمد', amount: 950, requestedAt: '2024-03-22', method: 'PayPal' },
+        ];
+
+        // System State
+        let maintenanceMode = false;
+        let autoBackup = true;
+        let currentNotifPage = 1;
+        const notifPerPage = 5;
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            updateCurrentDate();
+            renderSystemNotifications();
+            renderSentNotifications();
+            renderActivityLog();
+            renderBackupHistory();
+            renderPendingWithdrawals();
+            renderActivityChart();
+            renderWeeklyActivityChart();
+            renderRecentActivity();
+            createParticles();
+            setupFormListeners();
+            updateNotificationBadge();
+        }
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-SA', options);
+        }
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            document.querySelectorAll('.menu-item, .submenu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.remove('mobile-open');
+            }
+        }
+
+        function toggleSubmenu(submenuId) {
+            const submenu = document.getElementById(submenuId);
+            const arrowId = submenuId.replace('Submenu', 'Arrow');
+            const arrow = document.getElementById(arrowId);
+            
+            if (submenu && arrow) {
+                submenu.classList.toggle('open');
+                arrow.style.transform = submenu.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0)';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth < 1024) {
+                sidebar.classList.toggle('mobile-open');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                document.getElementById('mainContent').classList.toggle('expanded');
+            }
+        }
+
+        // ============================================
+        // NOTIFICATIONS - SEND TO USERS
+        // ============================================
+
+        function renderSentNotifications() {
+            const list = document.getElementById('sentNotifications');
+            if (!list) return;
+            
+            list.innerHTML = sentNotifications.map(notif => `
+                <div class="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg ${getNotifIconBg(notif.type)} flex items-center justify-center">
+                                ${getNotifIconSmall(notif.type)}
+                            </div>
+                            <h4 class="font-medium text-[var(--third-color)]">${notif.title}</h4>
+                        </div>
+                        <button onclick="deleteSentNotification(${notif.id})" class="p-1 hover:bg-red-100 rounded text-gray-400 hover:text-[var(--error-color)]">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">${notif.message}</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>تم الإرسال إلى: ${getRecipientName(notif.recipients)}</span>
+                        <span>${notif.sentAt}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function sendNotification(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('notifTitle').value;
+            const message = document.getElementById('notifDesc').value;
+            const type = document.getElementById('notifType').value;
+            const recipients = document.getElementById('notifRecipients').value;
+            
+            const newNotif = {
+                id: Math.max(...sentNotifications.map(n => n.id)) + 1,
+                title: title,
+                message: message,
+                recipients: recipients,
+                sentAt: new Date().toLocaleString('ar-SA'),
+                type: type
+            };
+            
+            sentNotifications.unshift(newNotif);
+            
+            logActivity('create', 'مدير النظام', 'إرسال إشعار', `العنوان: ${title} - المستلمون: ${getRecipientName(recipients)}`);
+            showToast('تم إرسال الإشعار بنجاح', 'success');
+            
+            document.getElementById('notificationForm').reset();
+            renderSentNotifications();
+        }
+
+        function deleteSentNotification(id) {
+            const index = sentNotifications.findIndex(n => n.id === id);
+            if (index !== -1) {
+                sentNotifications.splice(index, 1);
+                logActivity('delete', 'مدير النظام', 'حذف إشعار مرسل', '');
+                showToast('تم حذف الإشعار', 'success');
+                renderSentNotifications();
+            }
+        }
+
+        // ============================================
+        // NOTIFICATIONS - SYSTEM & REPORTS
+        // ============================================
+
+        function renderSystemNotifications() {
+            const list = document.getElementById('systemNotificationsList');
+            if (!list) return;
+
+            const filter = document.getElementById('notifFilter')?.value || '';
+            const filtered = filter ? notifications.filter(n => n.type === filter) : notifications;
+            const start = (currentNotifPage - 1) * notifPerPage;
+            const paginated = filtered.slice(start, start + notifPerPage);
+            
+            list.innerHTML = paginated.map(notif => `
+                <div class="notification-item ${!notif.read ? 'unread' : ''}" onclick="markAsRead(${notif.id})">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full ${getNotifIconBg(notif.type)} flex items-center justify-center flex-shrink-0">
+                            ${getNotifIcon(notif.type)}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-1">
+                                <h4 class="font-medium text-[var(--third-color)]">${notif.title}</h4>
+                                <span class="text-xs text-gray-500">${notif.createdAt}</span>
+                            </div>
+                            <p class="text-sm text-gray-600">${notif.message}</p>
+                            <span class="inline-block mt-2 badge ${getNotifBadgeClass(notif.type)}">${getNotifTypeName(notif.type)}</span>
+                        </div>
+                        ${!notif.read ? '<span class="w-2 h-2 rounded-full bg-[var(--primary-color)] flex-shrink-0"></span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            updateNotifPagination(filtered.length);
+        }
+
+        function filterNotifications() {
+            currentNotifPage = 1;
+            renderSystemNotifications();
+        }
+
+        function markAsRead(id) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif && !notif.read) {
+                notif.read = true;
+                renderSystemNotifications();
+                updateNotificationBadge();
+            }
+        }
+
+        function markAllAsRead() {
+            notifications.forEach(n => n.read = true);
+            renderSystemNotifications();
+            updateNotificationBadge();
+            showToast('تم تحديد جميع الإشعارات كمقروءة', 'success');
+        }
+
+        function updateNotificationBadge() {
+            const unread = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notifBadge');
+            const headerBadge = document.getElementById('headerNotifBadge');
+            
+            if (badge) {
+                badge.textContent = unread;
+                badge.style.display = unread > 0 ? 'inline' : 'none';
+            }
+            if (headerBadge) {
+                headerBadge.textContent = unread;
+                headerBadge.style.display = unread > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function updateNotifPagination(total) {
+            const totalPages = Math.ceil(total / notifPerPage);
+            document.getElementById('notifShowing').textContent = `${((currentNotifPage - 1) * notifPerPage) + 1}-${Math.min(currentNotifPage * notifPerPage, total)}`;
+            document.getElementById('notifTotal').textContent = total;
+            
+            const pagination = document.getElementById('notifPagination');
+            let html = '';
+            
+            if (currentNotifPage > 1) {
+                html += `<button onclick="changeNotifPage(${currentNotifPage - 1})" class="p-2 rounded-lg hover:bg-gray-100">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>`;
+            }
+            
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button onclick="changeNotifPage(${i})" class="w-10 h-10 rounded-lg ${currentNotifPage === i ? 'bg-[var(--primary-color)] text-white' : 'hover:bg-gray-100'}">${i}</button>`;
+            }
+            
+            if (currentNotifPage < totalPages) {
+                html += `<button onclick="changeNotifPage(${currentNotifPage + 1})" class="p-2 rounded-lg hover:bg-gray-100">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>`;
+            }
+            
+            pagination.innerHTML = html;
+        }
+
+        function changeNotifPage(page) {
+            currentNotifPage = page;
+            renderSystemNotifications();
+        }
+
+        // ============================================
+        // ACTIVITY LOG
+        // ============================================
+        
+        function renderActivityLog() {
+            const list = document.getElementById('activityLogList');
+            if (!list) return;
+
+            const typeFilter = document.getElementById('activityTypeFilter')?.value || '';
+            const dateFilter = document.getElementById('activityDateFilter')?.value || '';
+            
+            let filtered = activityLog;
+            if (typeFilter) filtered = filtered.filter(l => l.type === typeFilter);
+            if (dateFilter) filtered = filtered.filter(l => l.timestamp.startsWith(dateFilter));
+            
+            list.innerHTML = filtered.map(log => `
+                <div class="activity-item ${log.type}">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="font-medium text-[var(--third-color)]">${log.action}</h4>
+                            <p class="text-sm text-gray-500">${log.details}</p>
+                            <p class="text-xs text-gray-400 mt-1">بواسطة: ${log.user}</p>
+                        </div>
+                        <span class="text-xs text-gray-400">${log.timestamp}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function logActivity(type, user, action, details) {
+            const log = {
+                id: Math.max(...activityLog.map(l => l.id)) + 1,
+                type: type,
+                user: user,
+                action: action,
+                details: details,
+                timestamp: new Date().toLocaleString('ar-SA')
+            };
+            activityLog.unshift(log);
+        }
+
+        function filterActivity() {
+            renderActivityLog();
+        }
+
+        // ============================================
+        // BACKUP
+        // ============================================
+        
+        function renderBackupHistory() {
+            const list = document.getElementById('backupHistory');
+            if (!list) return;
+            
+            list.innerHTML = backupHistory.map(backup => `
+                <div class="p-4 rounded-xl ${backup.status === 'success' ? 'bg-[var(--green2)]' : 'bg-[rgba(231,76,60,0.1)]'}">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-medium text-[var(--third-color)]">${getBackupTypeName(backup.type)}</span>
+                        <span class="badge ${backup.status === 'success' ? 'badge-success' : 'badge-danger'}">${backup.status === 'success' ? 'ناجح' : 'فشل'}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span>${backup.size}</span>
+                        <span>${backup.createdAt}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createBackup() {
+            const type = document.getElementById('backupType').value;
+            const backup = {
+                id: Math.max(...backupHistory.map(b => b.id)) + 1,
+                type: type,
+                size: type === 'full' ? '256 MB' : type === 'database' ? '128 MB' : '180 MB',
+                status: Math.random() > 0.1 ? 'success' : 'failed',
+                createdAt: new Date().toLocaleString('ar-SA')
+            };
+            
+            backupHistory.unshift(backup);
+            document.getElementById('lastBackupDate').textContent = backup.createdAt;
+            
+            logActivity('create', 'النظام', 'نسخ احتياطي', `نوع: ${getBackupTypeName(type)} - الحجم: ${backup.size}`);
+            
+            if (backup.status === 'success') {
+                showToast('تم إنشاء النسخة الاحتياطية بنجاح', 'success');
+            } else {
+                showToast('فشل إنشاء النسخة الاحتياطية', 'error');
+            }
+            
+            renderBackupHistory();
+        }
+
+        function toggleAutoBackup() {
+            autoBackup = !autoBackup;
+            const toggle = document.getElementById('autoBackupToggle');
+            toggle.classList.toggle('active', autoBackup);
+            logActivity('update', 'مدير النظام', 'تغيير إعدادات النسخ التلقائي', autoBackup ? 'تفعيل' : 'إلغاء');
+            showToast(autoBackup ? 'تم تفعيل النسخ التلقائي' : 'تم إيقاف النسخ التلقائي', 'info');
+        }
+
+        // ============================================
+        // MAINTENANCE MODE
+        // ============================================
+        
+        function toggleMaintenance() {
+            maintenanceMode = !maintenanceMode;
+            
+            const overlay = document.getElementById('maintenanceOverlay');
+            const toggle = document.getElementById('maintenanceToggle');
+            const statusText = document.getElementById('maintenanceStatusText');
+            
+            overlay.classList.toggle('active', maintenanceMode);
+            toggle.classList.toggle('active', maintenanceMode);
+            statusText.textContent = maintenanceMode ? 'مفعّل' : 'غير مفعّل';
+            
+            logActivity('update', 'مدير النظام', 'تغيير وضع الصيانة', maintenanceMode ? 'تفعيل' : 'إلغاء');
+            showToast(maintenanceMode ? 'تم تفعيل وضع الصيانة' : 'تم إلغاء وضع الصيانة', 'warning');
+        }
+
+        function saveMaintenanceSettings() {
+            const message = document.getElementById('maintenanceMessage').value;
+            const duration = document.getElementById('maintenanceDuration').value;
+            
+            document.getElementById('previewMessage').textContent = message;
+            document.getElementById('previewDuration').textContent = duration;
+            
+            logActivity('update', 'مدير النظام', 'تعديل إعدادات الصيانة', `المدة: ${duration} دقيقة`);
+            showToast('تم حفظ إعدادات الصيانة', 'success');
+        }
+
+        // ============================================
+        // WITHDRAWAL
+        // ============================================
+        
+        function renderPendingWithdrawals() {
+            const list = document.getElementById('pendingWithdrawals');
+            if (!list) return;
+            
+            list.innerHTML = pendingWithdrawals.map(w => `
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-medium text-[var(--third-color)]">${w.user}</span>
+                        <span class="font-bold text-[var(--primary-color)]">${w.amount} ريال</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm text-gray-500">${w.method}</span>
+                        <span class="text-sm text-gray-500">${w.requestedAt}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="approveWithdrawal(${w.id})" class="flex-1 py-2 bg-[var(--success-color)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition">
+                            موافقة
+                        </button>
+                        <button onclick="rejectWithdrawal(${w.id})" class="flex-1 py-2 bg-[var(--error-color)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition">
+                            رفض
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveWithdrawal(id) {
+            const index = pendingWithdrawals.findIndex(w => w.id === id);
+            if (index !== -1) {
+                const w = pendingWithdrawals[index];
+                pendingWithdrawals.splice(index, 1);
+                logActivity('update', 'مدير النظام', 'موافقة على سحب', `المبلغ: ${w.amount} ريال للمستخدم: ${w.user}`);
+                showToast('تم الموافقة على طلب السحب', 'success');
+                renderPendingWithdrawals();
+            }
+        }
+
+        function rejectWithdrawal(id) {
+            const index = pendingWithdrawals.findIndex(w => w.id === id);
+            if (index !== -1) {
+                const w = pendingWithdrawals[index];
+                pendingWithdrawals.splice(index, 1);
+                logActivity('update', 'مدير النظام', 'رفض سحب', `المبلغ: ${w.amount} ريال للمستخدم: ${w.user}`);
+                showToast('تم رفض طلب السحب', 'warning');
+                renderPendingWithdrawals();
+            }
+        }
+
+        function saveWithdrawalSettings() {
+            const min = document.getElementById('minWithdrawal').value;
+            const fee = document.getElementById('withdrawalFee').value;
+            const days = document.getElementById('processingDays').value;
+            
+            logActivity('update', 'مدير النظام', 'تعديل إعدادات السحب', `الحد الأدنى: ${min} ريال - الرسوم: ${fee}% - مدة المعالجة: ${days} أيام`);
+            showToast('تم حفظ إعدادات السحب', 'success');
+        }
+
+        function saveCommissionSettings() {
+            const courseComm = document.getElementById('courseCommission').value;
+            const trainingComm = document.getElementById('trainingCommission').value;
+            
+            logActivity('update', 'مدير النظام', 'تعديل نسب العمولة', `الكورسات: ${courseComm}% - التدريبات: ${trainingComm}%`);
+            showToast('تم حفظ إعدادات العمولة', 'success');
+        }
+
+        // ============================================
+        // CHARTS & VISUALIZATION
+        // ============================================
+        
+        function renderActivityChart() {
+            const container = document.getElementById('activityChart');
+            if (!container) return;
+            
+            const data = [45, 62, 38, 75, 52, 88, 65];
+            const max = Math.max(...data);
+            
+            container.innerHTML = data.map(value => `
+                <div class="chart-bar" style="height: ${(value / max) * 100}%">
+                    <span>${value}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderWeeklyActivityChart() {
+            const container = document.getElementById('weeklyActivityChart');
+            if (!container) return;
+            
+            const data = [120, 185, 145, 210, 195, 230, 180];
+            const max = Math.max(...data);
+            
+            container.innerHTML = data.map(value => `
+                <div class="chart-bar" style="height: ${(value / max) * 100}%">
+                    <span>${value}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            if (!container) return;
+            
+            container.innerHTML = activityLog.slice(0, 5).map(log => `
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    <div class="w-10 h-10 rounded-full ${getActivityIconBg(log.type)} flex items-center justify-center">
+                        ${getActivityIcon(log.type)}
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-[var(--third-color)]">${log.action}</p>
+                        <p class="text-xs text-gray-500">${log.user}</p>
+                    </div>
+                    <span class="text-xs text-gray-400">${log.timestamp.split(' ')[1]}</span>
+                </div>
+            `).join('');
+        }
+
+        // ============================================
+        // PARTICLES
+        // ============================================
+        
+        function createParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particle.style.width = (5 + Math.random() * 10) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                ${getToastIcon(type)}
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        function getToastIcon(type) {
+            const icons = {
+                success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+                warning: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotifIconBg(type) {
+            const bgs = {
+                info: 'bg-[var(--third-color)]',
+                success: 'bg-[var(--success-color)]',
+                warning: 'bg-[var(--warning-color)]',
+                error: 'bg-[var(--error-color)]'
+            };
+            return bgs[type] || bgs.info;
+        }
+
+        function getNotifIcon(type) {
+            const icons = {
+                info: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+                success: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                error: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotifIconSmall(type) {
+            const icons = {
+                info: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/></svg>',
+                success: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+                warning: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>',
+                error: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg>'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotifBadgeClass(type) {
+            const classes = {
+                info: 'badge-info',
+                success: 'badge-success',
+                warning: 'badge-warning',
+                error: 'badge-danger'
+            };
+            return classes[type] || classes.info;
+        }
+
+        function getNotifTypeName(type) {
+            const names = {
+                info: 'معلومات',
+                success: 'نجاح',
+                warning: 'تحذير',
+                error: 'خطأ'
+            };
+            return names[type] || type;
+        }
+
+        function getActivityIconBg(type) {
+            const bgs = {
+                login: 'bg-[var(--green3)]',
+                logout: 'bg-[var(--yellow1)]',
+                create: 'bg-[var(--purble1)]',
+                update: 'bg-[var(--green2)]',
+                delete: 'bg-[rgba(231,76,60,0.15)]'
+            };
+            return bgs[type] || 'bg-gray-100';
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                login: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>',
+                logout: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning-color)" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+                create: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purble2)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+                update: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+                delete: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--error-color)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
+            };
+            return icons[type] || icons.create;
+        }
+
+        function getBackupTypeName(type) {
+            const names = {
+                full: 'نسخ كامل',
+                database: 'قاعدة البيانات',
+                files: 'الملفات فقط'
+            };
+            return names[type] || type;
+        }
+
+        function getRecipientName(recipient) {
+            const names = {
+                all: 'جميع المستخدمين',
+                students: 'الطلاب فقط',
+                instructors: 'المدربون فقط',
+                admins: 'المدراء فقط'
+            };
+            return names[recipient] || recipient;
+        }
+
+        // ============================================
+        // FORM LISTENERS
+        // ============================================
+        
+        function setupFormListeners() {
+            document.getElementById('notificationForm').addEventListener('submit', sendNotification);
+            
+            // Update preview on input
+            document.getElementById('maintenanceMessage').addEventListener('input', function() {
+                document.getElementById('previewMessage').textContent = this.value;
+            });
+            
+            document.getElementById('maintenanceDuration').addEventListener('input', function() {
+                document.getElementById('previewDuration').textContent = this.value;
+            });
+        }
+
+        // ============================================
+        // GLOBAL SEARCH
+        // ============================================
+        
+        function handleGlobalSearch(e) {
+            if (e.key === 'Enter') {
+                const query = e.target.value.toLowerCase();
+                showToast(`البحث عن: ${query}`, 'info');
+            }
+        }
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        
+        function logout() {
+            logActivity('logout', 'مدير النظام', 'تسجيل خروج', 'إنهاء الجلسة');
+            showToast('تم تسجيل الخروج بنجاح', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
+
+        // Close modals on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

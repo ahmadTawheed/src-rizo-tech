@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الزراعة - إدارة التقييمات والتعليقات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8BBA40;
+            --secondary-color: #5AB06A;
+            --third-color: #1E4565;
+            --background-color: #FBFBFB;
+            --bg-icon: #D9D9D9;
+            --bg-footer: #212121;
+            --text-color: #FFFFFF;
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --iconAndUl-colors: #2D2D2D;
+            --overMode-color: #000000;
+            --green1: #52FF55;
+            --green2: #EBFCF1;
+            --green3: #DCFCE7;
+            --red1: #FF8A8C;
+            --red2: #FFD8EF;
+            --red3: #80141B;
+            --purble1: #F3E8FF;
+            --purble2: #7F23CF;
+            --yellow1: #FFFAC4;
+            --yellow2: #A16006;
+            --yellow3: #FFCC00;
+            --browen1: #91410F;
+            --white0: #CCCCCC;
+            --white1: #ECECEC;
+        }
+
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--background-color);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--third-color) 0%, #0D2233 100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar.collapsed {
+            width: 80px !important;
+        }
+
+        .sidebar.collapsed .nav-text,
+        .sidebar.collapsed .logo-text,
+        .sidebar.collapsed .user-info {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .nav-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, transparent, rgba(139, 186, 64, 0.2));
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            width: 100%;
+        }
+
+        .nav-item.active {
+            background: rgba(139, 186, 64, 0.15);
+            border-right: 4px solid var(--primary-color);
+        }
+
+        .nav-item:hover {
+            transform: translateX(-5px);
+        }
+
+        /* Cards */
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(139, 186, 64, 0.15);
+        }
+
+        .stat-card .icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover .icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table thead th {
+            background: linear-gradient(135deg, var(--third-color), #2A5A7A);
+            color: white;
+            padding: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .data-table thead th:first-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        .data-table thead th:last-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .data-table tbody tr {
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--green2);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--green3);
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--white1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 186, 64, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 186, 64, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--third-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2A5A7A;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 8px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--third-color), #2A5A7A);
+            padding: 20px 24px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Form Inputs */
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--white1);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: var(--background-color);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 186, 64, 0.15);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--third-color);
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 4px;
+            direction: ltr;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 28px;
+            color: var(--white1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: var(--yellow3);
+            transform: scale(1.1);
+        }
+
+        .star-rating {
+            flex-direction: row-reverse;
+        }
+
+        /* Badge */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-right: 45px;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bg-icon);
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--white1);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--green2);
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(-400px);
+            animation: slideIn 0.4s forwards;
+            min-width: 300px;
+        }
+
+        .toast.success {
+            border-right: 4px solid var(--success-color);
+        }
+
+        .toast.error {
+            border-right: 4px solid var(--error-color);
+        }
+
+        .toast.warning {
+            border-right: 4px solid var(--warning-color);
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                transform: translateX(-400px);
+                opacity: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 100;
+                transform: translateX(100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .mobile-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(139, 186, 64, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(90, 176, 106, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 69, 101, 0.03) 0%, transparent 50%);
+        }
+
+        /* Active Link Indicator */
+        .nav-item.active .nav-icon {
+            color: var(--primary-color);
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Content Area Animation */
+        .content-section {
+            display: none;
+            opacity: 0;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* Confirm Dialog */
+        .confirm-dialog {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .confirm-dialog .icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .confirm-dialog .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body class="bg-pattern">
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="sidebar w-72 min-h-screen flex flex-col" id="sidebar">
+            <!-- Logo -->
+            <div class="p-6 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center">
+                        <i class="fas fa-seedling text-white text-xl"></i>
+                    </div>
+                    <div class="logo-text transition-all duration-300">
+                        <h1 class="text-white font-bold text-lg">زراعة تك</h1>
+                        <p class="text-white/60 text-xs">لوحة التحكم</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Info -->
+            <div class="p-4 border-b border-white/10">
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div class="user-info transition-all duration-300">
+                        <p class="text-white font-semibold text-sm">أحمد محمد</p>
+                        <p class="text-white/60 text-xs">مدير النظام</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="#" class="nav-item active flex items-center gap-3 p-3 rounded-xl text-white" data-section="dashboard" onclick="switchSection('dashboard', event)">
+                    <i class="fas fa-home nav-icon text-lg w-6 text-center"></i>
+                    <span class="nav-text transition-all duration-300">لوحة التحكم</span>
+                </a>
+                <a href="#" class="nav-item flex items-center gap-3 p-3 rounded-xl text-white/70 hover:text-white" data-section="ratings" onclick="switchSection('ratings', event)">
+                    <i class="fas fa-star nav-icon text-lg w-6 text-center"></i>
+                    <span class="nav-text transition-all duration-300">التقييمات</span>
+                </a>
+                <a href="#" class="nav-item flex items-center gap-3 p-3 rounded-xl text-white/70 hover:text-white" data-section="comments" onclick="switchSection('comments', event)">
+                    <i class="fas fa-comment nav-icon text-lg w-6 text-center"></i>
+                    <span class="nav-text transition-all duration-300">التعليقات</span>
+                </a>
+                <a href="#" class="nav-item flex items-center gap-3 p-3 rounded-xl text-white/70 hover:text-white" data-section="courses" onclick="switchSection('courses', event)">
+                    <i class="fas fa-book nav-icon text-lg w-6 text-center"></i>
+                    <span class="nav-text transition-all duration-300">الكورسات</span>
+                </a>
+            </nav>
+
+            <!-- Collapse Button -->
+            <div class="p-4 border-t border-white/10">
+                <button onclick="toggleSidebar()" class="w-full p-3 rounded-xl bg-white/5 text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-compress-alt"></i>
+                    <span class="nav-text">تصغير القائمة</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-8">
+            <!-- Header -->
+            <header class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-3 rounded-xl bg-white shadow-md hover:shadow-lg transition-all">
+                        <i class="fas fa-bars text-[var(--third-color)]"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-[var(--third-color)]" id="pageTitle">لوحة التحكم</h2>
+                        <p class="text-gray-500 text-sm mt-1">مرحباً بك في نظام إدارة المحتوى الزراعي</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="p-3 rounded-xl bg-white shadow-md hover:shadow-lg transition-all relative">
+                        <i class="fas fa-bell text-[var(--third-color)]"></i>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-[var(--error-color)] rounded-full text-white text-xs flex items-center justify-center">3</span>
+                    </button>
+                    <button class="p-3 rounded-xl bg-white shadow-md hover:shadow-lg transition-all">
+                        <i class="fas fa-cog text-[var(--third-color)]"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="section-dashboard">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card animate-fadeInUp stagger-1">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">إجمالي التقييمات</p>
+                                <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalRatings">248</h3>
+                                <p class="text-[var(--success-color)] text-sm mt-2 flex items-center gap-1">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>12% هذا الشهر</span>
+                                </p>
+                            </div>
+                            <div class="icon-wrapper bg-[var(--green2)]">
+                                <i class="fas fa-star text-[var(--secondary-color)]"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-fadeInUp stagger-2">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">إجمالي التعليقات</p>
+                                <h3 class="text-3xl font-bold text-[var(--third-color)]" id="totalComments">512</h3>
+                                <p class="text-[var(--success-color)] text-sm mt-2 flex items-center gap-1">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>8% هذا الشهر</span>
+                                </p>
+                            </div>
+                            <div class="icon-wrapper bg-[var(--yellow1)]">
+                                <i class="fas fa-comment text-[var(--yellow2)]"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-fadeInUp stagger-3">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">الكورسات النشطة</p>
+                                <h3 class="text-3xl font-bold text-[var(--third-color)]">36</h3>
+                                <p class="text-[var(--primary-color)] text-sm mt-2 flex items-center gap-1">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>4 كورسات جديدة</span>
+                                </p>
+                            </div>
+                            <div class="icon-wrapper bg-[var(--green3)]">
+                                <i class="fas fa-book text-[var(--primary-color)]"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-fadeInUp stagger-4">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">متوسط التقييم</p>
+                                <h3 class="text-3xl font-bold text-[var(--third-color)]">4.5</h3>
+                                <p class="text-[var(--warning-color)] text-sm mt-2 flex items-center gap-1">
+                                    <i class="fas fa-star"></i>
+                                    <span>من 5 نجوم</span>
+                                </p>
+                            </div>
+                            <div class="icon-wrapper bg-[var(--purble1)]">
+                                <i class="fas fa-chart-line text-[var(--purble2)]"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg animate-fadeInUp stagger-2">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-[var(--third-color)]">أحدث التقييمات</h3>
+                            <button onclick="switchSection('ratings', event)" class="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors text-sm font-semibold">
+                                عرض الكل
+                            </button>
+                        </div>
+                        <div class="space-y-4" id="recentRatings">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg animate-fadeInUp stagger-3">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-[var(--third-color)]">أحدث التعليقات</h3>
+                            <button onclick="switchSection('comments', event)" class="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors text-sm font-semibold">
+                                عرض الكل
+                            </button>
+                        </div>
+                        <div class="space-y-4" id="recentComments">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ratings Section -->
+            <section class="content-section" id="section-ratings">
+                <!-- Header -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div class="search-box flex-1 max-w-md">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-input" placeholder="بحث في التقييمات..." id="ratingSearchInput" oninput="searchRatings()">
+                    </div>
+                    <button onclick="openAddRatingModal()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        إضافة تقييم
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>التقييم</th>
+                                    <th>سبب التقييم</th>
+                                    <th>الكورس</th>
+                                    <th>المستخدم</th>
+                                    <th>صاحب الكورس</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ratingsTableBody">
+                                <!-- Filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comments Section -->
+            <section class="content-section" id="section-comments">
+                <!-- Header -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div class="search-box flex-1 max-w-md">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-input" placeholder="بحث في التعليقات..." id="commentSearchInput" oninput="searchComments()">
+                    </div>
+                    <button onclick="openAddCommentModal()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        إضافة تعليق
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>التعليق</th>
+                                    <th>الكورس</th>
+                                    <th>الدرس</th>
+                                    <th>المستخدم</th>
+                                    <th>صاحب الكورس</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commentsTableBody">
+                                <!-- Filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Courses Section -->
+            <section class="content-section" id="section-courses">
+                <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+                    <div class="w-20 h-20 rounded-full bg-[var(--green2)] flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-book text-[var(--secondary-color)] text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[var(--third-color)] mb-2">إدارة الكورسات</h3>
+                    <p class="text-gray-500">هذا القسم لإدارة الكورسات التعليمية في المنصة</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal-overlay" id="ratingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-white" id="ratingModalTitle">إضافة تقييم جديد</h3>
+                <button onclick="closeModal('ratingModal')" class="text-white/80 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="ratingForm" onsubmit="saveRating(event)">
+                    <input type="hidden" id="ratingId">
+                    
+                    <!-- Course Search -->
+                    <div class="mb-5">
+                        <label class="form-label">اختر الكورس</label>
+                        <div class="dropdown">
+                            <input type="text" class="form-input dropdown-trigger" id="ratingCourseSearch" placeholder="ابحث عن كورس..." oninput="filterCoursesForRating()" onclick="toggleCourseDropdown('ratingCourseDropdown')">
+                            <div class="dropdown-menu" id="ratingCourseDropdown">
+                                <!-- Filled by JS -->
+                            </div>
+                        </div>
+                        <input type="hidden" id="selectedRatingCourseId">
+                    </div>
+
+                    <!-- Rating Stars -->
+                    <div class="mb-5">
+                        <label class="form-label">التقييم</label>
+                        <div class="star-rating">
+                            <input type="radio" name="rating" id="star5" value="5">
+                            <label for="star5"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" id="star4" value="4">
+                            <label for="star4"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" id="star3" value="3">
+                            <label for="star3"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" id="star2" value="2">
+                            <label for="star2"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" id="star1" value="1">
+                            <label for="star1"><i class="fas fa-star"></i></label>
+                        </div>
+                    </div>
+
+                    <!-- Reason -->
+                    <div class="mb-6">
+                        <label class="form-label">سبب التقييم</label>
+                        <textarea class="form-input" id="ratingReason" rows="4" placeholder="اكتب سبب تقييمك..."></textarea>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex gap-3 justify-end">
+                        <button type="button" onclick="closeModal('ratingModal')" class="btn btn-secondary">إلغاء</button>
+                        <button type="submit" class="btn btn-primary" id="ratingSubmitBtn">
+                            <span>حفظ التقييم</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Modal -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-white" id="commentModalTitle">إضافة تعليق جديد</h3>
+                <button onclick="closeModal('commentModal')" class="text-white/80 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="commentForm" onsubmit="saveComment(event)">
+                    <input type="hidden" id="commentId">
+                    
+                    <!-- Course Search -->
+                    <div class="mb-5">
+                        <label class="form-label">اختر الكورس</label>
+                        <div class="dropdown">
+                            <input type="text" class="form-input dropdown-trigger" id="commentCourseSearch" placeholder="ابحث عن كورس..." oninput="filterCoursesForComment()" onclick="toggleCourseDropdown('commentCourseDropdown')">
+                            <div class="dropdown-menu" id="commentCourseDropdown">
+                                <!-- Filled by JS -->
+                            </div>
+                        </div>
+                        <input type="hidden" id="selectedCommentCourseId">
+                    </div>
+
+                    <!-- Lesson Select -->
+                    <div class="mb-5">
+                        <label class="form-label">اختر الدرس</label>
+                        <div class="dropdown">
+                            <input type="text" class="form-input dropdown-trigger" id="lessonSearch" placeholder="اختر درس..." onclick="toggleLessonDropdown()">
+                            <div class="dropdown-menu" id="lessonDropdown">
+                                <p class="p-4 text-gray-500 text-center">اختر كورس أولاً</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selectedLessonId">
+                    </div>
+
+                    <!-- Comment Content -->
+                    <div class="mb-6">
+                        <label class="form-label">محتوى التعليق</label>
+                        <textarea class="form-input" id="commentContent" rows="4" placeholder="اكتب تعليقك..."></textarea>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex gap-3 justify-end">
+                        <button type="button" onclick="closeModal('commentModal')" class="btn btn-secondary">إلغاء</button>
+                        <button type="submit" class="btn btn-primary" id="commentSubmitBtn">
+                            <span>حفظ التعليق</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Rating Modal -->
+    <div class="modal-overlay" id="viewRatingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-white">تفاصيل التقييم</h3>
+                <button onclick="closeModal('viewRatingModal')" class="text-white/80 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6" id="viewRatingContent">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- View Comment Modal -->
+    <div class="modal-overlay" id="viewCommentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-white">تفاصيل التعليق</h3>
+                <button onclick="closeModal('viewCommentModal')" class="text-white/80 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6" id="viewCommentContent">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--error-color), #c0392b);">
+                <h3 class="text-xl font-bold text-white">تأكيد الحذف</h3>
+                <button onclick="closeModal('deleteModal')" class="text-white/80 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="confirm-dialog">
+                <div class="icon bg-red-100 text-[var(--error-color)]">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <p class="text-gray-700 text-lg mb-2">هل أنت متأكد من الحذف؟</p>
+                <p class="text-gray-500 text-sm">لا يمكن التراجع عن هذا الإجراء</p>
+                <div class="btn-group">
+                    <button onclick="closeModal('deleteModal')" class="btn btn-secondary">إلغاء</button>
+                    <button onclick="confirmDelete()" class="btn btn-danger" id="confirmDeleteBtn">حذف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== DATA ==========
+        let courses = [
+            { id: 'CRS001', name: 'أساسيات الزراعة العضوية', instructor: 'د. محمد أحمد', instructorId: 'USR001', lessons: ['مقدمة في الزراعة العضوية', 'التربة الصحية', 'التسميد الطبيعي', 'مكافحة الآفات'] },
+            { id: 'CRS002', name: 'تقنيات الري الحديثة', instructor: 'م. سارة محمود', instructorId: 'USR002', lessons: ['أساسيات الري', 'أنظمة الري بالتنقيط', 'الري الذكي', 'إدارة المياه'] },
+            { id: 'CRS003', name: 'زراعة المحاصيل الاستوائية', instructor: 'د. خالد علي', instructorId: 'USR003', lessons: ['المحاصيل الاستوائية', 'المناخ المناسب', 'طرق الزراعة', 'الحصاد والتخزين'] },
+            { id: 'CRS004', name: 'تربية النحل وإنتاج العسل', instructor: 'أ. فاطمة حسن', instructorId: 'USR004', lessons: ['مقدمة في تربية النحل', 'أنواع النحل', 'خلايا النحل', 'جني العسل'] },
+            { id: 'CRS005', name: 'الزراعة المائية', instructor: 'د. عمر سعيد', instructorId: 'USR005', lessons: ['مبادئ الزراعة المائية', 'أنظمة الزراعة', 'المحاليل الغذائية', 'الصيانة'] }
+        ];
+
+        let ratings = [
+            { id: 'RT001', courseId: 'CRS001', courseName: 'أساسيات الزراعة العضوية', rating: 5, reason: 'كورس ممتاز جداً وغطى جميع الجوانب الأساسية للزراعة العضوية', userId: 'USR101', userName: 'أحمد محمد', instructorId: 'USR001', instructorName: 'د. محمد أحمد', date: '2024-01-15' },
+            { id: 'RT002', courseId: 'CRS002', courseName: 'تقنيات الري الحديثة', rating: 4, reason: 'محتوى جيد لكن يحتاج المزيد من الأمثلة العملية', userId: 'USR102', userName: 'سلمى أحمد', instructorId: 'USR002', instructorName: 'م. سارة محمود', date: '2024-01-14' },
+            { id: 'RT003', courseId: 'CRS003', courseName: 'زراعة المحاصيل الاستوائية', rating: 5, reason: 'شرح واضح ومفصل مع أمثلة من الواقع', userId: 'USR103', userName: 'يوسف علي', instructorId: 'USR003', instructorName: 'د. خالد علي', date: '2024-01-13' },
+            { id: 'RT004', courseId: 'CRS001', courseName: 'أساسيات الزراعة العضوية', rating: 3, reason: 'المحتوى جيد لكن جودة الفيديو تحتاج تحسين', userId: 'USR104', userName: 'نورة حسن', instructorId: 'USR001', instructorName: 'د. محمد أحمد', date: '2024-01-12' },
+            { id: 'RT005', courseId: 'CRS004', courseName: 'تربية النحل وإنتاج العسل', rating: 4, reason: 'كورس مفيد جداً للمبتدئين، أنصح به بشدة', userId: 'USR105', userName: 'عمر فاروق', instructorId: 'USR004', instructorName: 'أ. فاطمة حسن', date: '2024-01-11' }
+        ];
+
+        let comments = [
+            { id: 'CM001', courseId: 'CRS001', courseName: 'أساسيات الزراعة العضوية', lessonId: 'LS001', lessonName: 'مقدمة في الزراعة العضوية', content: 'شكراً على الشرح الواضح والمفصل، استفدت كثيراً من هذا الدرس', userId: 'USR101', userName: 'أحمد محمد', instructorId: 'USR001', instructorName: 'د. محمد أحمد', date: '2024-01-15' },
+            { id: 'CM002', courseId: 'CRS002', courseName: 'تقنيات الري الحديثة', lessonId: 'LS002', lessonName: 'أنظمة الري بالتنقيط', content: 'هل يمكن الحصول على ملف PDF للشرح؟', userId: 'USR102', userName: 'سلمى أحمد', instructorId: 'USR002', instructorName: 'م. سارة محمود', date: '2024-01-14' },
+            { id: 'CM003', courseId: 'CRS001', courseName: 'أساسيات الزراعة العضوية', lessonId: 'LS003', lessonName: 'التسميد الطبيعي', content: 'متى يفضل إضافة السماد الطبيعي للتربة؟', userId: 'USR103', userName: 'يوسف علي', instructorId: 'USR001', instructorName: 'د. محمد أحمد', date: '2024-01-13' },
+            { id: 'CM004', courseId: 'CRS003', courseName: 'زراعة المحاصيل الاستوائية', lessonId: 'LS004', lessonName: 'المناخ المناسب', content: 'هل يمكن زراعة هذه المحاصيل في المناطق شبه الاستوائية؟', userId: 'USR104', userName: 'نورة حسن', instructorId: 'USR003', instructorName: 'د. خالد علي', date: '2024-01-12' },
+            { id: 'CM005', courseId: 'CRS004', courseName: 'تربية النحل وإنتاج العسل', lessonId: 'LS005', lessonName: 'خلايا النحل', content: 'ما هو أفضل نوع خلايا للمبتدئين؟', userId: 'USR105', userName: 'عمر فاروق', instructorId: 'USR004', instructorName: 'أ. فاطمة حسن', date: '2024-01-11' }
+        ];
+
+        let deleteCallback = null;
+        let nextRatingId = 6;
+        let nextCommentId = 6;
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRatingsTable();
+            renderCommentsTable();
+            renderRecentActivity();
+            updateStats();
+        });
+
+        // ========== SIDEBAR & NAVIGATION ==========
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            if (window.innerWidth < 1024) {
+                sidebar.classList.toggle('mobile-open');
+                overlay.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        function switchSection(section, event) {
+            if (event) event.preventDefault();
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('text-white/70');
+            });
+            document.querySelector(`[data-section="${section}"]`).classList.add('active');
+            document.querySelector(`[data-section="${section}"]`).classList.remove('text-white/70');
+            
+            // Update sections
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(`section-${section}`).classList.add('active');
+            
+            // Update title
+            const titles = {
+                dashboard: 'لوحة التحكم',
+                ratings: 'إدارة التقييمات',
+                comments: 'إدارة التعليقات',
+                courses: 'إدارة الكورسات'
+            };
+            document.getElementById('pageTitle').textContent = titles[section];
+            
+            // Close mobile sidebar
+            if (window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+
+        // ========== MODAL FUNCTIONS ==========
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // ========== TOAST NOTIFICATIONS ==========
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: 'fa-check-circle text-green-500',
+                error: 'fa-times-circle text-red-500',
+                warning: 'fa-exclamation-circle text-yellow-500'
+            };
+            
+            toast.innerHTML = `
+                <i class="fas ${icons[type]} text-xl"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.4s forwards';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // ========== RATINGS CRUD ==========
+        function renderRatingsTable(data = ratings) {
+            const tbody = document.getElementById('ratingsTableBody');
+            tbody.innerHTML = data.map((r, index) => `
+                <tr>
+                    <td class="font-semibold">${index + 1}</td>
+                    <td>${renderStars(r.rating)}</td>
+                    <td class="max-w-xs truncate">${r.reason}</td>
+                    <td><span class="badge bg-[var(--green2)] text-[var(--secondary-color)]">${r.courseName}</span></td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-[var(--third-color)] flex items-center justify-center text-white text-sm">${r.userName.charAt(0)}</div>
+                            <div>
+                                <p class="font-semibold text-sm">${r.userName}</p>
+                                <p class="text-xs text-gray-500">${r.userId}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="font-semibold text-sm">${r.instructorName}</p>
+                            <p class="text-xs text-gray-500">${r.instructorId}</p>
+                        </div>
+                    </td>
+                    <td class="text-gray-500 text-sm">${r.date}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button onclick="viewRating('${r.id}')" class="btn btn-sm bg-[var(--third-color)] text-white">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="editRating('${r.id}')" class="btn btn-sm bg-[var(--primary-color)] text-white">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteRating('${r.id}')" class="btn btn-sm bg-[var(--error-color)] text-white">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="fas fa-star text-[var(--yellow3)]"></i>';
+                } else {
+                    stars += '<i class="far fa-star text-gray-300"></i>';
+                }
+            }
+            return stars;
+        }
+
+        function openAddRatingModal() {
+            document.getElementById('ratingModalTitle').textContent = 'إضافة تقييم جديد';
+            document.getElementById('ratingForm').reset();
+            document.getElementById('ratingId').value = '';
+            document.getElementById('selectedRatingCourseId').value = '';
+            document.getElementById('ratingCourseSearch').value = '';
+            populateCourseDropdown('ratingCourseDropdown');
+            openModal('ratingModal');
+        }
+
+        function editRating(id) {
+            const rating = ratings.find(r => r.id === id);
+            if (!rating) return;
+            
+            document.getElementById('ratingModalTitle').textContent = 'تعديل التقييم';
+            document.getElementById('ratingId').value = rating.id;
+            document.getElementById('selectedRatingCourseId').value = rating.courseId;
+            document.getElementById('ratingCourseSearch').value = rating.courseName;
+            document.getElementById('ratingReason').value = rating.reason;
+            document.querySelector(`input[name="rating"][value="${rating.rating}"]`).checked = true;
+            
+            populateCourseDropdown('ratingCourseDropdown');
+            openModal('ratingModal');
+        }
+
+        function saveRating(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('ratingId').value;
+            const courseId = document.getElementById('selectedRatingCourseId').value;
+            const ratingValue = document.querySelector('input[name="rating"]:checked')?.value;
+            const reason = document.getElementById('ratingReason').value;
+            const course = courses.find(c => c.id === courseId);
+            
+            if (!courseId || !ratingValue || !reason) {
+                showToast('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            if (id) {
+                // Edit existing
+                const index = ratings.findIndex(r => r.id === id);
+                if (index !== -1) {
+                    ratings[index] = {
+                        ...ratings[index],
+                        courseId,
+                        courseName: course.name,
+                        rating: parseInt(ratingValue),
+                        reason,
+                        instructorId: course.instructorId,
+                        instructorName: course.instructor,
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                }
+                showToast('تم تعديل التقييم بنجاح', 'success');
+            } else {
+                // Add new
+                const newRating = {
+                    id: 'RT' + String(nextRatingId++).padStart(3, '0'),
+                    courseId,
+                    courseName: course.name,
+                    rating: parseInt(ratingValue),
+                    reason,
+                    userId: 'USR' + String(Math.floor(Math.random() * 1000)).padStart(3, '0'),
+                    userName: 'المستخدم الحالي',
+                    instructorId: course.instructorId,
+                    instructorName: course.instructor,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                ratings.unshift(newRating);
+                showToast('تم إضافة التقييم بنجاح', 'success');
+            }
+            
+            renderRatingsTable();
+            renderRecentActivity();
+            updateStats();
+            closeModal('ratingModal');
+        }
+
+        function viewRating(id) {
+            const rating = ratings.find(r => r.id === id);
+            if (!rating) return;
+            
+            document.getElementById('viewRatingContent').innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 p-4 bg-[var(--green2)] rounded-xl">
+                        <div class="w-16 h-16 rounded-full bg-[var(--secondary-color)] flex items-center justify-center text-white text-2xl">
+                            ${renderStars(rating.rating)}
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-[var(--third-color)]">${rating.rating} / 5</p>
+                            <p class="text-gray-500">التقييم</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">الكورس</p>
+                            <p class="font-semibold text-[var(--third-color)]">${rating.courseName}</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">معرف الكورس</p>
+                            <p class="font-semibold text-[var(--third-color)]">${rating.courseId}</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">المستخدم</p>
+                            <p class="font-semibold text-[var(--third-color)]">${rating.userName}</p>
+                            <p class="text-xs text-gray-400">${rating.userId}</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">صاحب الكورس</p>
+                            <p class="font-semibold text-[var(--third-color)]">${rating.instructorName}</p>
+                            <p class="text-xs text-gray-400">${rating.instructorId}</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <p class="text-gray-500 text-sm mb-2">سبب التقييم</p>
+                        <p class="text-[var(--third-color)]">${rating.reason}</p>
+                    </div>
+                    <div class="text-gray-500 text-sm">
+                        <i class="fas fa-calendar-alt ml-2"></i>
+                        ${rating.date}
+                    </div>
+                </div>
+            `;
+            openModal('viewRatingModal');
+        }
+
+        function deleteRating(id) {
+            deleteCallback = () => {
+                ratings = ratings.filter(r => r.id !== id);
+                renderRatingsTable();
+                renderRecentActivity();
+                updateStats();
+                showToast('تم حذف التقييم بنجاح', 'success');
+            };
+            openModal('deleteModal');
+        }
+
+        function searchRatings() {
+            const query = document.getElementById('ratingSearchInput').value.toLowerCase();
+            const filtered = ratings.filter(r => 
+                r.reason.toLowerCase().includes(query) ||
+                r.courseName.toLowerCase().includes(query) ||
+                r.userName.toLowerCase().includes(query)
+            );
+            renderRatingsTable(filtered);
+        }
+
+        // ========== COMMENTS CRUD ==========
+        function renderCommentsTable(data = comments) {
+            const tbody = document.getElementById('commentsTableBody');
+            tbody.innerHTML = data.map((c, index) => `
+                <tr>
+                    <td class="font-semibold">${index + 1}</td>
+                    <td class="max-w-xs truncate">${c.content}</td>
+                    <td><span class="badge bg-[var(--green2)] text-[var(--secondary-color)]">${c.courseName}</span></td>
+                    <td><span class="badge bg-[var(--yellow1)] text-[var(--yellow2)]">${c.lessonName}</span></td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-[var(--third-color)] flex items-center justify-center text-white text-sm">${c.userName.charAt(0)}</div>
+                            <div>
+                                <p class="font-semibold text-sm">${c.userName}</p>
+                                <p class="text-xs text-gray-500">${c.userId}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="font-semibold text-sm">${c.instructorName}</p>
+                            <p class="text-xs text-gray-500">${c.instructorId}</p>
+                        </div>
+                    </td>
+                    <td class="text-gray-500 text-sm">${c.date}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button onclick="viewComment('${c.id}')" class="btn btn-sm bg-[var(--third-color)] text-white">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="editComment('${c.id}')" class="btn btn-sm bg-[var(--primary-color)] text-white">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteComment('${c.id}')" class="btn btn-sm bg-[var(--error-color)] text-white">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddCommentModal() {
+            document.getElementById('commentModalTitle').textContent = 'إضافة تعليق جديد';
+            document.getElementById('commentForm').reset();
+            document.getElementById('commentId').value = '';
+            document.getElementById('selectedCommentCourseId').value = '';
+            document.getElementById('selectedLessonId').value = '';
+            document.getElementById('commentCourseSearch').value = '';
+            document.getElementById('lessonSearch').value = '';
+            populateCourseDropdown('commentCourseDropdown');
+            document.getElementById('lessonDropdown').innerHTML = '<p class="p-4 text-gray-500 text-center">اختر كورس أولاً</p>';
+            openModal('commentModal');
+        }
+
+        function editComment(id) {
+            const comment = comments.find(c => c.id === id);
+            if (!comment) return;
+            
+            document.getElementById('commentModalTitle').textContent = 'تعديل التعليق';
+            document.getElementById('commentId').value = comment.id;
+            document.getElementById('selectedCommentCourseId').value = comment.courseId;
+            document.getElementById('commentCourseSearch').value = comment.courseName;
+            document.getElementById('selectedLessonId').value = comment.lessonId;
+            document.getElementById('lessonSearch').value = comment.lessonName;
+            document.getElementById('commentContent').value = comment.content;
+            
+            populateCourseDropdown('commentCourseDropdown');
+            populateLessonDropdown(comment.courseId);
+            openModal('commentModal');
+        }
+
+        function saveComment(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('commentId').value;
+            const courseId = document.getElementById('selectedCommentCourseId').value;
+            const lessonName = document.getElementById('lessonSearch').value;
+            const content = document.getElementById('commentContent').value;
+            const course = courses.find(c => c.id === courseId);
+            
+            if (!courseId || !lessonName || !content) {
+                showToast('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            if (id) {
+                // Edit existing
+                const index = comments.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    comments[index] = {
+                        ...comments[index],
+                        courseId,
+                        courseName: course.name,
+                        lessonName,
+                        content,
+                        instructorId: course.instructorId,
+                        instructorName: course.instructor,
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                }
+                showToast('تم تعديل التعليق بنجاح', 'success');
+            } else {
+                // Add new
+                const newComment = {
+                    id: 'CM' + String(nextCommentId++).padStart(3, '0'),
+                    courseId,
+                    courseName: course.name,
+                    lessonId: 'LS' + String(Math.floor(Math.random() * 100)).padStart(3, '0'),
+                    lessonName,
+                    content,
+                    userId: 'USR' + String(Math.floor(Math.random() * 1000)).padStart(3, '0'),
+                    userName: 'المستخدم الحالي',
+                    instructorId: course.instructorId,
+                    instructorName: course.instructor,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                comments.unshift(newComment);
+                showToast('تم إضافة التعليق بنجاح', 'success');
+            }
+            
+            renderCommentsTable();
+            renderRecentActivity();
+            updateStats();
+            closeModal('commentModal');
+        }
+
+        function viewComment(id) {
+            const comment = comments.find(c => c.id === id);
+            if (!comment) return;
+            
+            document.getElementById('viewCommentContent').innerHTML = `
+                <div class="space-y-4">
+                    <div class="p-4 bg-[var(--green2)] rounded-xl">
+                        <p class="text-gray-500 text-sm mb-2">محتوى التعليق</p>
+                        <p class="text-[var(--third-color)] text-lg">${comment.content}</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">الكورس</p>
+                            <p class="font-semibold text-[var(--third-color)]">${comment.courseName}</p>
+                            <p class="text-xs text-gray-400">${comment.courseId}</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">الدرس</p>
+                            <p class="font-semibold text-[var(--third-color)]">${comment.lessonName}</p>
+                            <p class="text-xs text-gray-400">${comment.lessonId}</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">المستخدم</p>
+                            <p class="font-semibold text-[var(--third-color)]">${comment.userName}</p>
+                            <p class="text-xs text-gray-400">${comment.userId}</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <p class="text-gray-500 text-sm">صاحب الكورس</p>
+                            <p class="font-semibold text-[var(--third-color)]">${comment.instructorName}</p>
+                            <p class="text-xs text-gray-400">${comment.instructorId}</p>
+                        </div>
+                    </div>
+                    <div class="text-gray-500 text-sm">
+                        <i class="fas fa-calendar-alt ml-2"></i>
+                        ${comment.date}
+                    </div>
+                </div>
+            `;
+            openModal('viewCommentModal');
+        }
+
+        function deleteComment(id) {
+            deleteCallback = () => {
+                comments = comments.filter(c => c.id !== id);
+                renderCommentsTable();
+                renderRecentActivity();
+                updateStats();
+                showToast('تم حذف التعليق بنجاح', 'success');
+            };
+            openModal('deleteModal');
+        }
+
+        function searchComments() {
+            const query = document.getElementById('commentSearchInput').value.toLowerCase();
+            const filtered = comments.filter(c => 
+                c.content.toLowerCase().includes(query) ||
+                c.courseName.toLowerCase().includes(query) ||
+                c.lessonName.toLowerCase().includes(query) ||
+                c.userName.toLowerCase().includes(query)
+            );
+            renderCommentsTable(filtered);
+        }
+
+        // ========== COURSE & LESSON DROPDOWNS ==========
+        function populateCourseDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.innerHTML = courses.map(c => `
+                <div class="dropdown-item" onclick="selectCourse('${c.id}', '${dropdownId}')">
+                    <p class="font-semibold text-[var(--third-color)]">${c.name}</p>
+                    <p class="text-xs text-gray-500">${c.instructor}</p>
+                </div>
+            `).join('');
+        }
+
+        function toggleCourseDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            document.querySelectorAll('.dropdown-menu').forEach(d => {
+                if (d.id !== dropdownId) d.classList.remove('active');
+            });
+            dropdown.classList.toggle('active');
+        }
+
+        function selectCourse(courseId, dropdownId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            if (dropdownId === 'ratingCourseDropdown') {
+                document.getElementById('selectedRatingCourseId').value = courseId;
+                document.getElementById('ratingCourseSearch').value = course.name;
+            } else {
+                document.getElementById('selectedCommentCourseId').value = courseId;
+                document.getElementById('commentCourseSearch').value = course.name;
+                document.getElementById('lessonSearch').value = '';
+                document.getElementById('selectedLessonId').value = '';
+                populateLessonDropdown(courseId);
+            }
+            
+            document.getElementById(dropdownId).classList.remove('active');
+        }
+
+        function filterCoursesForRating() {
+            const query = document.getElementById('ratingCourseSearch').value.toLowerCase();
+            const dropdown = document.getElementById('ratingCourseDropdown');
+            const filtered = courses.filter(c => c.name.toLowerCase().includes(query));
+            dropdown.innerHTML = filtered.map(c => `
+                <div class="dropdown-item" onclick="selectCourse('${c.id}', 'ratingCourseDropdown')">
+                    <p class="font-semibold text-[var(--third-color)]">${c.name}</p>
+                    <p class="text-xs text-gray-500">${c.instructor}</p>
+                </div>
+            `).join('');
+            dropdown.classList.add('active');
+        }
+
+        function filterCoursesForComment() {
+            const query = document.getElementById('commentCourseSearch').value.toLowerCase();
+            const dropdown = document.getElementById('commentCourseDropdown');
+            const filtered = courses.filter(c => c.name.toLowerCase().includes(query));
+            dropdown.innerHTML = filtered.map(c => `
+                <div class="dropdown-item" onclick="selectCourse('${c.id}', 'commentCourseDropdown')">
+                    <p class="font-semibold text-[var(--third-color)]">${c.name}</p>
+                    <p class="text-xs text-gray-500">${c.instructor}</p>
+                </div>
+            `).join('');
+            dropdown.classList.add('active');
+        }
+
+        function populateLessonDropdown(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            const dropdown = document.getElementById('lessonDropdown');
+            dropdown.innerHTML = course.lessons.map((lesson, index) => `
+                <div class="dropdown-item" onclick="selectLesson('${index}', '${lesson}')">
+                    <p class="font-semibold text-[var(--third-color)]">${lesson}</p>
+                </div>
+            `).join('');
+        }
+
+        function toggleLessonDropdown() {
+            const dropdown = document.getElementById('lessonDropdown');
+            document.querySelectorAll('.dropdown-menu').forEach(d => {
+                if (d.id !== 'lessonDropdown') d.classList.remove('active');
+            });
+            dropdown.classList.toggle('active');
+        }
+
+        function selectLesson(lessonId, lessonName) {
+            document.getElementById('selectedLessonId').value = lessonId;
+            document.getElementById('lessonSearch').value = lessonName;
+            document.getElementById('lessonDropdown').classList.remove('active');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
+            }
+        });
+
+        // ========== DELETE CONFIRMATION ==========
+        function confirmDelete() {
+            if (deleteCallback) {
+                deleteCallback();
+                deleteCallback = null;
+            }
+            closeModal('deleteModal');
+        }
+
+        // ========== RECENT ACTIVITY ==========
+        function renderRecentActivity() {
+            // Recent Ratings
+            const recentRatings = document.getElementById('recentRatings');
+            recentRatings.innerHTML = ratings.slice(0, 3).map(r => `
+                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[var(--green2)] transition-colors">
+                    <div class="w-10 h-10 rounded-full bg-[var(--primary-color)] flex items-center justify-center text-white font-bold">
+                        ${r.userName.charAt(0)}
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-[var(--third-color)]">${r.userName}</p>
+                        <p class="text-sm text-gray-500 truncate">${r.reason}</p>
+                    </div>
+                    <div class="text-[var(--yellow3)]">
+                        ${renderStars(r.rating)}
+                    </div>
+                </div>
+            `).join('');
+            
+            // Recent Comments
+            const recentComments = document.getElementById('recentComments');
+            recentComments.innerHTML = comments.slice(0, 3).map(c => `
+                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[var(--green2)] transition-colors">
+                    <div class="w-10 h-10 rounded-full bg-[var(--secondary-color)] flex items-center justify-center text-white font-bold">
+                        ${c.userName.charAt(0)}
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-[var(--third-color)]">${c.userName}</p>
+                        <p class="text-sm text-gray-500 truncate">${c.content}</p>
+                    </div>
+                    <span class="badge bg-[var(--green3)] text-[var(--primary-color)]">${c.lessonName}</span>
+                </div>
+            `).join('');
+        }
+
+        // ========== UPDATE STATS ==========
+        function updateStats() {
+            document.getElementById('totalRatings').textContent = ratings.length;
+            document.getElementById('totalComments').textContent = comments.length;
+        }
+    </script>
+</body>
+</html>
