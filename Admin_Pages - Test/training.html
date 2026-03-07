@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الزراعة الذكية - لوحة التحكم</title>
+    <title> لوحة التحكم</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -769,14 +769,12 @@
                     <span class="text-xs text-white/50 uppercase tracking-wider">القائمة الرئيسية</span>
                 </div>
                 
-                <div class="nav-item active flex items-center gap-3 px-6 py-4 cursor-pointer" onclick="showSection('dashboard')">
+                <div class="nav-item active flex items-center gap-3 px-6 py-4 cursor-pointer" onclick="showSection('aboutCompany')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="14" width="7" height="7" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-                    <span>الاحصائيات</span>
+                    <span>عن الشركة</span>
                 </div>
 
                 <div class="nav-item flex items-center gap-3 px-6 py-4 cursor-pointer" onclick="showSection('addTraining')">
@@ -864,7 +862,7 @@
                                 <line x1="3" y1="18" x2="21" y2="18"/>
                             </svg>
                         </button>
-                        <h2 class="text-xl font-bold" id="pageTitle">الاحصائيات</h2>
+                        <h2 class="text-xl font-bold" id="pageTitle">عن الشركة</h2>
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="relative">
@@ -879,128 +877,49 @@
             </header>
 
             <div class="p-6">
-                <!-- Dashboard Section -->
-                <section id="dashboardSection" class="section-content">
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-                        <div class="stat-card p-6 animate-fadeInUp stagger-1">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <p class="text-[#6b7280] text-sm mb-2">اجمالي التدريبات</p>
-                                    <h3 class="text-4xl font-bold text-[#2D2D2D]" id="totalTrainings">0</h3>
+                <!-- About Company Section -->
+                <section id="aboutCompanySection" class="section-content">
+                    <div class="content-card max-w-2xl mx-auto">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold">بيانات الشركة</h3>
+                            <span class="badge badge-green" id="companyFormMode">تعديل البيانات</span>
+                        </div>
+                        
+                        <form id="companyForm" class="space-y-6">
+                            <div>
+                                <label class="form-label">اسم الشركة</label>
+                                <input type="text" id="companyName" class="form-input" placeholder="مثال: شركة الزراعة الذكية" required>
+                            </div>
+                            
+                            <div>
+                                <label class="form-label">عن الشركة</label>
+                                <textarea id="companyDescription" class="form-input" rows="6" placeholder="اكتب نبذة تعريفية عن الشركة..." required></textarea>
+                            </div>
+
+                            <div class="border-t border-[#ECECEC] pt-6">
+                                <h4 class="text-lg font-semibold mb-4 text-[#8BBA40]">بيانات التواصل</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="form-label">رقم الهاتف</label>
+                                        <input type="tel" id="companyPhone" class="form-input" placeholder="01012345678">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">البريد الالكتروني</label>
+                                        <input type="email" id="companyEmail" class="form-input" placeholder="info@company.com">
+                                    </div>
                                 </div>
-                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#8BBA40]/20 to-[#8BBA40]/5 flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8BBA40" stroke-width="2">
-                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                                    </svg>
+                                <div class="mt-4">
+                                    <label class="form-label">العنوان</label>
+                                    <input type="text" id="companyAddress" class="form-input" placeholder="مصر - القاهرة">
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="stat-card p-6 animate-fadeInUp stagger-2">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <p class="text-[#6b7280] text-sm mb-2">اجمالي الوظائف</p>
-                                    <h3 class="text-4xl font-bold text-[#2D2D2D]" id="totalJobs">0</h3>
-                                </div>
-                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#1E4565]/20 to-[#1E4565]/5 flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1E4565" stroke-width="2">
-                                        <rect x="2" y="7" width="20" height="14" rx="2"/>
-                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                                    </svg>
-                                </div>
+                            <div class="flex gap-4 pt-6">
+                                <button type="submit" class="btn-primary flex-1">
+                                    <span>حفظ البيانات</span>
+                                </button>
                             </div>
-                        </div>
-
-                        <div class="stat-card p-6 animate-fadeInUp stagger-3">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <p class="text-[#6b7280] text-sm mb-2">متقدمين التدريب</p>
-                                    <h3 class="text-4xl font-bold text-[#2D2D2D]" id="totalTrainingApps">0</h3>
-                                </div>
-                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#5AB06A]/20 to-[#5AB06A]/5 flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5AB06A" stroke-width="2">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                        <circle cx="9" cy="7" r="4"/>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card p-6 animate-fadeInUp stagger-4">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <p class="text-[#6b7280] text-sm mb-2">متقدمين الوظائف</p>
-                                    <h3 class="text-4xl font-bold text-[#2D2D2D]" id="totalJobApps">0</h3>
-                                </div>
-                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#27ae60]/20 to-[#27ae60]/5 flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                        <circle cx="9" cy="7" r="4"/>
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Stats for Approved -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div class="stat-card p-6" style="border-color: rgba(39, 174, 96, 0.3);">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <p class="text-[#6b7280] text-sm mb-2">تدريبات موافق عليها</p>
-                                    <h3 class="text-4xl font-bold text-[#27ae60]" id="totalApprovedTrainings">0</h3>
-                                </div>
-                                <div class="w-14 h-14 rounded-2xl bg-[#27ae60]/10 flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                        <polyline points="22 4 12 14.01 9 11.01"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card p-6" style="border-color: rgba(39, 174, 96, 0.3);">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <p class="text-[#6b7280] text-sm mb-2">وظائف موافق عليها</p>
-                                    <h3 class="text-4xl font-bold text-[#27ae60]" id="totalApprovedJobs">0</h3>
-                                </div>
-                                <div class="w-14 h-14 rounded-2xl bg-[#27ae60]/10 flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                        <polyline points="22 4 12 14.01 9 11.01"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                        <div class="content-card">
-                            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-[#2D2D2D]">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8BBA40" stroke-width="2">
-                                    <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
-                                </svg>
-                                احدث التدريبات
-                            </h3>
-                            <div id="recentTrainings" class="space-y-3"></div>
-                        </div>
-
-                        <div class="content-card">
-                            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-[#2D2D2D]">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E4565" stroke-width="2">
-                                    <rect x="2" y="7" width="20" height="14" rx="2"/>
-                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                                </svg>
-                                احدث الوظائف
-                            </h3>
-                            <div id="recentJobs" class="space-y-3"></div>
-                        </div>
+                        </form>
                     </div>
                 </section>
 
@@ -1043,7 +962,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="form-label">مستوى التدريب</label>
                                     <select id="trainingLevel" class="form-input" required>
@@ -1067,23 +986,13 @@
                                         <option value="organic">الزراعة العضوية</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <label class="form-label">ناشر التدريب</label>
-                                    <input type="text" id="trainingPublisher" class="form-input" placeholder="اسم الشركة أو المزرعة" required>
-                                </div>
                             </div>
 
                             <div class="border-t border-[#ECECEC] pt-6">
-                                <h4 class="text-lg font-semibold mb-4 text-[#8BBA40]">بيانات الجهة المنظمة</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label class="form-label">اسم الشركة / المزرعة</label>
-                                        <input type="text" id="trainingOrgName" class="form-input" placeholder="مزرعة النخيل الذهبية" required>
-                                    </div>
-                                    <div>
-                                        <label class="form-label">الموقع / المكان</label>
-                                        <input type="text" id="trainingLocation" class="form-input" placeholder="مصر - الاسكندرية" required>
-                                    </div>
+                                <h4 class="text-lg font-semibold mb-4 text-[#8BBA40]">الموقع</h4>
+                                <div>
+                                    <label class="form-label">الموقع / المكان</label>
+                                    <input type="text" id="trainingLocation" class="form-input" placeholder="مصر - الاسكندرية" required>
                                 </div>
                             </div>
 
@@ -1234,7 +1143,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="form-label">الفئة / التخصص</label>
                                     <select id="jobCategory" class="form-input" required>
@@ -1250,10 +1159,6 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="form-label">ناشر الوظيفة</label>
-                                    <input type="text" id="jobPublisher" class="form-input" placeholder="اسم الشركة أو المزرعة" required>
-                                </div>
-                                <div>
                                     <label class="form-label">نوع العمل</label>
                                     <select id="jobWorkType" class="form-input" required>
                                         <option value="fulltime">دوام كامل</option>
@@ -1265,16 +1170,10 @@
                             </div>
 
                             <div class="border-t border-[#ECECEC] pt-6">
-                                <h4 class="text-lg font-semibold mb-4 text-[#1E4565]">بيانات جهة العمل</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label class="form-label">اسم الشركة / المزرعة</label>
-                                        <input type="text" id="jobOrgName" class="form-input" placeholder="شركة الزراعة الحديثة" required>
-                                    </div>
-                                    <div>
-                                        <label class="form-label">المقر / الموقع</label>
-                                        <input type="text" id="jobLocation" class="form-input" placeholder="مصر - القاهرة - المعادي" required>
-                                    </div>
+                                <h4 class="text-lg font-semibold mb-4 text-[#1E4565]">المقر / الموقع</h4>
+                                <div>
+                                    <label class="form-label">المقر / الموقع</label>
+                                    <input type="text" id="jobLocation" class="form-input" placeholder="مصر - القاهرة - المعادي" required>
                                 </div>
                             </div>
 
@@ -1384,7 +1283,7 @@
                             <h3 class="text-xl font-bold">تقديمات التدريب</h3>
                             <div class="flex flex-wrap gap-3">
                                 <div class="relative">
-                                    <input type="text" id="trainingAppSearch" class="form-input w-64 py-2 text-sm" placeholder="بحث بالاسم أو رقم الهاتف..." oninput="filterTrainingApps()">
+                                    <input type="text" id="trainingAppSearch" class="form-input w-64 py-2 text-sm" placeholder="بحث بالاسم..." oninput="filterTrainingApps()">
                                 </div>
                                 <select id="trainingAppFilter" class="form-input py-2 text-sm" onchange="filterTrainingApps()">
                                     <option value="all">جميع الحالات</option>
@@ -1415,13 +1314,8 @@
                                 <thead>
                                     <tr class="bg-[#f8faf8] text-[#1E4565]">
                                         <th class="text-right p-4 font-semibold">الاسم</th>
-                                        <th class="text-right p-4 font-semibold">الهاتف</th>
-                                        <th class="text-right p-4 font-semibold">الجامعة</th>
-                                        <th class="text-right p-4 font-semibold">التخصص</th>
                                         <th class="text-right p-4 font-semibold">التدريب</th>
-                                        <th class="text-right p-4 font-semibold">الحالة</th>
-                                        <th class="text-right p-4 font-semibold">التاريخ</th>
-                                        <th class="text-right p-4 font-semibold">CV</th>
+                                        <th class="text-right p-4 font-semibold">عرض CV</th>
                                         <th class="text-right p-4 font-semibold">اجراءات</th>
                                     </tr>
                                 </thead>
@@ -1449,7 +1343,7 @@
                             <h3 class="text-xl font-bold">تقديمات الوظائف</h3>
                             <div class="flex flex-wrap gap-3">
                                 <div class="relative">
-                                    <input type="text" id="jobAppSearch" class="form-input w-64 py-2 text-sm" placeholder="بحث بالاسم أو رقم الهاتف..." oninput="filterJobApps()">
+                                    <input type="text" id="jobAppSearch" class="form-input w-64 py-2 text-sm" placeholder="بحث بالاسم..." oninput="filterJobApps()">
                                 </div>
                                 <select id="jobAppFilter" class="form-input py-2 text-sm" onchange="filterJobApps()">
                                     <option value="all">جميع الحالات</option>
@@ -1480,13 +1374,8 @@
                                 <thead>
                                     <tr class="bg-[#f8faf8] text-[#1E4565]">
                                         <th class="text-right p-4 font-semibold">الاسم</th>
-                                        <th class="text-right p-4 font-semibold">الهاتف</th>
-                                        <th class="text-right p-4 font-semibold">التخصص</th>
-                                        <th class="text-right p-4 font-semibold">الخبرة</th>
                                         <th class="text-right p-4 font-semibold">الوظيفة</th>
-                                        <th class="text-right p-4 font-semibold">الحالة</th>
-                                        <th class="text-right p-4 font-semibold">التاريخ</th>
-                                        <th class="text-right p-4 font-semibold">CV</th>
+                                        <th class="text-right p-4 font-semibold">عرض CV</th>
                                         <th class="text-right p-4 font-semibold">اجراءات</th>
                                     </tr>
                                 </thead>
@@ -1662,6 +1551,13 @@
         let jobs = JSON.parse(localStorage.getItem('jobs')) || [];
         let trainingApplications = JSON.parse(localStorage.getItem('trainingApplications')) || [];
         let jobApplications = JSON.parse(localStorage.getItem('jobApplications')) || [];
+        let companyData = JSON.parse(localStorage.getItem('companyData')) || {
+            name: '',
+            description: '',
+            phone: '',
+            email: '',
+            address: ''
+        };
 
         let currentPdfDoc = null;
         let currentPdfPage = 1;
@@ -1674,17 +1570,35 @@
             if (trainingApplications.length === 0) loadSampleTrainingApps();
             if (jobApplications.length === 0) loadSampleJobApps();
             
-            updateStats();
+            loadCompanyData();
             renderTrainings();
             renderJobs();
             renderTrainingApps();
             renderJobApps();
-            renderRecentItems();
             renderApprovedTrainings();
             renderApprovedJobs();
             
             initForms();
         });
+
+        function loadCompanyData() {
+            document.getElementById('companyName').value = companyData.name || '';
+            document.getElementById('companyDescription').value = companyData.description || '';
+            document.getElementById('companyPhone').value = companyData.phone || '';
+            document.getElementById('companyEmail').value = companyData.email || '';
+            document.getElementById('companyAddress').value = companyData.address || '';
+        }
+
+        function saveCompanyData() {
+            companyData = {
+                name: document.getElementById('companyName').value,
+                description: document.getElementById('companyDescription').value,
+                phone: document.getElementById('companyPhone').value,
+                email: document.getElementById('companyEmail').value,
+                address: document.getElementById('companyAddress').value
+            };
+            localStorage.setItem('companyData', JSON.stringify(companyData));
+        }
 
         function loadSampleTrainings() {
             trainings = [
@@ -1695,8 +1609,6 @@
                     image: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=400',
                     level: 'advanced',
                     category: 'hydroponics',
-                    publisher: 'مزرعة النخيل الذهبية',
-                    orgName: 'مزرعة النخيل الذهبية',
                     location: 'مصر - الاسكندرية',
                     duration: '3 شهور',
                     startDate: '2025-02-01',
@@ -1717,8 +1629,6 @@
                     image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400',
                     level: 'intermediate',
                     category: 'pestControl',
-                    publisher: 'شركة الزراعة الحديثة',
-                    orgName: 'شركة الزراعة الحديثة',
                     location: 'مصر - الجيزة',
                     duration: 'شهران',
                     startDate: '2025-03-01',
@@ -1744,9 +1654,7 @@
                     shortDesc: 'مطلوب مهندس ري متخصص في انظمة الري الحديثة',
                     image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400',
                     category: 'irrigation',
-                    publisher: 'شركة الوادي الاخضر',
                     workType: 'fulltime',
-                    orgName: 'شركة الوادي الاخضر',
                     location: 'مصر - بني سويف',
                     publishDate: '2025-01-20',
                     endDate: '2025-02-20',
@@ -1786,6 +1694,7 @@
                     motivation: 'اريد اكتساب خبرة في الزراعة المائية لانها مستقبل الزراعة في مصر',
                     cvData: samplePdfBase64,
                     cvName: 'CV_Ahmed_Mohamed.pdf',
+                    studentProof: 'إثبات قيد طالب',
                     status: 'pending',
                     createdAt: '2025-01-20'
                 },
@@ -1807,6 +1716,7 @@
                     motivation: 'احب هذا المجال واريده مستقبلي المهني',
                     cvData: samplePdfBase64,
                     cvName: 'CV_Sara_Ahmed.pdf',
+                    studentProof: 'إثبات قيد طالب',
                     status: 'approved',
                     createdAt: '2025-01-19'
                 },
@@ -1828,6 +1738,7 @@
                     motivation: 'اود التخصص في الزراعة المائية واكتساب خبرة عملية',
                     cvData: null,
                     cvName: null,
+                    studentProof: 'شهادة تخرج',
                     status: 'rejected',
                     createdAt: '2025-01-18'
                 }
@@ -1940,7 +1851,7 @@
             event.currentTarget.classList.add('active');
             
             const titles = {
-                'dashboard': 'الاحصائيات',
+                'aboutCompany': 'عن الشركة',
                 'addTraining': 'رفع تدريب',
                 'addJob': 'رفع وظيفة',
                 'trainingApps': 'تقديمات التدريب',
@@ -2111,34 +2022,13 @@
             showToast('تم تحميل الملف بنجاح');
         }
 
-        function updateStats() {
-            animateCounter('totalTrainings', trainings.length);
-            animateCounter('totalJobs', jobs.length);
-            animateCounter('totalTrainingApps', trainingApplications.length);
-            animateCounter('totalJobApps', jobApplications.length);
-            
-            const approvedTrainingsCount = trainingApplications.filter(a => a.status === 'approved').length;
-            const approvedJobsCount = jobApplications.filter(a => a.status === 'approved').length;
-            
-            animateCounter('totalApprovedTrainings', approvedTrainingsCount);
-            animateCounter('totalApprovedJobs', approvedJobsCount);
-        }
-
-        function animateCounter(elementId, target) {
-            const element = document.getElementById(elementId);
-            let current = 0;
-            const increment = target / 30;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                element.textContent = Math.floor(current);
-            }, 30);
-        }
-
         function initForms() {
+            document.getElementById('companyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveCompanyData();
+                showToast('تم حفظ بيانات الشركة بنجاح');
+            });
+            
             document.getElementById('trainingForm').addEventListener('submit', handleTrainingSubmit);
             document.getElementById('jobForm').addEventListener('submit', handleJobSubmit);
         }
@@ -2163,8 +2053,6 @@
                 shortDesc: document.getElementById('trainingShortDesc').value,
                 level: document.getElementById('trainingLevel').value,
                 category: document.getElementById('trainingCategory').value,
-                publisher: document.getElementById('trainingPublisher').value,
-                orgName: document.getElementById('trainingOrgName').value,
                 location: document.getElementById('trainingLocation').value,
                 duration: document.getElementById('trainingDuration').value,
                 startDate: document.getElementById('trainingStartDate').value,
@@ -2196,9 +2084,7 @@
             }
 
             saveTrainings();
-            updateStats();
             renderTrainings();
-            renderRecentItems();
             resetTrainingForm();
         }
 
@@ -2326,9 +2212,7 @@
                 title: document.getElementById('jobTitle').value,
                 shortDesc: document.getElementById('jobShortDesc').value,
                 category: document.getElementById('jobCategory').value,
-                publisher: document.getElementById('jobPublisher').value,
                 workType: document.getElementById('jobWorkType').value,
-                orgName: document.getElementById('jobOrgName').value,
                 location: document.getElementById('jobLocation').value,
                 publishDate: document.getElementById('jobPublishDate').value,
                 endDate: document.getElementById('jobEndDate').value,
@@ -2360,9 +2244,7 @@
             }
 
             saveJobs();
-            updateStats();
             renderJobs();
-            renderRecentItems();
             resetJobForm();
         }
 
@@ -2442,8 +2324,7 @@
             const searchTerm = document.getElementById('trainingSearch').value.toLowerCase();
             
             const filtered = trainings.filter(t => 
-                t.title.toLowerCase().includes(searchTerm) ||
-                t.publisher.toLowerCase().includes(searchTerm)
+                t.title.toLowerCase().includes(searchTerm)
             );
 
             if (filtered.length === 0) {
@@ -2494,8 +2375,7 @@
             const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
             
             const filtered = jobs.filter(j => 
-                j.title.toLowerCase().includes(searchTerm) ||
-                j.publisher.toLowerCase().includes(searchTerm)
+                j.title.toLowerCase().includes(searchTerm)
             );
 
             if (filtered.length === 0) {
@@ -2554,8 +2434,7 @@
             const filterStatus = document.getElementById('trainingAppFilter').value;
             
             let filtered = trainingApplications.filter(app => 
-                app.fullName.toLowerCase().includes(searchTerm) ||
-                app.phone.includes(searchTerm)
+                app.fullName.toLowerCase().includes(searchTerm)
             );
 
             if (filterStatus !== 'all') {
@@ -2572,12 +2451,7 @@
             tbody.innerHTML = filtered.map(app => `
                 <tr class="table-row">
                     <td class="p-4 font-medium">${app.fullName}</td>
-                    <td class="p-4">${app.phone}</td>
-                    <td class="p-4">${app.university}</td>
-                    <td class="p-4">${app.department}</td>
                     <td class="p-4 text-[#8BBA40]">${app.trainingTitle}</td>
-                    <td class="p-4">${getStatusBadge(app.status)}</td>
-                    <td class="p-4 text-[#6b7280]">${app.createdAt}</td>
                     <td class="p-4">
                         ${app.cvData ? `
                             <span class="pdf-view-btn" onclick="viewPdf('${app.cvData}', '${app.cvName || 'CV.pdf'}', '${app.fullName}')">
@@ -2585,7 +2459,7 @@
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                     <polyline points="14,2 14,8 20,8"/>
                                 </svg>
-                                عرض PDF
+                                عرض CV
                             </span>
                         ` : '<span class="text-[#6b7280] text-sm">لا يوجد</span>'}
                     </td>
@@ -2598,16 +2472,10 @@
                                 رفض
                             </button>
                             <button onclick="viewTrainingApp(${app.id})" class="btn-secondary py-2 px-3 text-sm">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                </svg>
+                                عرض
                             </button>
                             <button onclick="deleteTrainingApp(${app.id})" class="btn-danger py-2 px-3 text-sm">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="3,6 5,6 21,6"/>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                </svg>
+                                حذف
                             </button>
                         </div>
                     </td>
@@ -2622,8 +2490,7 @@
             const filterStatus = document.getElementById('jobAppFilter').value;
             
             let filtered = jobApplications.filter(app => 
-                app.fullName.toLowerCase().includes(searchTerm) ||
-                app.phone.includes(searchTerm)
+                app.fullName.toLowerCase().includes(searchTerm)
             );
 
             if (filterStatus !== 'all') {
@@ -2640,12 +2507,7 @@
             tbody.innerHTML = filtered.map(app => `
                 <tr class="table-row">
                     <td class="p-4 font-medium">${app.fullName}</td>
-                    <td class="p-4">${app.phone}</td>
-                    <td class="p-4">${app.specialization}</td>
-                    <td class="p-4">${app.experienceYears}</td>
                     <td class="p-4 text-[#1E4565]">${app.jobTitle}</td>
-                    <td class="p-4">${getStatusBadge(app.status)}</td>
-                    <td class="p-4 text-[#6b7280]">${app.createdAt}</td>
                     <td class="p-4">
                         ${app.cvData ? `
                             <span class="pdf-view-btn" onclick="viewPdf('${app.cvData}', '${app.cvName || 'CV.pdf'}', '${app.fullName}')">
@@ -2653,7 +2515,7 @@
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                     <polyline points="14,2 14,8 20,8"/>
                                 </svg>
-                                عرض PDF
+                                عرض CV
                             </span>
                         ` : '<span class="text-[#6b7280] text-sm">لا يوجد</span>'}
                     </td>
@@ -2666,16 +2528,10 @@
                                 رفض
                             </button>
                             <button onclick="viewJobApp(${app.id})" class="btn-secondary py-2 px-3 text-sm">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                </svg>
+                                عرض
                             </button>
                             <button onclick="deleteJobApp(${app.id})" class="btn-danger py-2 px-3 text-sm">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="3,6 5,6 21,6"/>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                </svg>
+                                حذف
                             </button>
                         </div>
                     </td>
@@ -2767,7 +2623,7 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex items-center gap-2 text-[#6b7280]">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/>
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/>
                             </svg>
                             ${app.phone}
                         </div>
@@ -2796,40 +2652,12 @@
             `).join('');
         }
 
-        function renderRecentItems() {
-            const recentTrainingsContainer = document.getElementById('recentTrainings');
-            const recentJobsContainer = document.getElementById('recentJobs');
-
-            recentTrainingsContainer.innerHTML = trainings.slice(0, 5).map(t => `
-                <div class="flex items-center gap-3 p-3 rounded-xl bg-[#f8faf8] hover:bg-[#EBFCF1] transition-colors cursor-pointer border border-transparent hover:border-[#8BBA40]/30" onclick="editTraining(${t.id})">
-                    <div class="w-10 h-10 rounded-lg bg-cover bg-center" style="background-image: url('${t.image}')"></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-medium truncate text-[#2D2D2D]">${t.title}</p>
-                        <p class="text-xs text-[#6b7280]">${t.createdAt}</p>
-                    </div>
-                    <span class="badge ${getLevelBadge(t.level)} text-xs">${getLevelText(t.level)}</span>
-                </div>
-            `).join('') || '<p class="text-[#6b7280] text-center py-4">لا توجد تدريبات</p>';
-
-            recentJobsContainer.innerHTML = jobs.slice(0, 5).map(j => `
-                <div class="flex items-center gap-3 p-3 rounded-xl bg-[#f8faf8] hover:bg-[#F3E8FF] transition-colors cursor-pointer border border-transparent hover:border-[#1E4565]/30" onclick="editJob(${j.id})">
-                    <div class="w-10 h-10 rounded-lg bg-cover bg-center" style="background-image: url('${j.image}')"></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-medium truncate text-[#2D2D2D]">${j.title}</p>
-                        <p class="text-xs text-[#6b7280]">${j.createdAt}</p>
-                    </div>
-                    <span class="badge badge-gold text-xs">${getWorkTypeText(j.workType)}</span>
-                </div>
-            `).join('') || '<p class="text-[#6b7280] text-center py-4">لا توجد وظائف</p>';
-        }
-
         // ==================== APPROVAL FUNCTIONS ====================
         function approveTrainingApp(id) {
             const index = trainingApplications.findIndex(a => a.id === id);
             if (index !== -1) {
                 trainingApplications[index].status = 'approved';
                 saveTrainingApps();
-                updateStats();
                 renderTrainingApps();
                 renderApprovedTrainings();
                 showToast('تم الموافقة على التقديم بنجاح');
@@ -2841,7 +2669,6 @@
             if (index !== -1) {
                 trainingApplications[index].status = 'rejected';
                 saveTrainingApps();
-                updateStats();
                 renderTrainingApps();
                 renderApprovedTrainings();
                 showToast('تم رفض التقديم', 'error');
@@ -2853,7 +2680,6 @@
             if (index !== -1) {
                 jobApplications[index].status = 'approved';
                 saveJobApps();
-                updateStats();
                 renderJobApps();
                 renderApprovedJobs();
                 showToast('تم الموافقة على التقديم بنجاح');
@@ -2865,7 +2691,6 @@
             if (index !== -1) {
                 jobApplications[index].status = 'rejected';
                 saveJobApps();
-                updateStats();
                 renderJobApps();
                 renderApprovedJobs();
                 showToast('تم رفض التقديم', 'error');
@@ -2884,8 +2709,6 @@
             document.getElementById('trainingShortDesc').value = training.shortDesc;
             document.getElementById('trainingLevel').value = training.level;
             document.getElementById('trainingCategory').value = training.category;
-            document.getElementById('trainingPublisher').value = training.publisher;
-            document.getElementById('trainingOrgName').value = training.orgName;
             document.getElementById('trainingLocation').value = training.location;
             document.getElementById('trainingDuration').value = training.duration;
             document.getElementById('trainingStartDate').value = training.startDate;
@@ -2946,9 +2769,7 @@
             
             trainings = trainings.filter(t => t.id !== id);
             saveTrainings();
-            updateStats();
             renderTrainings();
-            renderRecentItems();
             showToast('تم حذف التدريب بنجاح');
         }
 
@@ -2962,9 +2783,7 @@
             document.getElementById('jobTitle').value = job.title;
             document.getElementById('jobShortDesc').value = job.shortDesc;
             document.getElementById('jobCategory').value = job.category;
-            document.getElementById('jobPublisher').value = job.publisher;
             document.getElementById('jobWorkType').value = job.workType;
-            document.getElementById('jobOrgName').value = job.orgName;
             document.getElementById('jobLocation').value = job.location;
             document.getElementById('jobPublishDate').value = job.publishDate;
             document.getElementById('jobEndDate').value = job.endDate;
@@ -3007,9 +2826,7 @@
             
             jobs = jobs.filter(j => j.id !== id);
             saveJobs();
-            updateStats();
             renderJobs();
-            renderRecentItems();
             showToast('تم حذف الوظيفة بنجاح');
         }
 
@@ -3024,7 +2841,7 @@
                     <div class="flex items-center gap-2 mb-4">
                         ${getStatusBadge(app.status)}
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="form-label">الاسم الكامل</label>
                             <p class="text-[#2D2D2D] font-medium">${app.fullName}</p>
@@ -3077,6 +2894,10 @@
                     <div>
                         <label class="form-label">الدوافع</label>
                         <p class="text-[#2D2D2D] bg-[#f8faf8] p-4 rounded-xl border border-[#ECECEC]">${app.motivation}</p>
+                    </div>
+                    <div>
+                        <label class="form-label">إثبات أنه طالب</label>
+                        <p class="text-[#2D2D2D] bg-[#EBFCF1] p-4 rounded-xl border border-[#8BBA40]/30 font-medium">${app.studentProof || 'لم يتم تقديم إثبات'}</p>
                     </div>
                     ${app.cvData ? `
                         <div class="mt-4">
@@ -3227,7 +3048,6 @@
             
             trainingApplications = trainingApplications.filter(a => a.id !== id);
             saveTrainingApps();
-            updateStats();
             renderTrainingApps();
             renderApprovedTrainings();
             showToast('تم حذف التقديم بنجاح');
@@ -3238,7 +3058,6 @@
             
             jobApplications = jobApplications.filter(a => a.id !== id);
             saveJobApps();
-            updateStats();
             renderJobApps();
             renderApprovedJobs();
             showToast('تم حذف التقديم بنجاح');
@@ -3249,7 +3068,6 @@
             
             trainingApplications = [];
             saveTrainingApps();
-            updateStats();
             renderTrainingApps();
             renderApprovedTrainings();
             showToast('تم حذف جميع تقديمات التدريب');
@@ -3260,7 +3078,6 @@
             
             jobApplications = [];
             saveJobApps();
-            updateStats();
             renderJobApps();
             renderApprovedJobs();
             showToast('تم حذف جميع تقديمات الوظائف');
